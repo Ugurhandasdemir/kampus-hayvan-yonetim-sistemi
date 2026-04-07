@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,12 +23,47 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-nxq&s74c6wxlbemh(uz_gqq^*$n%*qvb3tgk#-4)+c=fa55(@$'
 
+IS_VERCEL = bool(os.getenv('VERCEL'))
+
+
+def _get_list_from_env(name):
+    return [item.strip() for item in os.getenv(name, '').split(',') if item.strip()]
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False' if IS_VERCEL else 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
-    'kampus-hayvan-yonetim-sistemi-ppw10kxfb.vercel.app'
-    ]
+    '127.0.0.1',
+    'localhost',
+    '.vercel.app',
+    'kampus-hayvan-yonetim-sistemi.vercel.app',
+]
+
+VERCEL_URL = os.getenv('VERCEL_URL')
+if VERCEL_URL:
+    ALLOWED_HOSTS.append(VERCEL_URL)
+
+ALLOWED_HOSTS.extend(_get_list_from_env('ALLOWED_HOSTS'))
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'https://*.vercel.app',
+    'https://kampus-hayvan-yonetim-sistemi.vercel.app',
+]
+
+if VERCEL_URL:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{VERCEL_URL}')
+
+CSRF_TRUSTED_ORIGINS.extend(_get_list_from_env('CSRF_TRUSTED_ORIGINS'))
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+SESSION_COOKIE_SECURE = IS_VERCEL
+CSRF_COOKIE_SECURE = IS_VERCEL
 
 
 # Application definition
