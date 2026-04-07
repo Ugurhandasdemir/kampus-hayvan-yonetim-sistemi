@@ -1,167 +1,104 @@
+{% load static %}
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Login | Campus Paws Collective</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=Be+Vietnam+Pro:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary-container": "#fd8b00",
-                        "outline": "#986f3f",
-                        "error-dim": "#b92902",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-container-high": "#ffddba",
-                        "background": "#fff5ed",
-                        "on-tertiary-fixed": "#453900",
-                        "secondary-container": "#8dedec",
-                        "secondary-dim": "#005959",
-                        "primary-fixed-dim": "#ea8000",
-                        "on-secondary-container": "#005858",
-                        "inverse-on-surface": "#c29461",
-                        "tertiary-fixed": "#ffd709",
-                        "tertiary": "#6c5a00",
-                        "surface-dim": "#ffcb93",
-                        "on-tertiary-container": "#5b4b00",
-                        "surface-bright": "#fff5ed",
-                        "on-tertiary-fixed-variant": "#665500",
-                        "tertiary-container": "#ffd709",
-                        "surface-container-highest": "#ffd6ab",
-                        "secondary-fixed": "#8dedec",
-                        "on-secondary": "#bbfffe",
-                        "on-primary": "#fff0e7",
-                        "on-surface-variant": "#7a5426",
-                        "primary-dim": "#7b4000",
-                        "on-secondary-fixed-variant": "#006262",
-                        "tertiary-dim": "#5e4e00",
-                        "on-secondary-fixed": "#004343",
-                        "on-error": "#ffefec",
-                        "surface-container-low": "#ffeedf",
-                        "on-error-container": "#520c00",
-                        "inverse-primary": "#fd8b00",
-                        "secondary": "#006666",
-                        "on-surface": "#452800",
-                        "outline-variant": "#d4a46f",
-                        "on-tertiary": "#fff2cd",
-                        "surface-tint": "#8c4a00",
-                        "primary": "#8c4a00",
-                        "on-primary-container": "#442100",
-                        "tertiary-fixed-dim": "#efc900",
-                        "on-primary-fixed-variant": "#512800",
-                        "surface": "#fff5ed",
-                        "on-background": "#452800",
-                        "surface-container": "#ffe4c9",
-                        "secondary-fixed-dim": "#7fdede",
-                        "primary-fixed": "#fd8b00",
-                        "surface-variant": "#ffd6ab",
-                        "on-primary-fixed": "#180800",
-                        "error": "#b02500",
-                        "inverse-surface": "#190b00",
-                        "error-container": "#f95630"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "1rem",
-                        "lg": "2rem",
-                        "xl": "3rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Plus Jakarta Sans"],
-                        "body": ["Be Vietnam Pro"],
-                        "label": ["Plus Jakarta Sans"]
-                    }
-                },
-            },
-        }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .grainy-bg {
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.04;
-            pointer-events: none;
-        }
-    </style>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Giriş | Kampüs Pati Topluluğu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
 </head>
-<body class="bg-surface font-body text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-tertiary-container selection:text-on-tertiary-container overflow-x-hidden">
-<div class="fixed inset-0 grainy-bg"></div>
-<div class="relative w-full max-w-md flex flex-col items-center">
-<div class="mb-12 text-center relative z-10">
-<h1 class="font-headline text-5xl font-black text-primary tracking-tighter mb-2 scale-105 transform -rotate-1">
-                Campus Paws
-            </h1>
-<span class="font-headline text-lg font-bold text-secondary tracking-widest block transform rotate-1">COLLECTIVE</span>
-</div>
-<div class="w-full bg-surface-container-low rounded-xl shadow-2xl shadow-primary-container/10 p-8 md:p-12 relative flex flex-col border-none transform transition-all duration-300">
-<div class="absolute -top-16 -right-12 w-40 h-40 transform rotate-12 hidden md:block">
-<div class="w-full h-full rounded-lg bg-tertiary-container flex items-center justify-center p-2 shadow-xl rotate-3">
-<img alt="Adorable orange tabby cat with a curious expression sitting in a sunlit campus garden, oil painting style" class="w-full h-full object-cover rounded-md" data-alt="Adorable orange tabby cat with a curious expression sitting in a sunlit campus garden, warm sunbeams, painterly oil style with visible brushstrokes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAENxY8bO31MdQffwWhfoR5hAc29iskoELwJeBng9wP39q8MJ8KeeBedmVOnqpjZdDs9wnvlmY7rzUtPlBE_5SkObw6E0WXhXeH7mXKzcFa_C2StLTGuLZLq7NaG7HHcTUcQFTKNgpkf5Be3hYN6UPkInvc3nNbev7bIhrhysx_zs9uUlJL6qj1KhuSncscBBTvAijgHhCOzFvinYYZOcyDDBAG7oSwTpWZqSV0wv8GzZvTj3F3eItnbRQNpJBIfvENv45HnnteCWGu"/>
-</div>
-<div class="absolute -bottom-2 -left-2 bg-secondary text-on-secondary text-[10px] font-headline font-bold px-3 py-1 rounded-full shadow-lg -rotate-6">
-                    Mascot: Ginger!
+<body class="bg-surface font-body text-on-surface min-h-screen relative overflow-x-hidden">
+    <div class="grainy-overlay fixed inset-0 z-50"></div>
+    <main class="flex min-h-screen w-full">
+        <div class="hidden lg:flex w-1/2 relative overflow-hidden bg-primary-dim">
+            <img alt="Güneşli üniversite kampüsü çimeninde oturan mutlu bir golden retriever, arkada bulanık öğrenciler" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay" data-alt="Sonbahar ışığı altındaki üniversite çimeninde oturan neşeli golden retriever köpek" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T72iTtr81RNt0xM87P1PYsWRHRxH--rtdEXGf9rSooqPXWbWvfEy4tTxc5flYYWhlgMbZ_ooiO8_g7h5TjLAYN3q4n-KsPaokuFh6rhj8LwZBakF1I_Bb4m9Wd2YoAWuwyfoicdDCvj1uk53gEMURAFEejY0D_bjKyZy745I-twcuuaumpZJ1tK2kh1QGEtstoZJZy0KSBAp7kebO7UgoZfizfg69f2UoPLLxVkPZGeMqvX9QNlCq-TBDpq9FYZ3afXnIX1iCT2B">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+            <div class="relative z-10 p-16 flex flex-col justify-end h-full">
+                <div class="bg-tertiary-container/90 backdrop-blur-md p-6 rounded-lg -rotate-1 self-start shadow-xl max-w-sm mb-8">
+                    <span class="font-headline font-bold text-on-tertiary-container text-lg block">"En iyi dostlar, en iyi bakımı hak eder."</span>
+                    <span class="font-body text-on-tertiary-container/80 text-sm italic">&mdash; Kampüs Pati Topluluğu</span>
                 </div>
-</div>
-<div class="space-y-8">
-<header>
-<h2 class="text-3xl font-headline font-extrabold text-on-surface leading-tight">Welcome Back!</h2>
-<p class="text-on-surface-variant text-sm mt-2">Log in to check on your campus furry friends.</p>
-</header>
-<form class="space-y-6">
-<div class="space-y-4">
-<div class="relative group">
-<label class="block text-xs font-headline font-bold text-primary mb-1.5 ml-1">UNIVERSITY EMAIL</label>
-<input class="w-full px-6 py-4 bg-surface-container-lowest border-none rounded-full text-on-surface placeholder:text-outline-variant focus:ring-4 focus:ring-secondary/20 transition-all" placeholder="student@university.edu" type="email"/>
-</div>
-<div class="relative group">
-<label class="block text-xs font-headline font-bold text-primary mb-1.5 ml-1">PASSWORD</label>
-<input class="w-full px-6 py-4 bg-surface-container-lowest border-none rounded-full text-on-surface placeholder:text-outline-variant focus:ring-4 focus:ring-secondary/20 transition-all" placeholder="••••••••" type="password"/>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<label class="flex items-center space-x-3 cursor-pointer group">
-<div class="relative">
-<input class="sr-only peer" type="checkbox"/>
-<div class="w-10 h-6 bg-surface-container-highest rounded-full peer peer-checked:bg-secondary transition-colors"></div>
-<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
-</div>
-<span class="text-xs font-headline font-bold text-on-surface-variant group-hover:text-secondary transition-colors">Admin login</span>
-</label>
-<a class="text-xs font-headline font-bold text-secondary hover:underline underline-offset-4" href="#">Forgot password?</a>
-</div>
-<button class="w-full py-4 bg-primary-container text-on-primary-container font-headline font-black text-lg rounded-full shadow-lg shadow-primary-container/40 hover:bg-primary-fixed-dim hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" type="submit">
-                        Sign in
-                        <span class="material-symbols-outlined text-xl" data-icon="pets">pets</span>
-</button>
-</form>
-<div class="text-center">
-<p class="text-on-surface-variant text-sm font-medium">
-                        Don't have an account? 
-                        <a class="text-secondary font-headline font-bold ml-1 hover:underline underline-offset-4 decoration-2" href="#">Create an account</a>
-</p>
-</div>
-</div>
-<div class="absolute -bottom-8 -left-10 w-24 h-24 hidden md:flex items-center justify-center bg-tertiary rounded-xl rotate-[-15deg] shadow-lg">
-<span class="material-symbols-outlined text-tertiary-container text-5xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
-</div>
-</div>
-<div class="mt-12 flex items-center gap-6 text-on-surface-variant/40">
-<span class="material-symbols-outlined text-4xl" data-icon="house">house</span>
-<span class="material-symbols-outlined text-4xl" data-icon="location_on">location_on</span>
-<span class="material-symbols-outlined text-4xl" data-icon="volunteer_activism">volunteer_activism</span>
-</div>
-<div class="mt-8 text-center px-4">
-<p class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-headline font-bold">
-                Supported by the Student Union &amp; Campus Wildlife Foundation
-            </p>
-</div>
-</div>
-</body></html>
+                <h1 class="font-headline font-extrabold text-white text-6xl tracking-tighter leading-none mb-4">
+                    Kampüsteki <br>dostlarımızı koruyoruz.
+                </h1>
+                <p class="font-body text-on-primary text-xl max-w-md">
+                    Yerel can dostlarımızın iyiliği için çalışan öğrenci gönüllüsünün arasına katıl.
+                </p>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface relative">
+            <div class="absolute top-12 right-12 opacity-10 lg:opacity-100">
+                <div class="bg-surface-container-high rounded-full w-24 h-24 flex items-center justify-center rotate-12 shadow-inner">
+                    <span class="material-symbols-outlined text-primary text-4xl" data-icon="pets">pets</span>
+                </div>
+            </div>
+            <div class="w-full max-w-md space-y-8">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 mb-8">
+                        <span class="material-symbols-outlined text-primary-container text-4xl" data-icon="potted_plant" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+                        <span class="font-headline font-black text-3xl tracking-tight text-primary">Kampüs Pati</span>
+                    </div>
+                    <h2 class="font-headline font-bold text-4xl text-on-surface tracking-tight">Tekrar Hoş Geldin</h2>
+                    <p class="font-body text-on-surface-variant text-lg">Gönüllü paneline giriş yap</p>
+                </div>
+                <form class="space-y-6">
+                    <div class="space-y-4">
+                        <div class="group">
+                            <label class="block font-headline font-semibold text-sm text-on-surface-variant mb-2 px-1" for="email">Üniversite E-postası</label>
+                            <input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container transition-all placeholder:text-outline-variant text-on-surface" id="email" placeholder="ad@universite.edu.tr" type="email">
+                        </div>
+                        <div class="group">
+                            <div class="flex justify-between items-center mb-2 px-1">
+                                <label class="block font-headline font-semibold text-sm text-on-surface-variant" for="password">Şifre</label>
+                                <a class="text-xs font-headline font-bold text-primary hover:underline" href="#">Unuttun mu?</a>
+                            </div>
+                            <input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container transition-all placeholder:text-outline-variant text-on-surface" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" type="password">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 px-1">
+                        <input class="w-5 h-5 rounded border-outline-variant text-primary-container focus:ring-primary-container bg-surface-container-low" id="remember" type="checkbox">
+                        <label class="font-body text-sm text-on-surface-variant select-none" for="remember">Oturumumu hatırla</label>
+                    </div>
+                    <button class="w-full bg-gradient-to-br from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-bold py-4 rounded-full text-lg shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="button">
+                        Giriş Yap
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                </form>
+                <div class="pt-8 space-y-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center"><span class="w-full h-px bg-surface-container-highest"></span></div>
+                        <div class="relative flex justify-center text-xs uppercase"><span class="bg-surface px-4 font-headline font-bold text-outline">Veya şununla devam et</span></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/10 rounded-lg py-3 px-4 font-headline font-semibold text-on-surface hover:bg-surface-container transition-colors">
+                            <img alt="Google Logosu" class="w-5 h-5" data-alt="Google G logosu, çok renkli marka renkleri" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50i-DjOi5SjPFKEKigj2LZPmWDbF6h8bLKAN49B40sdlySdHRVcKwP4x_ZQjFHwniAKRNkX31LxzKFGNAHh7hG8E4qQN2i77EW8_86rSGYFkHdBxcHx5bYqui4YR33S5hNNM9YREWw9EKdtr9PHzuV5YsrD4qg1bl5luJHemce_KhHd_edXPVsIQkCMEUHP8c42wQnSIF7xL-Gi9Ha6bmeRfPkKJ4h3AoZWz3b2qZPIZ2_f7xmIQEtTXnokU44g8TbyW_S-7D6g29">
+                            Google
+                        </button>
+                        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/10 rounded-lg py-3 px-4 font-headline font-semibold text-on-surface hover:bg-surface-container transition-colors">
+                            <span class="material-symbols-outlined text-on-surface" data-icon="school">school</span>
+                            Öğrenci SSO
+                        </button>
+                    </div>
+                </div>
+                <p class="text-center font-body text-on-surface-variant text-sm pt-8">
+                    Topluluğa yeni mi katıldın?
+                    <a class="font-headline font-bold text-secondary hover:text-secondary-dim underline underline-offset-4 decoration-tertiary-container decoration-4 transition-colors" href="#">Harekete katıl</a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <!-- <div class="fixed bottom-6 right-6 z-10 md:block hidden">
+        <div class="bg-secondary-container p-4 rounded-xl shadow-2xl flex items-center gap-3 rotate-[-2deg]">
+            <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-secondary text-xl" data-icon="volunteer_activism">volunteer_activism</span>
+            </div>
+            <div class="pr-2">
+                <p class="font-headline font-bold text-on-secondary-container text-xs">TOPLULUĞA KATIL</p>
+                <p class="font-body text-[10px] text-on-secondary-container/70">Bugün 5 yeni koloni bildirimi</p>
+            </div> 
+        </div> 
+    </div> -->
+</body>
+</html>
