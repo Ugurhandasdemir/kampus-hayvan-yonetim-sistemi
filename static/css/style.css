@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f7f7fb;
+    color: #1f2430;
+}
+
+.container {
+    width: min(960px, 92%);
+    margin: 0 auto;
+}
+
+.site-header {
+    background: #111827;
+    color: #ffffff;
+    padding: 1rem 0;
+}
+
+.logo {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.hero {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+}
+
+.hero h2 {
+    margin-top: 0;
+}
