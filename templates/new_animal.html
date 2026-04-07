@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>New Report | PawsMap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="{% static 'css/new_animal.css' %}" rel="stylesheet"/>
+</head>
+<body class="yeni_sayfa">
+
+    <!-- Üst Navigasyon -->
+    <header class="yeni_nav">
+        <nav class="yeni_nav_icerik">
+            <div class="yeni_nav_sol">
+                <span class="yeni_marka">PawsMap</span>
+                <div class="yeni_nav_linkler">
+                    <a class="yeni_nav_link" href="#">My Listings</a>
+                    <a class="yeni_nav_link" href="#">Map View</a>
+                </div>
+            </div>
+            <div class="yeni_nav_sag">
+                <button class="yeni_rapor_btn" type="button">New Report</button>
+                <div class="yeni_profil_daire">
+                    <span class="material-symbols-outlined yeni_profil_ikon">person</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="yeni_ana">
+
+        <!-- Başlık -->
+        <div class="yeni_baslik_bolumu">
+            <span class="yeni_etiket">Community Sanctuary</span>
+            <h1 class="yeni_baslik">
+                Report an <br/><span class="yeni_baslik_vurgu">Animal's Need</span>
+            </h1>
+            <div class="yeni_baslik_blur"></div>
+        </div>
+
+        <form action="{% url 'new_animal' %}" class="yeni_form" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+
+            <!-- Sol Kolon -->
+            <div class="yeni_sol_kolon">
+
+                <!-- Fotoğraf Yükleme -->
+                <div class="yeni_foto_kapsayici">
+                    <div class="yeni_foto_ic">
+                        <div class="yeni_foto_ikon_daire">
+                            <span class="material-symbols-outlined yeni_foto_ikon">add_a_photo</span>
+                        </div>
+                        <h3 class="yeni_foto_baslik">Drop a photo here</h3>
+                        <p class="yeni_foto_aciklama">High-quality photos help us identify and help animals faster.</p>
+                        <label class="yeni_foto_btn" for="photo">
+                            Choose Files
+                            <input class="yeni_gizli_input" id="photo" name="photo" type="file" accept="image/*"/>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Harita -->
+                <div class="yeni_harita_kart">
+                    <div class="yeni_harita_ust">
+                        <label class="yeni_harita_baslik">Mark Location</label>
+                        <span class="yeni_harita_chip">Pin Location</span>
+                    </div>
+                    <div class="yeni_harita_alan">
+                        <img alt="Map" class="yeni_harita_gorsel"
+                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfCRzMZ3uwUzXy9736LFkwTu1B7Vx0zWLY6jK3NUQKBDxXxTTpLUF1UaqRvmne7jLvBp0sBwHx4eL-uEPLtGZDBUVvHXD20ujEaf5TWdCEUMq54Xgmzrf7ZeI6BK1oJ0cK3cLYGY4KcDyZVKkdFJTTWa1MqI1GlIn-ZqYcBFoioT2qTZhH6iPY0uhENmWmuIUCZ-yRtMBl6JUmLaBW9ssGL1d2BSDXj1pY5C50sH_XR89Z-hUZ_wdSyW9tWP1DqNEirYt3Ji_eWQ1u"/>
+                        <div class="yeni_harita_pin_kaplama">
+                            <span class="material-symbols-outlined yeni_harita_pin" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        </div>
+                    </div>
+                    <p class="yeni_harita_ipucu">Tap the map to adjust the exact encounter location.</p>
+                </div>
+
+            </div>
+
+            <!-- Sağ Kolon -->
+            <div class="yeni_sag_kolon">
+
+                <!-- Kategori Seçimi -->
+                <section class="yeni_bolum">
+                    <label class="yeni_bolum_baslik">Select Category</label>
+                    <div class="yeni_kategori_grid">
+
+                        <label class="yeni_kategori_secenegi">
+                            <input class="yeni_kategori_radio" name="category" type="radio" value="lost" checked/>
+                            <div class="yeni_kategori_kutu yeni_kategori_kutu--kayip">
+                                <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--kayip">search</span>
+                                <span class="yeni_kategori_metin">Lost</span>
+                            </div>
+                        </label>
+
+                        <label class="yeni_kategori_secenegi">
+                            <input class="yeni_kategori_radio" name="category" type="radio" value="adoption"/>
+                            <div class="yeni_kategori_kutu yeni_kategori_kutu--sahip">
+                                <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--sahip">pets</span>
+                                <span class="yeni_kategori_metin">Adoption</span>
+                            </div>
+                        </label>
+
+                        <label class="yeni_kategori_secenegi">
+                            <input class="yeni_kategori_radio" name="category" type="radio" value="medical"/>
+                            <div class="yeni_kategori_kutu yeni_kategori_kutu--saglik">
+                                <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--saglik">medical_services</span>
+                                <span class="yeni_kategori_metin">Medical</span>
+                            </div>
+                        </label>
+
+                    </div>
+                </section>
+
+                <!-- Açıklama -->
+                <section class="yeni_bolum">
+                    <div class="yeni_aciklama_ust">
+                        <label class="yeni_bolum_baslik" for="details">The Story</label>
+                        <span class="yeni_karakter_siniri">MAX 500 CHARS</span>
+                    </div>
+                    <textarea class="yeni_textarea" id="details" name="details"
+                              placeholder="Describe the animal's behavior, physical markers, or urgent needs..."
+                              rows="6" maxlength="500">{{ request.POST.details|default:'' }}</textarea>
+                </section>
+
+                <!-- İletişim Bilgileri -->
+                <section class="yeni_bolum">
+                    <label class="yeni_bolum_baslik">Responder Details</label>
+                    <div class="yeni_iletisim_grid">
+                        <div class="yeni_iletisim_alan">
+                            <label class="yeni_kucuk_label" for="full_name">Full Name</label>
+                            <input class="yeni_input" id="full_name" name="full_name"
+                                   placeholder="Sarah Jenkins" type="text"
+                                   value="{{ request.POST.full_name|default:'' }}"/>
+                        </div>
+                        <div class="yeni_iletisim_alan">
+                            <label class="yeni_kucuk_label" for="phone">Contact Number</label>
+                            <input class="yeni_input" id="phone" name="phone"
+                                   placeholder="+1 (555) 000-0000" type="tel"
+                                   value="{{ request.POST.phone|default:'' }}"/>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gönder -->
+                <div class="yeni_gonder_satiri">
+                    <button class="yeni_gonder_btn" type="submit">Publish Report</button>
+                    <p class="yeni_gonder_aciklama">By publishing, you agree to our community safety guidelines and privacy policy.</p>
+                </div>
+
+            </div>
+
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="yeni_footer">
+        <div class="yeni_footer_icerik">
+            <div class="yeni_footer_marka_bolumu">
+                <span class="yeni_footer_marka">PawsMap</span>
+                <p class="yeni_footer_aciklama">Connecting lost hearts with loving homes through community-driven rescue mapping.</p>
+            </div>
+            <div class="yeni_footer_linkler">
+                <a class="yeni_footer_link" href="#">About Our Mission</a>
+                <a class="yeni_footer_link" href="#">Success Stories</a>
+                <a class="yeni_footer_link" href="#">Privacy</a>
+                <a class="yeni_footer_link" href="#">Contact</a>
+            </div>
+        </div>
+        <div class="yeni_footer_alt">
+            <p class="yeni_footer_telif">© 2024 PawsMap Sanctuary. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Mobil Alt Navigasyon -->
+    <nav class="yeni_mobil_nav">
+        <a class="yeni_mobil_item" href="#">
+            <span class="material-symbols-outlined">map</span>
+            <span class="yeni_mobil_etiket">Map</span>
+        </a>
+        <a class="yeni_mobil_item yeni_mobil_item--aktif" href="#">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
+            <span class="yeni_mobil_etiket">Reports</span>
+        </a>
+        <a class="yeni_mobil_item" href="#">
+            <span class="material-symbols-outlined">pets</span>
+            <span class="yeni_mobil_etiket">Adoptions</span>
+        </a>
+        <a class="yeni_mobil_item" href="#">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="yeni_mobil_etiket">Profile</span>
+        </a>
+    </nav>
+
+</body>
+</html>

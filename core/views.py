@@ -75,3 +75,10 @@ def logout_view(request):
         logout(request)
         messages.success(request, 'Cikis yaptin.')
     return redirect('login')
+
+
+def animal_details_view(request):
+    return render(request, 'animal_details.html')
+
+def new_animal_view(request):
+    return render(request, 'new_animal.html')
