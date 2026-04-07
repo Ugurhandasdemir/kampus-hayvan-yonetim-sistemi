@@ -1,0 +1,538 @@
+:root {
+    --primary-container: #fd8b00;
+    --outline: #986f3f;
+    --surface-container-lowest: #ffffff;
+    --surface-container-high: #ffddba;
+    --secondary-dim: #005959;
+    --primary-fixed-dim: #ea8000;
+    --tertiary-container: #ffd709;
+    --secondary: #006666;
+    --on-surface-variant: #7a5426;
+    --outline-variant: #d4a46f;
+    --primary: #8c4a00;
+    --on-primary-container: #442100;
+    --surface: #fff5ed;
+    --surface-container: #ffe4c9;
+    --surface-container-low: #ffeedf;
+    --surface-container-highest: #ffd6ab;
+    --on-tertiary-container: #5b4b00;
+    --on-surface: #452800;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Be Vietnam Pro", sans-serif;
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+select,
+button {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* ─── Sayfa Gövdesi ─── */
+
+.kayit_sayfa {
+    background-color: var(--surface);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .kayit_sayfa {
+        padding: 2rem;
+    }
+}
+
+/* ─── Ana Kapsayıcı ─── */
+
+.kayit_kapsayici {
+    width: 100%;
+    max-width: 80rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    background-color: var(--surface-container-low);
+    border-radius: 3rem;
+    overflow: hidden;
+    box-shadow: 0 26px 48px rgba(214, 211, 209, 0.5);
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .kayit_kapsayici {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ─── Sol Panel ─── */
+
+.kayit_sol_panel {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    background-color: var(--primary-container);
+    position: relative;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .kayit_sol_panel {
+        display: flex;
+    }
+}
+
+.kayit_daire_buyuk {
+    position: absolute;
+    top: -2.5rem;
+    left: -2.5rem;
+    width: 10rem;
+    height: 10rem;
+    background-color: var(--tertiary-container);
+    border-radius: 9999px;
+    opacity: 0.2;
+    transform: rotate(-12deg);
+}
+
+.kayit_daire_kucuk {
+    position: absolute;
+    top: 25%;
+    right: -3rem;
+    width: 8rem;
+    height: 8rem;
+    background-color: var(--secondary-dim);
+    border-radius: 2rem;
+    transform: rotate(12deg);
+    opacity: 0.1;
+}
+
+/* ─── Marka Bölümü ─── */
+
+.kayit_marka_bolumu {
+    position: relative;
+    z-index: 10;
+}
+
+.kayit_marka_satiri {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.kayit_marka_ikon {
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+    color: var(--on-primary-container);
+    font-size: 2.25rem;
+    line-height: 1;
+}
+
+.kayit_marka_yazi {
+    font-size: 1.875rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+    color: var(--on-primary-container);
+}
+
+.kayit_slogani {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--on-primary-container);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+}
+
+.kayit_aciklama {
+    font-size: 1.25rem;
+    color: rgba(68, 33, 0, 0.8);
+    max-width: 28rem;
+    font-weight: 500;
+}
+
+/* ─── Görsel Alan ─── */
+
+.kayit_gorsel_alan {
+    position: relative;
+    z-index: 10;
+    margin-top: 3rem;
+}
+
+.kayit_gorsel_cerceve {
+    position: relative;
+    display: inline-block;
+    transform: rotate(1deg);
+    transition: transform 0.5s ease;
+}
+
+.kayit_gorsel_cerceve:hover {
+    transform: rotate(0deg);
+}
+
+.kayit_gorsel {
+    width: 20rem;
+    height: 20rem;
+    object-fit: cover;
+    border-radius: 2rem;
+    box-shadow: 0 20px 34px rgba(0, 0, 0, 0.22);
+    border: 8px solid #ffffff;
+}
+
+.kayit_etiket {
+    position: absolute;
+    bottom: -1rem;
+    right: -1rem;
+    background-color: var(--tertiary-container);
+    padding: 1rem;
+    border-radius: 2rem;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+    transform: rotate(-6deg);
+    transition: transform 0.5s ease;
+}
+
+.kayit_gorsel_cerceve:hover .kayit_etiket {
+    transform: rotate(-12deg);
+}
+
+.kayit_etiket_metin {
+    color: var(--on-tertiary-container);
+    font-weight: 900;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ─── Alt Etiketler ─── */
+
+.kayit_alt_etiketler {
+    position: relative;
+    z-index: 10;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.kayit_alt_etiket {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(255, 214, 171, 0.3);
+    backdrop-filter: blur(12px);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--on-primary-container);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+/* ─── Form Paneli ─── */
+
+.kayit_form_paneli {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--surface-container-lowest);
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .kayit_form_paneli {
+        padding: 4rem;
+    }
+}
+
+/* ─── Adım Göstergesi ─── */
+
+.kayit_adim_bolumu {
+    margin-bottom: 2.5rem;
+}
+
+.kayit_adim_cubuklar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.kayit_adim_cubuk {
+    height: 0.5rem;
+    width: 3rem;
+    border-radius: 9999px;
+    background-color: var(--surface-container-highest);
+}
+
+.kayit_adim_cubuk.aktif {
+    background-color: var(--primary-container);
+}
+
+.kayit_form_baslik {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--on-surface);
+    letter-spacing: -0.025em;
+}
+
+.kayit_form_alt {
+    color: var(--on-surface-variant);
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.kayit_mesajlar {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.kayit_mesaj {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background-color: var(--surface-container-low);
+    color: var(--primary);
+    font-size: 0.875rem;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+/* ─── Form Elemanları ─── */
+
+.kayit_formu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.kayit_alan {
+    display: flex;
+    flex-direction: column;
+}
+
+.kayit_label {
+    display: block;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--on-surface);
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem;
+}
+
+.kayit_input_satiri {
+    position: relative;
+}
+
+.kayit_input {
+    width: 100%;
+    background-color: var(--surface-container-low);
+    border: none;
+    border-radius: 2rem;
+    padding: 1rem 1.25rem;
+    color: var(--on-surface);
+    transition: box-shadow 0.2s ease;
+    appearance: none;
+}
+
+.kayit_input::placeholder {
+    color: rgba(212, 164, 111, 0.6);
+}
+
+.kayit_input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(253, 139, 0, 0.2);
+}
+
+.kayit_input_ikon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--outline-variant);
+    pointer-events: none;
+}
+
+.kayit_secim {
+    padding-right: 3rem;
+}
+
+.kayit_uyari_metin {
+    font-size: 10px;
+    color: var(--outline);
+    margin-top: 0.5rem;
+    padding: 0 0.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.kayit_iki_sutun {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .kayit_iki_sutun {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ─── Şartlar ─── */
+
+.kayit_sartlar_satiri {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.kayit_checkbox {
+    margin-top: 0.25rem;
+    border-radius: 1rem;
+    background-color: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
+    accent-color: var(--primary-container);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.kayit_checkbox:focus {
+    outline: 2px solid rgba(253, 139, 0, 0.45);
+    outline-offset: 1px;
+}
+
+.kayit_sartlar_metin {
+    font-size: 0.875rem;
+    color: var(--on-surface-variant);
+    line-height: 1.5;
+}
+
+.kayit_sartlar_link {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.kayit_sartlar_link:hover {
+    text-decoration: underline;
+}
+
+/* ─── Kayıt Butonu ─── */
+
+.kayit_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    background-color: var(--primary-container);
+    color: var(--on-primary-container);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 900;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+    box-shadow: 0 14px 28px rgba(253, 139, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.kayit_btn:hover {
+    background-color: var(--primary-fixed-dim);
+}
+
+.kayit_btn:active {
+    transform: scale(0.95);
+}
+
+/* ─── Giriş Linki ─── */
+
+.kayit_giris_metin {
+    text-align: center;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+}
+
+.kayit_giris_link {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.kayit_giris_link:hover {
+    text-decoration: underline;
+}
+
+/* ─── Yüzen Dekoratif İkon ─── */
+
+.kayit_yuzen_ikon {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    transform: rotate(12deg);
+    opacity: 0.5;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .kayit_yuzen_ikon {
+        display: block;
+    }
+}
+
+.kayit_yuzen_daire {
+    background-color: var(--tertiary-container);
+    padding: 0.75rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--on-tertiary-container);
+    font-size: 2.25rem;
+}

@@ -11,10 +11,29 @@
     <header class="site-header">
         <div class="container">
             <h1 class="logo">Django Starter</h1>
+            <nav class="site-actions">
+                {% if request.user.is_authenticated %}
+                <span class="site-user">{{ request.user.first_name|default:request.user.username }}</span>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="site-link-btn" type="submit">Logout</button>
+                </form>
+                {% else %}
+                <a class="site-link" href="{% url 'login' %}">Login</a>
+                <a class="site-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </nav>
         </div>
     </header>
 
     <main class="container">
+        {% if messages %}
+        <section class="site-messages">
+            {% for message in messages %}
+            <p class="site-message">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
         {% block content %}{% endblock %}
     </main>
 </body>

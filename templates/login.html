@@ -9,96 +9,112 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link href="{% static 'css/login.css' %}" rel="stylesheet">
 </head>
-<body class="bg-surface font-body text-on-surface min-h-screen relative overflow-x-hidden">
-    <div class="grainy-overlay fixed inset-0 z-50"></div>
-    <main class="flex min-h-screen w-full">
-        <div class="hidden lg:flex w-1/2 relative overflow-hidden bg-primary-dim">
-            <img alt="Güneşli üniversite kampüsü çimeninde oturan mutlu bir golden retriever, arkada bulanık öğrenciler" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay" data-alt="Sonbahar ışığı altındaki üniversite çimeninde oturan neşeli golden retriever köpek" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T72iTtr81RNt0xM87P1PYsWRHRxH--rtdEXGf9rSooqPXWbWvfEy4tTxc5flYYWhlgMbZ_ooiO8_g7h5TjLAYN3q4n-KsPaokuFh6rhj8LwZBakF1I_Bb4m9Wd2YoAWuwyfoicdDCvj1uk53gEMURAFEejY0D_bjKyZy745I-twcuuaumpZJ1tK2kh1QGEtstoZJZy0KSBAp7kebO7UgoZfizfg69f2UoPLLxVkPZGeMqvX9QNlCq-TBDpq9FYZ3afXnIX1iCT2B">
-            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
-            <div class="relative z-10 p-16 flex flex-col justify-end h-full">
-                <div class="bg-tertiary-container/90 backdrop-blur-md p-6 rounded-lg -rotate-1 self-start shadow-xl max-w-sm mb-8">
-                    <span class="font-headline font-bold text-on-tertiary-container text-lg block">"En iyi dostlar, en iyi bakımı hak eder."</span>
-                    <span class="font-body text-on-tertiary-container/80 text-sm italic">&mdash; Kampüs Pati Topluluğu</span>
+<body class="login_sayfa">
+    <div class="login_grain_overlay"></div>
+    <main class="login_ana_kapsayici">
+
+        <!-- Sol Panel: Görsel ve Alıntı -->
+        <div class="login_sol_panel">
+            <img alt="Güneşli üniversite kampüsü çimeninde oturan mutlu bir golden retriever, arkada bulanık öğrenciler"
+                 class="login_sol_gorsel"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T72iTtr81RNt0xM87P1PYsWRHRxH--rtdEXGf9rSooqPXWbWvfEy4tTxc5flYYWhlgMbZ_ooiO8_g7h5TjLAYN3q4n-KsPaokuFh6rhj8LwZBakF1I_Bb4m9Wd2YoAWuwyfoicdDCvj1uk53gEMURAFEejY0D_bjKyZy745I-twcuuaumpZJ1tK2kh1QGEtstoZJZy0KSBAp7kebO7UgoZfizfg69f2UoPLLxVkPZGeMqvX9QNlCq-TBDpq9FYZ3afXnIX1iCT2B">
+            <div class="login_sol_gradient"></div>
+            <div class="login_sol_icerik">
+                <div class="login_soz_kutusu">
+                    <span class="login_soz_metin">"En iyi dostlar, en iyi bakımı hak eder."</span>
+                    <span class="login_soz_kaynak">&mdash; Kampüs Pati Topluluğu</span>
                 </div>
-                <h1 class="font-headline font-extrabold text-white text-6xl tracking-tighter leading-none mb-4">
+                <h1 class="kampus_baslik">
                     Kampüsteki <br>dostlarımızı koruyoruz.
                 </h1>
-                <p class="font-body text-on-primary text-xl max-w-md">
+                <p class="login_sol_aciklama">
                     Yerel can dostlarımızın iyiliği için çalışan öğrenci gönüllüsünün arasına katıl.
                 </p>
             </div>
         </div>
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface relative">
-            <div class="absolute top-12 right-12 opacity-10 lg:opacity-100">
-                <div class="bg-surface-container-high rounded-full w-24 h-24 flex items-center justify-center rotate-12 shadow-inner">
-                    <span class="material-symbols-outlined text-primary text-4xl" data-icon="pets">pets</span>
+
+        <!-- Sağ Panel: Giriş Formu -->
+        <div class="login_sag_panel">
+            <div class="login_ust_ikon_kapsayici">
+                <div class="login_ust_ikon_daire">
+                    <span class="login_ust_ikon" data-icon="pets">pets</span>
                 </div>
             </div>
-            <div class="w-full max-w-md space-y-8">
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 mb-8">
-                        <span class="material-symbols-outlined text-primary-container text-4xl" data-icon="potted_plant" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
-                        <span class="font-headline font-black text-3xl tracking-tight text-primary">Kampüs Pati</span>
+
+            <div class="login_form_karti">
+
+                <div class="login_karsilama">
+                    <div class="login_logo_satiri">
+                        <span class="login_logo_ikon" data-icon="potted_plant" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+                        <span class="login_logo_yazi">Kampüs Pati</span>
                     </div>
-                    <h2 class="font-headline font-bold text-4xl text-on-surface tracking-tight">Tekrar Hoş Geldin</h2>
-                    <p class="font-body text-on-surface-variant text-lg">Gönüllü paneline giriş yap</p>
+                    <h2 class="login_karsilama_baslik">Tekrar Hoş Geldin</h2>
+                    <p class="login_karsilama_alt">Gönüllü paneline giriş yap</p>
                 </div>
-                <form class="space-y-6">
-                    <div class="space-y-4">
-                        <div class="group">
-                            <label class="block font-headline font-semibold text-sm text-on-surface-variant mb-2 px-1" for="email">Üniversite E-postası</label>
-                            <input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container transition-all placeholder:text-outline-variant text-on-surface" id="email" placeholder="ad@universite.edu.tr" type="email">
+
+                {% if messages %}
+                <div class="login_mesajlar">
+                    {% for message in messages %}
+                    <p class="login_mesaj">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form action="{% url 'login' %}" class="login_form" method="post">
+                    {% csrf_token %}
+                    {% if request.GET.next %}
+                    <input name="next" type="hidden" value="{{ request.GET.next }}">
+                    {% endif %}
+                    <div class="login_alanlar">
+                        <div class="login_alan">
+                            <label class="login_label" for="email">Üniversite E-postası</label>
+                            <input class="login_input" id="email" name="email" placeholder="ad@universite.edu.tr" required type="email" value="{{ request.POST.email|default:'' }}">
                         </div>
-                        <div class="group">
-                            <div class="flex justify-between items-center mb-2 px-1">
-                                <label class="block font-headline font-semibold text-sm text-on-surface-variant" for="password">Şifre</label>
-                                <a class="text-xs font-headline font-bold text-primary hover:underline" href="#">Unuttun mu?</a>
+                        <div class="login_alan">
+                            <div class="login_sifre_satir">
+                                <label class="login_label" for="password">Şifre</label>
+                                <a class="login_unuttum" href="#">Unuttun mu?</a>
                             </div>
-                            <input class="w-full bg-surface-container-low border-none rounded-lg p-4 focus:ring-0 focus:bg-surface-container transition-all placeholder:text-outline-variant text-on-surface" id="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" type="password">
+                            <input class="login_input" id="password" name="password" placeholder="••••••••" required type="password">
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 px-1">
-                        <input class="w-5 h-5 rounded border-outline-variant text-primary-container focus:ring-primary-container bg-surface-container-low" id="remember" type="checkbox">
-                        <label class="font-body text-sm text-on-surface-variant select-none" for="remember">Oturumumu hatırla</label>
+
+                    <div class="login_hatirla_satir">
+                        <input class="login_checkbox" id="remember" type="checkbox">
+                        <label class="login_checkbox_label" for="remember">Oturumumu hatırla</label>
                     </div>
-                    <button class="w-full bg-gradient-to-br from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-bold py-4 rounded-full text-lg shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="button">
+
+                    <button class="login_btn" type="submit">
                         Giriş Yap
                         <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
                     </button>
                 </form>
-                <div class="pt-8 space-y-6">
-                    <div class="relative">
-                        <div class="absolute inset-0 flex items-center"><span class="w-full h-px bg-surface-container-highest"></span></div>
-                        <div class="relative flex justify-center text-xs uppercase"><span class="bg-surface px-4 font-headline font-bold text-outline">Veya şununla devam et</span></div>
+
+                <div class="login_altbolum">
+                    <div class="login_ayirac">
+                        <span class="login_ayirac_metin">Veya şununla devam et</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/10 rounded-lg py-3 px-4 font-headline font-semibold text-on-surface hover:bg-surface-container transition-colors">
-                            <img alt="Google Logosu" class="w-5 h-5" data-alt="Google G logosu, çok renkli marka renkleri" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50i-DjOi5SjPFKEKigj2LZPmWDbF6h8bLKAN49B40sdlySdHRVcKwP4x_ZQjFHwniAKRNkX31LxzKFGNAHh7hG8E4qQN2i77EW8_86rSGYFkHdBxcHx5bYqui4YR33S5hNNM9YREWw9EKdtr9PHzuV5YsrD4qg1bl5luJHemce_KhHd_edXPVsIQkCMEUHP8c42wQnSIF7xL-Gi9Ha6bmeRfPkKJ4h3AoZWz3b2qZPIZ2_f7xmIQEtTXnokU44g8TbyW_S-7D6g29">
+                    <div class="login_sosyal_grid">
+                        <button class="login_sosyal_btn" type="button">
+                            <img alt="Google Logosu" class="login_sosyal_logo"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50i-DjOi5SjPFKEKigj2LZPmWDbF6h8bLKAN49B40sdlySdHRVcKwP4x_ZQjFHwniAKRNkX31LxzKFGNAHh7hG8E4qQN2i77EW8_86rSGYFkHdBxcHx5bYqui4YR33S5hNNM9YREWw9EKdtr9PHzuV5YsrD4qg1bl5luJHemce_KhHd_edXPVsIQkCMEUHP8c42wQnSIF7xL-Gi9Ha6bmeRfPkKJ4h3AoZWz3b2qZPIZ2_f7xmIQEtTXnokU44g8TbyW_S-7D6g29">
                             Google
                         </button>
-                        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/10 rounded-lg py-3 px-4 font-headline font-semibold text-on-surface hover:bg-surface-container transition-colors">
-                            <span class="material-symbols-outlined text-on-surface" data-icon="school">school</span>
+                        <button class="login_sosyal_btn" type="button">
+                            <span class="material-symbols-outlined" data-icon="school">school</span>
                             Öğrenci SSO
                         </button>
                     </div>
                 </div>
-                <p class="text-center font-body text-on-surface-variant text-sm pt-8">
+
+                <p class="login_kayit_metin">
                     Topluluğa yeni mi katıldın?
-                    <a class="font-headline font-bold text-secondary hover:text-secondary-dim underline underline-offset-4 decoration-tertiary-container decoration-4 transition-colors" href="#">Harekete katıl</a>
+                    <a class="login_kayit_link" href="{% url 'register' %}">Harekete katıl</a>
                 </p>
+
             </div>
         </div>
+
     </main>
-    <!-- <div class="fixed bottom-6 right-6 z-10 md:block hidden">
-        <div class="bg-secondary-container p-4 rounded-xl shadow-2xl flex items-center gap-3 rotate-[-2deg]">
-            <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                <span class="material-symbols-outlined text-on-secondary text-xl" data-icon="volunteer_activism">volunteer_activism</span>
-            </div>
-            <div class="pr-2">
-                <p class="font-headline font-bold text-on-secondary-container text-xs">TOPLULUĞA KATIL</p>
-                <p class="font-body text-[10px] text-on-secondary-container/70">Bugün 5 yeni koloni bildirimi</p>
-            </div> 
-        </div> 
-    </div> -->
 </body>
 </html>

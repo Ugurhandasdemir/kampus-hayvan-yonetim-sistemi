@@ -1,0 +1,275 @@
+:root {
+    --secondary-container: #8dedec;
+    --surface-variant: #ffd6ab;
+}
+
+.font-label {
+    font-family: "Be Vietnam Pro", sans-serif;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.max-w-5xl {
+    max-width: 64rem;
+}
+
+.w-16 {
+    width: 4rem;
+}
+
+.h-16 {
+    height: 4rem;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.p-1 {
+    padding: 0.25rem;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
+.px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.pt-8 {
+    padding-top: 2rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-16 {
+    margin-bottom: 4rem;
+}
+
+.-top-8 {
+    top: -2rem;
+}
+
+.-z-10 {
+    z-index: -10;
+}
+
+.gap-6 {
+    gap: 1.5rem;
+}
+
+.gap-12 {
+    gap: 3rem;
+}
+
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.5rem;
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem;
+}
+
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2rem;
+}
+
+.space-y-10 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2.5rem;
+}
+
+.border-2 {
+    border-width: 2px;
+    border-style: solid;
+}
+
+.border-dashed {
+    border-style: dashed;
+}
+
+.border-transparent {
+    border-color: transparent;
+}
+
+.border-outline-variant\/20 {
+    border-color: rgba(212, 164, 111, 0.2);
+}
+
+.border-primary\/20 {
+    border-color: rgba(140, 74, 0, 0.2);
+}
+
+.bg-primary\/10 {
+    background-color: rgba(140, 74, 0, 0.1);
+}
+
+.bg-secondary-container\/20 {
+    background-color: rgba(141, 237, 236, 0.2);
+}
+
+.bg-surface-variant {
+    background-color: var(--surface-variant);
+}
+
+.hover\:bg-primary\/5:hover {
+    background-color: rgba(140, 74, 0, 0.05);
+}
+
+.hover\:bg-surface-container-high:hover {
+    background-color: var(--surface-container-high);
+}
+
+.rounded-\[1\.8rem\] {
+    border-radius: 1.8rem;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-\[4\/5\] {
+    aspect-ratio: 4 / 5;
+}
+
+.inset-0 {
+    inset: 0;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.leading-relaxed {
+    line-height: 1.625;
+}
+
+.leading-\[0\.95\] {
+    line-height: 0.95;
+}
+
+.tracking-\[0\.2em\] {
+    letter-spacing: 0.2em;
+}
+
+.tracking-tighter {
+    letter-spacing: -0.05em;
+}
+
+.transition-colors {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.drop-shadow-lg {
+    filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.25));
+}
+
+.blur-3xl {
+    filter: blur(64px);
+}
+
+.focus\:ring-2:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(253, 139, 0, 0.35);
+}
+
+.focus\:bg-surface-container-lowest:focus {
+    background-color: var(--surface-container-lowest);
+}
+
+.placeholder\:text-on-surface-variant\/40::placeholder {
+    color: rgba(122, 84, 38, 0.4);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.peer:checked + .peer-checked\:border-primary {
+    border-color: var(--primary);
+}
+
+.peer:checked + .peer-checked\:bg-surface-container-high {
+    background-color: var(--surface-container-high);
+}
+
+.group:hover .group-hover\:scale-\[0\.99\] {
+    transform: scale(0.99);
+}
+
+@media (min-width: 640px) {
+    .sm\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:py-20 {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
+
+    .md\:text-7xl {
+        font-size: 4.5rem;
+        line-height: 1;
+    }
+
+    .md\:flex-row {
+        flex-direction: row;
+    }
+
+    .md\:w-auto {
+        width: auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\:grid-cols-12 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .lg\:col-span-5 {
+        grid-column: span 5 / span 5;
+    }
+
+    .lg\:col-span-7 {
+        grid-column: span 7 / span 7;
+    }
+}

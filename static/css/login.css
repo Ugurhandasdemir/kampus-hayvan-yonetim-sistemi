@@ -1,0 +1,467 @@
+:root {
+    --primary-container: #fd8b00;
+    --outline: #986f3f;
+    --surface-container-lowest: #ffffff;
+    --surface-container-high: #ffddba;
+    --secondary-container: #8dedec;
+    --primary-fixed-dim: #ea8000;
+    --tertiary-container: #ffd709;
+    --secondary: #006666;
+    --on-secondary: #bbfffe;
+    --on-primary: #fff0e7;
+    --on-surface-variant: #7a5426;
+    --on-surface: #452800;
+    --outline-variant: #d4a46f;
+    --primary: #8c4a00;
+    --on-primary-container: #442100;
+    --surface: #fff5ed;
+    --surface-container: #ffe4c9;
+    --surface-container-low: #ffeedf;
+    --surface-container-highest: #ffd6ab;
+    --primary-dim: #7b4000;
+    --secondary-dim: #005959;
+    --on-secondary-container: #005858;
+    --on-tertiary-container: #5b4b00;
+}
+
+.login_sayfa {
+    background-color: var(--surface);
+    color: var(--on-surface);
+    font-family: "Be Vietnam Pro", sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.login_grain_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+}
+
+.login_ana_kapsayici {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.login_sol_panel {
+    display: none;
+    width: 50%;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--primary-dim);
+}
+
+.login_sol_gorsel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: overlay;
+}
+
+.login_sol_gradient {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to top, rgba(140, 74, 0, 0.8), transparent);
+}
+
+.login_sol_icerik {
+    position: relative;
+    z-index: 10;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.login_soz_kutusu {
+    background-color: rgba(255, 215, 9, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 1.5rem;
+    border-radius: 2rem;
+    transform: rotate(-1deg);
+    align-self: flex-start;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+    max-width: 24rem;
+    margin-bottom: 2rem;
+}
+
+.login_soz_metin {
+    display: block;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    color: var(--on-tertiary-container);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.login_soz_kaynak {
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: rgba(91, 75, 0, 0.8);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-style: italic;
+}
+
+.kampus_baslik {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 3.75rem;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin: 0 0 1rem;
+}
+
+.login_sol_aciklama {
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: var(--on-primary);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    max-width: 28rem;
+    margin: 0;
+}
+
+.login_sag_panel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: var(--surface);
+    position: relative;
+}
+
+.login_ust_ikon_kapsayici {
+    position: absolute;
+    top: 3rem;
+    right: 3rem;
+    opacity: 0.1;
+}
+
+.login_ust_ikon_daire {
+    background-color: var(--surface-container-high);
+    border-radius: 9999px;
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(12deg);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.login_ust_ikon {
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    color: var(--primary);
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}
+
+.login_form_karti {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.login_karsilama {
+    margin-bottom: 2rem;
+}
+
+.login_logo_satiri {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.login_logo_ikon {
+    font-family: "Material Symbols Outlined", sans-serif;
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+    color: var(--primary-container);
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}
+
+.login_logo_yazi {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 900;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    letter-spacing: -0.025em;
+    color: var(--primary);
+}
+
+.login_karsilama_baslik {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    letter-spacing: -0.025em;
+    color: var(--on-surface);
+    margin: 0;
+}
+
+.login_karsilama_alt {
+    margin: 0.5rem 0 0;
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: var(--on-surface-variant);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.login_mesajlar {
+    margin-bottom: 1rem;
+}
+
+.login_mesaj {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background-color: var(--surface-container-low);
+    color: var(--primary);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+}
+
+.login_mesaj + .login_mesaj {
+    margin-top: 0.5rem;
+}
+
+.login_form {
+    display: block;
+}
+
+.login_alanlar > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem;
+}
+
+.login_label {
+    display: block;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--on-surface-variant);
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem;
+}
+
+.login_sifre_satir {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0 0.25rem;
+}
+
+.login_unuttum {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.login_unuttum:hover {
+    text-decoration: underline;
+}
+
+.login_input {
+    width: 100%;
+    background-color: var(--surface-container-low);
+    border: none;
+    border-radius: 2rem;
+    padding: 1rem;
+    color: var(--on-surface);
+    transition: all 0.2s ease;
+}
+
+.login_input::placeholder {
+    color: var(--outline-variant);
+}
+
+.login_input:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: var(--surface-container);
+}
+
+.login_hatirla_satir {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.25rem;
+    margin-top: 1rem;
+}
+
+.login_checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid var(--outline-variant);
+    background-color: var(--surface-container-low);
+    accent-color: var(--primary-container);
+}
+
+.login_checkbox:focus {
+    outline: 2px solid rgba(253, 139, 0, 0.45);
+    outline-offset: 1px;
+}
+
+.login_checkbox_label {
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--on-surface-variant);
+    user-select: none;
+}
+
+.login_btn {
+    width: 100%;
+    margin-top: 1.5rem;
+    background-image: linear-gradient(to bottom right, var(--primary-container), var(--primary-fixed-dim));
+    color: var(--on-primary-container);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    padding: 1rem;
+    border: none;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.login_btn:hover {
+    box-shadow: 0 14px 26px rgba(253, 139, 0, 0.2);
+}
+
+.login_btn:active {
+    transform: scale(0.98);
+}
+
+.login_altbolum {
+    padding-top: 2rem;
+}
+
+.login_alan {
+    display: flex;
+    flex-direction: column;
+}
+
+.login_ayirac {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.login_ayirac::before,
+.login_ayirac::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--surface-container-highest);
+}
+
+.login_ayirac_metin {
+    padding: 0 1rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--on-surface-variant);
+    background-color: var(--surface);
+}
+
+.login_sosyal_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.login_sosyal_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--surface-container-lowest);
+    border: 1px solid rgba(212, 164, 111, 0.1);
+    border-radius: 2rem;
+    padding: 0.75rem 1rem;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    color: var(--on-surface);
+    transition: background-color 0.2s ease;
+}
+
+.login_sosyal_btn:hover {
+    background-color: var(--surface-container);
+}
+
+.login_sosyal_logo {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+}
+
+.login_kayit_metin {
+    margin: 2rem 0 0;
+    text-align: center;
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: var(--on-surface-variant);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.login_kayit_link {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    color: var(--secondary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 4px;
+    text-decoration-color: var(--tertiary-container);
+    transition: color 0.2s ease;
+}
+
+.login_kayit_link:hover {
+    color: var(--secondary-dim);
+}
+
+@media (min-width: 640px) {
+    .login_sag_panel {
+        padding: 3rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .login_sol_panel {
+        display: flex;
+    }
+
+    .login_sag_panel {
+        width: 50%;
+        padding: 6rem;
+    }
+
+    .login_ust_ikon_kapsayici {
+        opacity: 1;
+    }
+}

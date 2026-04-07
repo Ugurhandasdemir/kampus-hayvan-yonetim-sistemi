@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>PawsMap | Animal Report Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="{% static 'css/animal_details.css' %}" rel="stylesheet">
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <span class="brand">PawsMap</span>
+            <div class="top-nav-links">
+                <a class="top-nav-link" href="#">My Listings</a>
+                <a class="top-nav-link" href="#">Map View</a>
+            </div>
+        </div>
+        <div class="top-nav-actions">
+            <button class="new-report-btn" type="button">New Report</button>
+            <span class="material-symbols-outlined profile-icon" data-icon="person">person</span>
+        </div>
+    </nav>
+
+    <main class="page-main">
+        <section class="hero-section">
+            <div class="hero-media">
+                <div class="hero-media-box">
+                    <img alt="Stray dog needing help" data-alt="Close-up portrait of a scruffy brown stray dog with soulful eyes sitting on a dusty street at golden hour, soft cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5EOtYDKxtELSX1aJ6u2HrR5u4E3fLY8BSEchqmk8auWQxsQd5Ywmh_rxImMhO6j1k8cKf5aE2Ojjt3UWAUJ-O1FL-OPfbXcmdgNhwngZ9BZS51kPvS3zqbw1tEP5E9uApHmJvs5VFnp7vErQRxI0zvpntVUQKdfCk4jUycr7JZrbLzs5y-0mHMZNJTNJ4zr6r-HNB8-zUVCKi03Z83SKR8ER4ZWaJOMdQuqm20muKDbKbK-5KtPBLt8lIOq9M0ZqAx1V6YMxIzR5n">
+                </div>
+                <div class="status-chip-wrap">
+                    <span class="status-chip">Awaiting Adoption</span>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <div>
+                    <h1 class="animal-name">Copper</h1>
+                    <div class="report-date">
+                        <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                        <span>Reported Oct 24, 2024</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="material-symbols-outlined summary-icon primary" data-icon="location_on">location_on</span>
+                        <div>
+                            <h3 class="summary-title">Location Found</h3>
+                            <p class="summary-text">Near the old bakery on Maple Avenue, North District.</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <span class="material-symbols-outlined summary-icon secondary" data-icon="health_and_safety">health_and_safety</span>
+                        <div>
+                            <h3 class="summary-title">Health Status</h3>
+                            <p class="summary-text">Stable, but needs a veterinary checkup for a minor limp in the front paw.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-stack">
+                    <button class="btn-adopt" type="button">
+                        <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+                        Adopt Copper
+                    </button>
+                    <button class="btn-contact" type="button">Contact Reporter</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="details-grid">
+            <div class="map-card">
+                <div class="map-image-layer">
+                    <img alt="Map location" data-alt="Stylized map showing a specific city block with a soft orange circular marker highlighting a rescue location." data-location="Toronto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDJej21m1Nl9NWs5EsDE1jNP72N3LxEdBQVjjvYcEXNCO4n7mZbuVkNOf8yUS-GMRIXTgxLWN1TS8xnm-SUA_zzhDFVfZkbU8DGn60wS2RkGJmJO4t2YGIUgu8jHXGSRZ1rRGh0qtgtocjfUyxgZYQHvESpB2gO7rnKgRzHZzV7h8AuGzUDBi2QO4NKHQyrx7y3vi09QNmCUcI9J-XW91fynz6L2U8eCuXDSGRwYdUybfPGe1BEOvNUB1bkbuIyYkUxhRYPLDg0Sg5">
+                </div>
+                <div class="map-marker-wrap">
+                    <div class="map-marker"></div>
+                </div>
+                <div class="distance-chip">
+                    <span class="material-symbols-outlined" data-icon="near_me">near_me</span>
+                    <span>3.2 miles from your current location</span>
+                </div>
+            </div>
+
+            <aside class="updates-card">
+                <h2 class="updates-title">
+                    <span class="material-symbols-outlined" data-icon="forum">forum</span>
+                    Updates
+                </h2>
+
+                <div class="updates-list">
+                    <div class="update-item primary">
+                        <p class="update-meta primary">Update • 2h ago</p>
+                        <p class="update-text italic">"Copper was fed by a neighbor this morning. He seems very friendly!"</p>
+                        <p class="update-author">— Sarah Miller</p>
+                    </div>
+
+                    <div class="update-item secondary">
+                        <p class="update-meta secondary">Rescue Team • 5h ago</p>
+                        <p class="update-text">"Shelter transport is scheduled for tomorrow at 9 AM if no owner claims."</p>
+                        <p class="update-author">— PawsMap Team</p>
+                    </div>
+                </div>
+
+                <div class="comment-box">
+                    <textarea class="comment-input" placeholder="Leave a comment..."></textarea>
+                    <button class="post-btn" type="button">Post Update</button>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <div class="page-footer-inner">
+            <div>
+                <span class="footer-brand">PawsMap Sanctuary</span>
+                <p class="footer-text">Helping every stray find their way home through community vigilance and compassion.</p>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="#">About Our Mission</a>
+                <a class="footer-link" href="#">Success Stories</a>
+                <a class="footer-link" href="#">Privacy</a>
+            </div>
+            <p class="footer-copy">© 2024 PawsMap Sanctuary. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="mobile-bottom-nav">
+        <div class="mobile-item">
+            <span class="material-symbols-outlined" data-icon="map">map</span>
+            <span class="mobile-item-label">Map</span>
+        </div>
+        <div class="mobile-item active">
+            <span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+            <span class="mobile-item-label">Reports</span>
+        </div>
+        <div class="mobile-item">
+            <span class="material-symbols-outlined" data-icon="pets">pets</span>
+            <span class="mobile-item-label">Adoptions</span>
+        </div>
+        <div class="mobile-item">
+            <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+            <span class="mobile-item-label">Profile</span>
+        </div>
+    </div>
+</body>
+</html>
