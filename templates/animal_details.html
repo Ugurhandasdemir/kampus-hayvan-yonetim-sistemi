@@ -4,111 +4,129 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>PawsMap | Animal Report Detail</title>
+    <title>PawsMap | Report #{{ report.id }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
     <link href="{% static 'css/animal_details.css' %}" rel="stylesheet">
 </head>
 <body>
     <nav class="top-nav">
         <div class="top-nav-left">
-            <span class="brand">PawsMap</span>
+            <a class="brand" href="{% url 'home' %}">PawsMap</a>
             <div class="top-nav-links">
-                <a class="top-nav-link" href="#">My Listings</a>
-                <a class="top-nav-link" href="#">Map View</a>
+                <a class="top-nav-link" href="{% url 'latest_animal_details' %}">Latest Report</a>
+                <a class="top-nav-link" href="{% url 'new_animal' %}">New Report</a>
             </div>
         </div>
         <div class="top-nav-actions">
-            <button class="new-report-btn" type="button">New Report</button>
-            <span class="material-symbols-outlined profile-icon" data-icon="person">person</span>
+            <a class="new-report-btn" href="{% url 'new_animal' %}">New Report</a>
+            <span class="material-symbols-outlined profile-icon">person</span>
         </div>
     </nav>
 
     <main class="page-main">
+        {% if messages %}
+        <div class="message-stack">
+            {% for message in messages %}
+            <p class="message-item">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <section class="hero-section">
             <div class="hero-media">
                 <div class="hero-media-box">
-                    <img alt="Stray dog needing help" data-alt="Close-up portrait of a scruffy brown stray dog with soulful eyes sitting on a dusty street at golden hour, soft cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5EOtYDKxtELSX1aJ6u2HrR5u4E3fLY8BSEchqmk8auWQxsQd5Ywmh_rxImMhO6j1k8cKf5aE2Ojjt3UWAUJ-O1FL-OPfbXcmdgNhwngZ9BZS51kPvS3zqbw1tEP5E9uApHmJvs5VFnp7vErQRxI0zvpntVUQKdfCk4jUycr7JZrbLzs5y-0mHMZNJTNJ4zr6r-HNB8-zUVCKi03Z83SKR8ER4ZWaJOMdQuqm20muKDbKbK-5KtPBLt8lIOq9M0ZqAx1V6YMxIzR5n">
+                    {% if report.photo %}
+                    <img alt="Animal photo for report {{ report.id }}" src="{{ report.photo.url }}">
+                    {% else %}
+                    <img alt="Animal placeholder photo" src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1400&q=80">
+                    {% endif %}
                 </div>
                 <div class="status-chip-wrap">
-                    <span class="status-chip">Awaiting Adoption</span>
+                    <span class="status-chip">{{ report.get_category_display }}</span>
                 </div>
             </div>
 
             <div class="hero-content">
                 <div>
-                    <h1 class="animal-name">Copper</h1>
+                    <h1 class="animal-name">Report #{{ report.id }}</h1>
                     <div class="report-date">
-                        <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
-                        <span>Reported Oct 24, 2024</span>
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        <span>Reported {{ report.created_at|date:"d M Y H:i" }}</span>
                     </div>
                 </div>
 
                 <div class="summary-card">
                     <div class="summary-item">
-                        <span class="material-symbols-outlined summary-icon primary" data-icon="location_on">location_on</span>
+                        <span class="material-symbols-outlined summary-icon primary">location_on</span>
                         <div>
-                            <h3 class="summary-title">Location Found</h3>
-                            <p class="summary-text">Near the old bakery on Maple Avenue, North District.</p>
+                            <h3 class="summary-title">Location</h3>
+                            <p class="summary-text">{{ report_latitude }}, {{ report_longitude }}</p>
                         </div>
                     </div>
 
                     <div class="summary-item">
-                        <span class="material-symbols-outlined summary-icon secondary" data-icon="health_and_safety">health_and_safety</span>
+                        <span class="material-symbols-outlined summary-icon secondary">description</span>
                         <div>
-                            <h3 class="summary-title">Health Status</h3>
-                            <p class="summary-text">Stable, but needs a veterinary checkup for a minor limp in the front paw.</p>
+                            <h3 class="summary-title">Report Story</h3>
+                            <p class="summary-text summary-text-long">{{ report.details|linebreaksbr }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="cta-stack">
-                    <button class="btn-adopt" type="button">
-                        <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
-                        Adopt Copper
-                    </button>
-                    <button class="btn-contact" type="button">Contact Reporter</button>
+                    <a class="btn-adopt" href="{% url 'new_animal' %}">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Create New Report
+                    </a>
+                    <a class="btn-contact" href="tel:{{ report.phone }}">Call Reporter: {{ report.phone }}</a>
                 </div>
             </div>
         </section>
 
         <section class="details-grid">
             <div class="map-card">
-                <div class="map-image-layer">
-                    <img alt="Map location" data-alt="Stylized map showing a specific city block with a soft orange circular marker highlighting a rescue location." data-location="Toronto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDJej21m1Nl9NWs5EsDE1jNP72N3LxEdBQVjjvYcEXNCO4n7mZbuVkNOf8yUS-GMRIXTgxLWN1TS8xnm-SUA_zzhDFVfZkbU8DGn60wS2RkGJmJO4t2YGIUgu8jHXGSRZ1rRGh0qtgtocjfUyxgZYQHvESpB2gO7rnKgRzHZzV7h8AuGzUDBi2QO4NKHQyrx7y3vi09QNmCUcI9J-XW91fynz6L2U8eCuXDSGRwYdUybfPGe1BEOvNUB1bkbuIyYkUxhRYPLDg0Sg5">
-                </div>
-                <div class="map-marker-wrap">
-                    <div class="map-marker"></div>
-                </div>
+                <div class="map-live"
+                     data-lat="{{ report_latitude }}"
+                     data-lng="{{ report_longitude }}"
+                     id="detailMap"></div>
                 <div class="distance-chip">
-                    <span class="material-symbols-outlined" data-icon="near_me">near_me</span>
-                    <span>3.2 miles from your current location</span>
+                    <span class="material-symbols-outlined">near_me</span>
+                    <span>{{ report_latitude }}, {{ report_longitude }}</span>
                 </div>
             </div>
 
             <aside class="updates-card">
                 <h2 class="updates-title">
-                    <span class="material-symbols-outlined" data-icon="forum">forum</span>
-                    Updates
+                    <span class="material-symbols-outlined">info</span>
+                    Report Information
                 </h2>
 
                 <div class="updates-list">
                     <div class="update-item primary">
-                        <p class="update-meta primary">Update • 2h ago</p>
-                        <p class="update-text italic">"Copper was fed by a neighbor this morning. He seems very friendly!"</p>
-                        <p class="update-author">— Sarah Miller</p>
+                        <p class="updates-key">Reporter</p>
+                        <p class="updates-value">{{ report.full_name }}</p>
                     </div>
-
                     <div class="update-item secondary">
-                        <p class="update-meta secondary">Rescue Team • 5h ago</p>
-                        <p class="update-text">"Shelter transport is scheduled for tomorrow at 9 AM if no owner claims."</p>
-                        <p class="update-author">— PawsMap Team</p>
+                        <p class="updates-key">Phone</p>
+                        <p class="updates-value"><a class="updates-link" href="tel:{{ report.phone }}">{{ report.phone }}</a></p>
                     </div>
-                </div>
-
-                <div class="comment-box">
-                    <textarea class="comment-input" placeholder="Leave a comment..."></textarea>
-                    <button class="post-btn" type="button">Post Update</button>
+                    <div class="update-item primary">
+                        <p class="updates-key">Category</p>
+                        <p class="updates-value">{{ report.get_category_display }}</p>
+                    </div>
+                    <div class="update-item secondary">
+                        <p class="updates-key">OpenStreetMap</p>
+                        <p class="updates-value">
+                            <a class="updates-link"
+                               href="https://www.openstreetmap.org/?mlat={{ report_latitude }}&mlon={{ report_longitude }}#map=16/{{ report_latitude }}/{{ report_longitude }}"
+                               rel="noopener noreferrer"
+                               target="_blank">
+                                Open exact pin
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </aside>
         </section>
@@ -121,31 +139,55 @@
                 <p class="footer-text">Helping every stray find their way home through community vigilance and compassion.</p>
             </div>
             <div class="footer-links">
-                <a class="footer-link" href="#">About Our Mission</a>
-                <a class="footer-link" href="#">Success Stories</a>
-                <a class="footer-link" href="#">Privacy</a>
+                <a class="footer-link" href="{% url 'home' %}">Home</a>
+                <a class="footer-link" href="{% url 'new_animal' %}">New Report</a>
+                <a class="footer-link" href="{% url 'latest_animal_details' %}">Latest Report</a>
             </div>
-            <p class="footer-copy">© 2024 PawsMap Sanctuary. All rights reserved.</p>
+            <p class="footer-copy">(c) 2026 PawsMap Sanctuary. All rights reserved.</p>
         </div>
     </footer>
 
     <div class="mobile-bottom-nav">
-        <div class="mobile-item">
-            <span class="material-symbols-outlined" data-icon="map">map</span>
-            <span class="mobile-item-label">Map</span>
-        </div>
-        <div class="mobile-item active">
-            <span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+        <a class="mobile-item" href="{% url 'home' %}">
+            <span class="material-symbols-outlined">home</span>
+            <span class="mobile-item-label">Home</span>
+        </a>
+        <a class="mobile-item active" href="{% url 'latest_animal_details' %}">
+            <span class="material-symbols-outlined">campaign</span>
             <span class="mobile-item-label">Reports</span>
-        </div>
-        <div class="mobile-item">
-            <span class="material-symbols-outlined" data-icon="pets">pets</span>
-            <span class="mobile-item-label">Adoptions</span>
-        </div>
-        <div class="mobile-item">
-            <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-            <span class="mobile-item-label">Profile</span>
-        </div>
+        </a>
+        <a class="mobile-item" href="{% url 'new_animal' %}">
+            <span class="material-symbols-outlined">add_circle</span>
+            <span class="mobile-item-label">Create</span>
+        </a>
     </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        (() => {
+            const mapElement = document.getElementById("detailMap");
+            if (!mapElement || !window.L) {
+                return;
+            }
+
+            const fallbackLat = 41.0082;
+            const fallbackLng = 28.9784;
+
+            const lat = Number.parseFloat(mapElement.dataset.lat);
+            const lng = Number.parseFloat(mapElement.dataset.lng);
+            const safeLat = Number.isFinite(lat) ? lat : fallbackLat;
+            const safeLng = Number.isFinite(lng) ? lng : fallbackLng;
+
+            const map = L.map(mapElement).setView([safeLat, safeLng], 15);
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+            }).addTo(map);
+
+            L.marker([safeLat, safeLng]).addTo(map);
+            setTimeout(() => map.invalidateSize(), 0);
+        })();
+    </script>
 </body>
 </html>

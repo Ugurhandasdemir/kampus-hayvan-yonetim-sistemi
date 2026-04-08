@@ -230,6 +230,23 @@ img { display: block; max-width: 100%; }
     gap: 3rem;
 }
 
+.yeni_mesajlar {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.yeni_mesaj {
+    margin: 0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-fixed);
+    color: var(--on-primary-container);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 /* ─── Sol Kolon ─── */
 
 .yeni_sol_kolon {
@@ -245,11 +262,16 @@ img { display: block; max-width: 100%; }
     border-radius: 2rem;
     padding: 0.25rem;
     border: 2px dashed rgba(219, 194, 178, 0.2);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .yeni_foto_kapsayici:hover {
     background-color: var(--surface-container-high);
+}
+
+.yeni_foto_kapsayici--surukleme {
+    background-color: var(--primary-fixed);
+    border-color: rgba(148, 74, 0, 0.45);
 }
 
 .yeni_foto_ic {
@@ -329,6 +351,39 @@ img { display: block; max-width: 100%; }
     border: 0;
 }
 
+.yeni_foto_onizleme {
+    display: none;
+    width: 100%;
+    max-width: 20rem;
+    max-height: 16rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    box-shadow: 0px 12px 32px rgba(148, 74, 0, 0.16);
+}
+
+.yeni_foto_onizleme--gorunur {
+    display: block;
+}
+
+.yeni_foto_dosya_adi {
+    display: none;
+    margin-top: 0.75rem;
+    max-width: 20rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--on-surface-variant);
+    overflow-wrap: anywhere;
+}
+
+.yeni_foto_dosya_adi--gorunur {
+    display: block;
+}
+
+.yeni_foto_kapsayici--hazir .yeni_foto_baslik {
+    margin-bottom: 0.25rem;
+}
+
 /* ─── Harita ─── */
 
 .yeni_harita_kart {
@@ -367,6 +422,7 @@ img { display: block; max-width: 100%; }
 .yeni_harita_alan {
     position: relative;
     aspect-ratio: 16 / 9;
+    min-height: 16rem;
     border-radius: 2rem;
     overflow: hidden;
     background-color: var(--surface-variant);
@@ -398,6 +454,16 @@ img { display: block; max-width: 100%; }
     font-size: 0.75rem;
     color: var(--on-surface-variant);
     font-style: italic;
+}
+
+.yeni_harita_koordinat {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.yeni_harita_alan .leaflet-control-attribution {
+    font-size: 0.65rem;
 }
 
 /* ─── Sağ Kolon ─── */

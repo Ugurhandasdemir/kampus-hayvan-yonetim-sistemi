@@ -7,6 +7,7 @@
     <title>New Report | PawsMap</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
     <link href="{% static 'css/new_animal.css' %}" rel="stylesheet"/>
 </head>
 <body class="yeni_sayfa">
@@ -44,6 +45,14 @@
         <form action="{% url 'new_animal' %}" class="yeni_form" enctype="multipart/form-data" method="post">
             {% csrf_token %}
 
+            {% if messages %}
+            <div class="yeni_mesajlar">
+                {% for message in messages %}
+                <p class="yeni_mesaj">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <!-- Sol Kolon -->
             <div class="yeni_sol_kolon">
 
@@ -59,6 +68,8 @@
                             Choose Files
                             <input class="yeni_gizli_input" id="photo" name="photo" type="file" accept="image/*"/>
                         </label>
+                        <img class="yeni_foto_onizleme" id="photoPreview" alt="Selected photo preview"/>
+                        <p class="yeni_foto_dosya_adi" id="photoFileName"></p>
                     </div>
                 </div>
 
@@ -68,13 +79,10 @@
                         <label class="yeni_harita_baslik">Mark Location</label>
                         <span class="yeni_harita_chip">Pin Location</span>
                     </div>
-                    <div class="yeni_harita_alan">
-                        <img alt="Map" class="yeni_harita_gorsel"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfCRzMZ3uwUzXy9736LFkwTu1B7Vx0zWLY6jK3NUQKBDxXxTTpLUF1UaqRvmne7jLvBp0sBwHx4eL-uEPLtGZDBUVvHXD20ujEaf5TWdCEUMq54Xgmzrf7ZeI6BK1oJ0cK3cLYGY4KcDyZVKkdFJTTWa1MqI1GlIn-ZqYcBFoioT2qTZhH6iPY0uhENmWmuIUCZ-yRtMBl6JUmLaBW9ssGL1d2BSDXj1pY5C50sH_XR89Z-hUZ_wdSyW9tWP1DqNEirYt3Ji_eWQ1u"/>
-                        <div class="yeni_harita_pin_kaplama">
-                            <span class="material-symbols-outlined yeni_harita_pin" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                        </div>
-                    </div>
+                    <div class="yeni_harita_alan" id="reportMap"></div>
+                    <input type="hidden" id="latitude" name="latitude" value="{{ request.POST.latitude|default:'41.008200' }}"/>
+                    <input type="hidden" id="longitude" name="longitude" value="{{ request.POST.longitude|default:'28.978400' }}"/>
+                    <p class="yeni_harita_koordinat" id="selectedCoordinates"></p>
                     <p class="yeni_harita_ipucu">Tap the map to adjust the exact encounter location.</p>
                 </div>
 
@@ -194,6 +202,149 @@
             <span class="yeni_mobil_etiket">Profile</span>
         </a>
     </nav>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        (() => {
+            const dropZone = document.querySelector(".yeni_foto_kapsayici");
+            const fileInput = document.getElementById("photo");
+            const preview = document.getElementById("photoPreview");
+            const fileName = document.getElementById("photoFileName");
+            const mapContainer = document.getElementById("reportMap");
+            const latitudeInput = document.getElementById("latitude");
+            const longitudeInput = document.getElementById("longitude");
+            const selectedCoordinates = document.getElementById("selectedCoordinates");
+            const defaultLatitude = 41.0082;
+            const defaultLongitude = 28.9784;
+
+            if (!dropZone || !fileInput || !preview || !fileName) {
+                return;
+            }
+
+            const parseCoordinate = (value, fallback) => {
+                const parsed = Number.parseFloat(value);
+                return Number.isFinite(parsed) ? parsed : fallback;
+            };
+
+            const updateCoordinateLabel = (lat, lng) => {
+                if (!selectedCoordinates) {
+                    return;
+                }
+                selectedCoordinates.textContent = `Selected: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            };
+
+            const updateCoordinateInputs = (lat, lng) => {
+                if (!latitudeInput || !longitudeInput) {
+                    return;
+                }
+                latitudeInput.value = lat.toFixed(6);
+                longitudeInput.value = lng.toFixed(6);
+                updateCoordinateLabel(lat, lng);
+            };
+
+            const showFileMessage = (message) => {
+                fileName.textContent = message;
+                fileName.classList.add("yeni_foto_dosya_adi--gorunur");
+            };
+
+            const clearPreview = () => {
+                preview.removeAttribute("src");
+                preview.classList.remove("yeni_foto_onizleme--gorunur");
+                dropZone.classList.remove("yeni_foto_kapsayici--hazir");
+            };
+
+            const setInputFile = (file) => {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                fileInput.files = dt.files;
+            };
+
+            const renderPreview = (file) => {
+                if (!file) {
+                    clearPreview();
+                    fileName.classList.remove("yeni_foto_dosya_adi--gorunur");
+                    return;
+                }
+
+                if (!file.type.startsWith("image/")) {
+                    clearPreview();
+                    showFileMessage("Please drop an image file only.");
+                    fileInput.value = "";
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    preview.src = event.target.result;
+                    preview.classList.add("yeni_foto_onizleme--gorunur");
+                    dropZone.classList.add("yeni_foto_kapsayici--hazir");
+                    showFileMessage(file.name);
+                };
+                reader.readAsDataURL(file);
+            };
+
+            fileInput.addEventListener("change", () => {
+                renderPreview(fileInput.files[0]);
+            });
+
+            ["dragenter", "dragover"].forEach((eventName) => {
+                dropZone.addEventListener(eventName, (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    dropZone.classList.add("yeni_foto_kapsayici--surukleme");
+                });
+            });
+
+            ["dragleave", "drop"].forEach((eventName) => {
+                dropZone.addEventListener(eventName, (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    dropZone.classList.remove("yeni_foto_kapsayici--surukleme");
+                });
+            });
+
+            dropZone.addEventListener("drop", (event) => {
+                const droppedFiles = event.dataTransfer ? event.dataTransfer.files : null;
+                if (!droppedFiles || !droppedFiles.length) {
+                    return;
+                }
+
+                const firstFile = droppedFiles[0];
+                setInputFile(firstFile);
+                renderPreview(firstFile);
+            });
+
+            if (mapContainer && window.L && latitudeInput && longitudeInput) {
+                const initialLatitude = parseCoordinate(latitudeInput.value, defaultLatitude);
+                const initialLongitude = parseCoordinate(longitudeInput.value, defaultLongitude);
+                const map = L.map(mapContainer).setView([initialLatitude, initialLongitude], 15);
+
+                L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+                }).addTo(map);
+
+                const marker = L.marker([initialLatitude, initialLongitude], {
+                    draggable: true,
+                }).addTo(map);
+
+                updateCoordinateInputs(initialLatitude, initialLongitude);
+
+                map.on("click", (event) => {
+                    marker.setLatLng(event.latlng);
+                    updateCoordinateInputs(event.latlng.lat, event.latlng.lng);
+                });
+
+                marker.on("dragend", () => {
+                    const position = marker.getLatLng();
+                    updateCoordinateInputs(position.lat, position.lng);
+                });
+
+                setTimeout(() => map.invalidateSize(), 0);
+            }
+        })();
+    </script>
 
 </body>
 </html>
