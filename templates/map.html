@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}PawsMap{% endblock %}
+
+{% block content %}
+<!-- Bu sayfa full-screen, container'ı override ediyoruz -->
+{% endblock %}
+
+{% block fullpage %}
+<div class="pawsmap-wrapper">
+
+  <!-- HEADER -->
+  <header class="paws-header">
+    <nav class="paws-nav">
+      <div class="paws-nav-left">
+        <span class="paws-logo">🐾 PawsMap</span>
+        <div class="paws-search-wrap">
+          <span class="paws-search-icon material-symbols-outlined">search</span>
+          <input class="paws-search" type="text" placeholder="Bölge ara..." id="searchInput" />
+        </div>
+        <a href="{% url 'profile' %}" class="paws-nav-link">İlanlarım</a>
+        <a href="{% url 'map' %}" class="paws-nav-link active">Harita</a>
+      </div>
+      <div class="paws-nav-right">
+        <a href="{% url 'new_animal' %}" class="paws-btn-primary">
+          <span class="material-symbols-outlined">add_circle</span>
+          Yeni İlan
+        </a>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="paws-icon-btn">
+          <span class="material-symbols-outlined">person</span>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="paws-icon-btn">
+          <span class="material-symbols-outlined">login</span>
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <!-- ANA İÇERİK -->
+  <main class="paws-main">
+
+    <!-- HARİTA -->
+    <div id="map" class="paws-map"></div>
+
+    <!-- FILTER PANELİ -->
+    <div class="paws-filter-panel">
+      <h3 class="paws-filter-title">Filtrele</h3>
+      <div class="paws-filter-list">
+        <a href="{% url 'map' %}" class="paws-filter-btn {% if not active_category %}active{% endif %}">
+          <span class="paws-filter-icon all-icon">
+            <span class="material-symbols-outlined">pets</span>
+          </span>
+          <span class="paws-filter-label">Tümü</span>
+          <span class="paws-filter-count">{{ counts.lost|add:counts.adoption|add:counts.medical }}</span>
+        </a>
+        <a href="{% url 'map' %}?category=lost" class="paws-filter-btn {% if active_category == 'lost' %}active lost-active{% endif %}">
+          <span class="paws-filter-icon lost-icon">
+            <span class="material-symbols-outlined">campaign</span>
+          </span>
+          <span class="paws-filter-label">Kayıp</span>
+          <span class="paws-filter-count lost-count">{{ counts.lost }}</span>
+        </a>
+        <a href="{% url 'map' %}?category=adoption" class="paws-filter-btn {% if active_category == 'adoption' %}active adoption-active{% endif %}">
+          <span class="paws-filter-icon adoption-icon">
+            <span class="material-symbols-outlined">favorite</span>
+          </span>
+          <span class="paws-filter-label">Sahiplendirme</span>
+          <span class="paws-filter-count adoption-count">{{ counts.adoption }}</span>
+        </a>
+        <a href="{% url 'map' %}?category=medical" class="paws-filter-btn {% if active_category == 'medical' %}active medical-active{% endif %}">
+          <span class="paws-filter-icon medical-icon">
+            <span class="material-symbols-outlined">medical_services</span>
+          </span>
+          <span class="paws-filter-label">Tıbbi Yardım</span>
+          <span class="paws-filter-count medical-count">{{ counts.medical }}</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MOBİL BOTTOM NAV -->
+  <nav class="paws-bottom-nav">
+    <a href="{% url 'map' %}" class="paws-bottom-item active">
+      <span class="material-symbols-outlined">map</span>
+      <span>Harita</span>
+    </a>
+    <a href="{% url 'map' %}?category=lost" class="paws-bottom-item">
+      <span class="material-symbols-outlined">campaign</span>
+      <span>Kayıp</span>
+    </a>
+    <a href="{% url 'map' %}?category=adoption" class="paws-bottom-item">
+      <span class="material-symbols-outlined">pets</span>
+      <span>Sahiplendirme</span>
+    </a>
+    <a href="{% url 'profile' %}" class="paws-bottom-item">
+      <span class="material-symbols-outlined">account_circle</span>
+      <span>Profil</span>
+    </a>
+  </nav>
+
+</div>
+
+<!-- Leaflet Harita -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const reports = JSON.parse('{{ reports_json|escapejs }}');
+console.log("Reports:", reports);
+
+const map = L.map('map').setView([39.9334, 32.8597], 6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+const markerColors = {
+  lost:     { bg: '#835500', shadow: 'rgba(131,85,0,0.3)',   icon: '🔍' },
+  adoption: { bg: '#944a00', shadow: 'rgba(148,74,0,0.3)',   icon: '🐾' },
+  medical:  { bg: '#006a63', shadow: 'rgba(0,106,99,0.3)',   icon: '🏥' },
+};
+
+function makeIcon(category) {
+  const c = markerColors[category] || markerColors.adoption;
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:40px;height:40px;
+      background:${c.bg};
+      border-radius:50%;
+      border:4px solid #fff;
+      box-shadow:0 8px 16px ${c.shadow};
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;
+    ">${c.icon}</div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+    popupAnchor: [0, -24],
+  });
+}
+
+reports.forEach(function(r) {
+  const lat = parseFloat(r.latitude);
+  const lng = parseFloat(r.longitude);
+  if (isNaN(lat) || isNaN(lng)) return;
+
+  const photoHtml = r.photo_url
+    ? `<img src="${r.photo_url}" style="width:100%;height:140px;object-fit:cover;border-radius:12px 12px 0 0;" />`
+    : `<div style="width:100%;height:80px;background:#eeeeee;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;font-size:32px;">🐾</div>`;
+
+  const categoryLabel = {lost:'Kayıp',adoption:'Sahiplendirme',medical:'Tıbbi Yardım'}[r.category] || r.category;
+
+  const popup = L.popup({ maxWidth: 260, className: 'paws-popup' }).setContent(`
+    <div style="font-family:'Be Vietnam Pro',sans-serif;border-radius:16px;overflow:hidden;min-width:240px;">
+      ${photoHtml}
+      <div style="padding:14px;">
+        <span style="
+          display:inline-block;padding:3px 10px;
+          background:#f28c38;color:#fff;
+          border-radius:999px;font-size:10px;font-weight:700;
+          letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;
+        ">${categoryLabel}</span>
+        <h4 style="margin:0 0 4px;font-size:16px;font-weight:700;color:#1a1c1c;">${r.full_name}</h4>
+        <p style="margin:0 0 12px;font-size:12px;color:#554337;line-height:1.5;">${r.details}</p>
+        <a href="/animal-details/${r.id}/" style="
+          display:block;text-align:center;
+          background:#944a00;color:#fff;
+          border-radius:12px;padding:10px;
+          font-weight:700;font-size:13px;
+          text-decoration:none;
+        ">Detaya Bak →</a>
+      </div>
+    </div>
+  `);
+
+  L.marker([lat, lng], { icon: makeIcon(r.category) })
+    .addTo(map)
+    .bindPopup(popup);
+});
+</script>
+{% endblock %}

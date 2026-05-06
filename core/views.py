@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 from io import BytesIO
 from pathlib import Path
 from uuid import uuid4
+import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -11,6 +12,8 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
+
+from django.contrib.auth.decorators import login_required
 
 from PIL import Image, ImageOps, UnidentifiedImageError
 
@@ -196,3 +199,70 @@ def new_animal_view(request):
                     return redirect("animal_details", report_id=created_report.id)
 
     return render(request, "new_animal.html")
+
+
+
+def map_view(request):
+    reports = AnimalReport.objects.all().order_by("-created_at")
+    category = request.GET.get("category", "")
+    if category in ["lost", "adoption", "medical"]:
+        reports = reports.filter(category=category)
+    
+    reports_data = []
+    for r in reports:
+        reports_data.append({
+            "id": r.id,
+            "category": r.category,
+            "full_name": r.full_name,
+            "details": r.details[:100],
+            "latitude": str(r.latitude) if r.latitude else "41.008200",
+            "longitude": str(r.longitude) if r.longitude else "28.978400",
+            "photo_url": r.photo.url if r.photo and r.photo.name else "",
+            "created_at": r.created_at.strftime("%d %b %Y"),
+        })
+    
+    counts = {
+        "lost": AnimalReport.objects.filter(category="lost").count(),
+        "adoption": AnimalReport.objects.filter(category="adoption").count(),
+        "medical": AnimalReport.objects.filter(category="medical").count(),
+    }
+    
+    context = {
+        "reports_json": json.dumps(reports_data),
+        "counts": counts,
+        "active_category": category,
+    }
+    return render(request, "map.html", context)
+
+
+@login_required
+def profile_view(request):
+    user_reports = AnimalReport.objects.filter(reporter=request.user).order_by("-created_at")
+    
+    if request.method == "POST":
+        report_id = request.POST.get("delete_id")
+        if report_id:
+            report = get_object_or_404(AnimalReport, id=report_id, reporter=request.user)
+            report.delete()
+            messages.success(request, "İlan silindi.")
+            return redirect("profile")
+    
+    context = {"user_reports": user_reports}
+    return render(request, "profile.html", context)
+
+
+@login_required
+def admin_settings_view(request):
+    if not request.user.is_staff:
+        messages.error(request, "Bu sayfaya erişim yetkiniz yok.")
+        return redirect("map")
+    
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        if first_name:
+            request.user.first_name = first_name
+            request.user.save()
+            messages.success(request, "Bilgiler güncellendi.")
+            return redirect("admin_settings")
+    
+    return render(request, "admin_settings.html")

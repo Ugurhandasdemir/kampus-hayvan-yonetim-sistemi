@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}İlanlarım{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <span class="material-symbols-outlined">account_circle</span>
+    </div>
+    <div class="profile-info">
+      <h2>{{ request.user.first_name|default:request.user.username }}</h2>
+      <p>{{ request.user.email }}</p>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-header">
+      <h3>Aktif İlanlarım</h3>
+      <a href="{% url 'new_animal' %}" class="paws-btn-primary" style="display:flex;">
+        <span class="material-symbols-outlined">add_circle</span>
+        Yeni İlan
+      </a>
+    </div>
+
+    {% if user_reports %}
+      <div class="profile-reports-grid">
+        {% for report in user_reports %}
+        <div class="profile-report-card">
+          {% if report.photo %}
+            <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-img" />
+          {% else %}
+            <div class="report-card-img-placeholder">🐾</div>
+          {% endif %}
+          <div class="report-card-body">
+            <span class="report-badge report-badge--{{ report.category }}">
+              {% if report.category == 'lost' %}Kayıp
+              {% elif report.category == 'adoption' %}Sahiplendirme
+              {% else %}Tıbbi Yardım{% endif %}
+            </span>
+            <h4>{{ report.full_name }}</h4>
+            <p>{{ report.details|truncatechars:80 }}</p>
+            <span class="report-date">{{ report.created_at|date:"d M Y" }}</span>
+            <div class="report-card-actions">
+              <a href="{% url 'animal_details' report.id %}" class="report-action-btn view-btn">
+                <span class="material-symbols-outlined">visibility</span> Görüntüle
+              </a>
+              <form method="post" style="display:inline" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')">
+                {% csrf_token %}
+                <input type="hidden" name="delete_id" value="{{ report.id }}">
+                <button type="submit" class="report-action-btn delete-btn">
+                  <span class="material-symbols-outlined">delete</span> Sil
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="profile-empty">
+        <span class="material-symbols-outlined profile-empty-icon">pets</span>
+        <h4>Henüz bir ilanın yok</h4>
+        <p>Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.</p>
+        <a href="{% url 'new_animal' %}" class="paws-btn-primary" style="display:inline-flex;margin-top:16px;">
+          <span class="material-symbols-outlined">add_circle</span>
+          İlk İlanını Oluştur
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+.profile-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+
+.profile-header {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--surface-container-lowest);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 24px var(--shadow-primary);
+  margin-bottom: 32px;
+}
+.profile-avatar .material-symbols-outlined {
+  font-size: 64px; color: var(--primary);
+}
+.profile-info h2 { margin:0; font-size:22px; font-weight:800; color:var(--on-surface); }
+.profile-info p  { margin:4px 0 0; font-size:14px; color:var(--on-surface-variant); }
+
+.profile-section { }
+.profile-section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px;
+}
+.profile-section-header h3 { font-size:18px; font-weight:700; margin:0; }
+
+.profile-reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.profile-report-card {
+  background: var(--surface-container-lowest);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px var(--shadow-primary);
+  transition: transform .2s;
+}
+.profile-report-card:hover { transform: translateY(-4px); }
+
+.report-card-img { width:100%; height:160px; object-fit:cover; display:block; }
+.report-card-img-placeholder {
+  width:100%; height:120px;
+  background: var(--surface-container);
+  display:flex; align-items:center; justify-content:center;
+  font-size:40px;
+}
+.report-card-body { padding: 16px; }
+
+.report-badge {
+  display:inline-block; padding:3px 10px;
+  border-radius:999px; font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;
+}
+.report-badge--lost     { background:var(--tertiary-container); color:var(--tertiary); }
+.report-badge--adoption { background:#ffdcc5; color:var(--primary); }
+.report-badge--medical  { background:var(--secondary-container); color:var(--secondary); }
+
+.report-card-body h4 { margin:0 0 6px; font-size:16px; font-weight:700; color:var(--on-surface); }
+.report-card-body p  { margin:0 0 6px; font-size:12px; color:var(--on-surface-variant); line-height:1.5; }
+.report-date { font-size:11px; color:#999; display:block; margin-bottom:12px; }
+
+.report-card-actions { display:flex; gap:8px; }
+.report-action-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:8px 12px; border-radius:10px;
+  font-size:12px; font-weight:600;
+  border:none; cursor:pointer; text-decoration:none;
+  transition:background .2s;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+.view-btn   { background:var(--surface-container); color:var(--on-surface); flex:1; justify-content:center; }
+.view-btn:hover   { background:var(--surface-container-highest,#e2e2e2); }
+.delete-btn { background:#ffdad6; color:#93000a; }
+.delete-btn:hover { background:#ffb4ab; }
+.report-action-btn .material-symbols-outlined { font-size:15px; }
+
+.profile-empty {
+  text-align:center; padding:60px 20px;
+  background:var(--surface-container-lowest);
+  border-radius:20px;
+}
+.profile-empty-icon { font-size:64px; color:var(--outline-variant); display:block; margin-bottom:16px; }
+.profile-empty h4   { font-size:18px; margin:0 0 8px; }
+.profile-empty p    { color:var(--on-surface-variant); font-size:14px; }
+</style>
+{% endblock %}
