@@ -1,105 +1,500 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html class="light" lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Besleme İstasyonları</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi | Besleme İstasyonları</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "surface-container-highest": "#ffd6ab",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "secondary": "#006666",
+                        "secondary-container": "#8dedec",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "error-container": "#f95630",
+                        "on-surface": "#452800",
+                        "on-primary-container": "#442100"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
-        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
-        .header a { color: white; text-decoration: none; margin-left: 16px; }
-        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
-        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
-        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
-        .danger { background: #dc2626; }
-        .success { background: #16a34a; }
-        form.box { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: grid; gap: 10px; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
-        th { background: #e5e7eb; }
-        .critical { color: #dc2626; font-weight: bold; }
-        .normal { color: #16a34a; font-weight: bold; }
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background-color: #fff5ed;
+            color: #452800;
+        }
+
+        .font-headline {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+
+        .click-bounce-effect:active {
+            transform: scale(0.95);
+        }
+
+        .soft-pattern {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: radial-gradient(#8c4a00 1px, transparent 1px);
+            background-size: 22px 22px;
+            z-index: 0;
+        }
     </style>
 </head>
-<body>
-    <div class="header">
-        <strong>Besleme İstasyonları</strong>
-        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+
+<body class="overflow-x-hidden bg-surface">
+<div class="soft-pattern"></div>
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 shadow-xl shadow-orange-900/5 z-50 flex-col py-6 gap-2">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center rotate-3">
+                <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-orange-600 font-headline leading-none">Admin Hub</h1>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="nav">
-            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
-            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
-            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
-            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+    <nav class="flex-1 flex flex-col gap-1">
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full hover:translate-x-1 transition-transform duration-200"
+           href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-headline text-sm font-semibold">Genel Bakış</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full hover:translate-x-1 transition-transform duration-200"
+           href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-headline text-sm font-semibold">İlanlar</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full hover:translate-x-1 transition-transform duration-200"
+           href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-headline text-sm font-semibold">Gönüllüler</span>
+        </a>
+
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg shadow-teal-900/20"
+           href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
+            <span class="font-headline text-sm font-semibold">Besleme İstasyonları</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full hover:translate-x-1 transition-transform duration-200"
+           href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-headline text-sm font-semibold">Ayarlar</span>
+        </a>
+    </nav>
+
+    <div class="px-4 mt-auto">
+        <a href="{% url 'new_animal' %}"
+           class="w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 rounded-full shadow-lg hover:shadow-xl transition-all click-bounce-effect flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add</span>
+            Yeni İlan
+        </a>
+    </div>
+</aside>
+
+<main class="md:pl-64 min-h-screen relative z-10">
+    <header class="bg-orange-50/80 backdrop-blur-xl top-0 z-40 flex justify-between items-center w-full px-6 py-3 sticky">
+        <div class="flex items-center gap-8">
+            <span class="text-2xl font-black tracking-tight text-orange-700 font-headline">
+                Kampüs Hayvan Admin
+            </span>
+
+            <div class="hidden lg:flex bg-orange-100/50 rounded-full px-4 py-2 items-center gap-2 w-96">
+                <span class="material-symbols-outlined text-stone-400">search</span>
+                <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-stone-400"
+                       placeholder="İstasyon veya bölge ara..."
+                       type="text"/>
+            </div>
         </div>
 
-        <form method="post" class="box">
-            {% csrf_token %}
-            <h2>Yeni Besleme İstasyonu Ekle</h2>
-            <input type="text" name="name" placeholder="İstasyon adı">
-            <input type="text" name="location_name" placeholder="Konum adı">
-            <input type="number" step="0.000001" name="latitude" placeholder="Enlem">
-            <input type="number" step="0.000001" name="longitude" placeholder="Boylam">
-            <input type="number" name="food_level" min="0" max="100" value="100" placeholder="Mama seviyesi">
-            <input type="number" name="water_level" min="0" max="100" value="100" placeholder="Su seviyesi">
-            <select name="status">
-                <option value="active">Aktif</option>
-                <option value="maintenance">Bakımda</option>
-                <option value="inactive">Pasif</option>
-            </select>
-            <button class="btn" type="submit">İstasyon Ekle</button>
-        </form>
+        <div class="flex items-center gap-4">
+            <a href="{% url 'custom_admin_dashboard' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+                <span class="material-symbols-outlined">dashboard</span>
+            </a>
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>İstasyon</th>
-                <th>Konum</th>
-                <th>Mama</th>
-                <th>Su</th>
-                <th>Durum</th>
-                <th>Kritik Uyarı</th>
-                <th>Güncelle</th>
-                <th>Sil</th>
-            </tr>
-            {% for station in stations %}
-            <tr>
-                <td>{{ station.id }}</td>
-                <td>{{ station.name }}</td>
-                <td>{{ station.location_name }}</td>
-                <td>{{ station.food_level }}%</td>
-                <td>{{ station.water_level }}%</td>
-                <td>{{ station.get_status_display }}</td>
-                <td>
-                    {% if station.is_critical %}
-                        <span class="critical">Kritik Seviye</span>
-                    {% else %}
-                        <span class="normal">Normal</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <form method="post" action="{% url 'custom_admin_station_update' station.id %}">
-                        {% csrf_token %}
-                        <input type="number" name="food_level" min="0" max="100" value="{{ station.food_level }}">
-                        <input type="number" name="water_level" min="0" max="100" value="{{ station.water_level }}">
-                        <select name="status">
-                            <option value="active" {% if station.status == "active" %}selected{% endif %}>Aktif</option>
-                            <option value="maintenance" {% if station.status == "maintenance" %}selected{% endif %}>Bakımda</option>
-                            <option value="inactive" {% if station.status == "inactive" %}selected{% endif %}>Pasif</option>
+            <a href="{% url 'home' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+                <span class="material-symbols-outlined">home</span>
+            </a>
+
+            <div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden ring-2 ring-orange-200 flex items-center justify-center font-black text-on-primary-container">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-6 lg:p-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+            <div>
+                <h2 class="text-4xl font-headline font-black tracking-tight text-on-surface">
+                    Besleme İstasyonu Yönetimi
+                </h2>
+                <p class="text-stone-500 font-body mt-1">
+                    Kampüs içindeki mama ve su istasyonlarını anlık olarak takip edin.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="#station-map"
+                   class="bg-surface-container-high px-6 py-3 rounded-full font-headline font-bold text-sm flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+                    <span class="material-symbols-outlined">map</span>
+                    Haritayı Gör
+                </a>
+
+                <a href="#station-form"
+                   class="bg-secondary text-white px-6 py-3 rounded-full font-headline font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+                    <span class="material-symbols-outlined">add</span>
+                    Yeni İstasyon
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 lg:col-span-8 space-y-6">
+                <div class="bg-error-container/10 rounded-xl p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <span class="material-symbols-outlined text-8xl">warning</span>
+                    </div>
+
+                    <div class="bg-error-container p-4 rounded-xl rotate-[-2deg] shadow-lg">
+                        <span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings: 'FILL' 1;">error</span>
+                    </div>
+
+                    <div class="flex-1">
+                        <h3 class="font-headline font-extrabold text-xl text-error">
+                            Kritik İstasyon Uyarısı
+                        </h3>
+                        <p class="text-stone-700 font-body text-sm">
+                            Mama veya su seviyesi %25 ve altına düşen istasyonlar kritik olarak işaretlenir.
+                        </p>
+                    </div>
+
+                    <a href="#station-list"
+                       class="bg-error text-white px-6 py-3 rounded-full font-headline font-bold shadow-lg shadow-error/20 hover:scale-105 transition-transform whitespace-nowrap">
+                        Kritik Durumları İncele
+                    </a>
+                </div>
+
+                <form id="station-form" method="post" class="bg-white rounded-xl p-6 shadow-xl shadow-orange-900/5">
+                    {% csrf_token %}
+                    <h3 class="font-headline font-black text-2xl mb-5">Yeni Besleme İstasyonu Ekle</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="text" name="name" placeholder="İstasyon adı">
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="text" name="location_name" placeholder="Konum adı">
+
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="number" step="0.000001" name="latitude" placeholder="Enlem">
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="number" step="0.000001" name="longitude" placeholder="Boylam">
+
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="number" name="food_level" min="0" max="100" value="100" placeholder="Mama seviyesi">
+                        <input class="rounded-xl border-orange-100 focus:ring-secondary" type="number" name="water_level" min="0" max="100" value="100" placeholder="Su seviyesi">
+
+                        <select class="rounded-xl border-orange-100 focus:ring-secondary md:col-span-2" name="status">
+                            <option value="active">Aktif</option>
+                            <option value="maintenance">Bakımda</option>
+                            <option value="inactive">Pasif</option>
                         </select>
-                        <button class="btn success" type="submit">Güncelle</button>
-                    </form>
-                </td>
-                <td>
-                    <a class="btn danger" href="{% url 'custom_admin_station_delete' station.id %}">Sil</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="9">Besleme istasyonu bulunamadı.</td></tr>
-            {% endfor %}
-        </table>
+                    </div>
+
+                    <button class="mt-5 w-full bg-primary-container text-on-primary-container font-headline font-bold py-3 rounded-full hover:scale-[1.01] transition-transform" type="submit">
+                        İstasyon Ekle
+                    </button>
+                </form>
+
+                <div id="station-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for station in stations %}
+                    <div class="bg-surface-container-low rounded-xl p-6 relative group hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm -rotate-3 group-hover:rotate-0 transition-transform">
+                                {% if station.is_critical %}
+                                <span class="material-symbols-outlined text-error">warning</span>
+                                {% else %}
+                                <span class="material-symbols-outlined text-secondary">restaurant</span>
+                                {% endif %}
+                            </div>
+
+                            {% if station.is_critical %}
+                            <span class="bg-error-container text-white px-3 py-1 rounded-md text-[10px] font-bold font-headline uppercase tracking-wider">
+                                Kritik
+                            </span>
+                            {% else %}
+                            <span class="bg-tertiary-container text-on-surface px-3 py-1 rounded-md text-[10px] font-bold font-headline uppercase tracking-wider">
+                                Stabil
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <h4 class="font-headline font-bold text-lg mb-1">{{ station.name }}</h4>
+                        <p class="text-xs text-stone-500">{{ station.location_name }}</p>
+
+                        <div class="space-y-4 mt-5">
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-stone-500 font-medium">Mama Seviyesi</span>
+                                    <span class="text-xs font-bold {% if station.food_level <= 25 %}text-error{% else %}text-secondary{% endif %}">
+                                        {{ station.food_level }}%
+                                    </span>
+                                </div>
+                                <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden mt-2">
+                                    <div class="{% if station.food_level <= 25 %}bg-error{% else %}bg-secondary{% endif %} h-full rounded-full"
+                                         style="width: {{ station.food_level }}%;"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-stone-500 font-medium">Su Seviyesi</span>
+                                    <span class="text-xs font-bold {% if station.water_level <= 25 %}text-error{% else %}text-primary{% endif %}">
+                                        {{ station.water_level }}%
+                                    </span>
+                                </div>
+                                <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden mt-2">
+                                    <div class="{% if station.water_level <= 25 %}bg-error{% else %}bg-primary{% endif %} h-full rounded-full"
+                                         style="width: {{ station.water_level }}%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-stone-400 text-sm">history</span>
+                                    <span class="text-[11px] text-stone-500">
+                                        Güncellendi: {{ station.last_updated|date:"d.m.Y H:i" }}
+                                    </span>
+                                </div>
+
+                                <span class="text-[10px] bg-white px-2 py-1 rounded text-stone-600 font-bold">
+                                    {{ station.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <form class="mt-6 pt-4 border-t border-orange-100 grid grid-cols-1 gap-2"
+                              method="post"
+                              action="{% url 'custom_admin_station_update' station.id %}">
+                            {% csrf_token %}
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <input class="rounded-full text-xs border-orange-100" type="number" name="food_level" min="0" max="100" value="{{ station.food_level }}">
+                                <input class="rounded-full text-xs border-orange-100" type="number" name="water_level" min="0" max="100" value="{{ station.water_level }}">
+                            </div>
+
+                            <select class="rounded-full text-xs border-orange-100" name="status">
+                                <option value="active" {% if station.status == "active" %}selected{% endif %}>Aktif</option>
+                                <option value="maintenance" {% if station.status == "maintenance" %}selected{% endif %}>Bakımda</option>
+                                <option value="inactive" {% if station.status == "inactive" %}selected{% endif %}>Pasif</option>
+                            </select>
+
+                            <div class="flex gap-2">
+                                <button class="flex-1 text-[11px] font-bold py-2 rounded-full bg-secondary text-white hover:opacity-90" type="submit">
+                                    Güncelle
+                                </button>
+
+                                <a class="flex-1 text-center text-[11px] font-bold py-2 rounded-full bg-error text-white hover:opacity-90"
+                                   href="{% url 'custom_admin_station_delete' station.id %}">
+                                    Sil
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    {% empty %}
+                    <div class="md:col-span-2 bg-white rounded-xl p-8 text-center text-stone-500">
+                        Henüz besleme istasyonu bulunamadı.
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div id="station-map" class="bg-surface-container-high rounded-xl h-[400px] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-teal-100 flex items-center justify-center">
+                        <div class="w-full h-full opacity-70"
+                             style="background-image: linear-gradient(45deg, rgba(0,102,102,.12) 25%, transparent 25%), linear-gradient(-45deg, rgba(0,102,102,.12) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(0,102,102,.12) 75%), linear-gradient(-45deg, transparent 75%, rgba(0,102,102,.12) 75%); background-size: 42px 42px; background-position: 0 0, 0 21px, 21px -21px, -21px 0;">
+                        </div>
+                    </div>
+
+                    {% for station in stations %}
+                    <div class="absolute group"
+                         style="top: {% cycle '28%' '45%' '62%' '36%' %}; left: {% cycle '32%' '58%' '70%' '44%' %};">
+                        <div class="w-6 h-6 {% if station.is_critical %}bg-error animate-bounce{% else %}bg-secondary animate-pulse{% endif %} rounded-full border-2 border-white shadow-lg"></div>
+                        <div class="absolute hidden group-hover:block bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white p-2 rounded shadow-xl whitespace-nowrap z-10">
+                            <p class="text-[10px] font-bold">{{ station.name }}</p>
+                            <p class="text-[10px] text-stone-500">Mama {{ station.food_level }}% / Su {{ station.water_level }}%</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="absolute top-4 right-4 flex flex-col gap-2">
+                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
+                            <span class="material-symbols-outlined">remove</span>
+                        </button>
+                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
+                            <span class="material-symbols-outlined">my_location</span>
+                        </button>
+                    </div>
+
+                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg flex items-center gap-4 border border-white/50 flex-wrap">
+                        <div class="flex items-center gap-1">
+                            <div class="w-2 h-2 rounded-full bg-secondary"></div>
+                            <span class="text-[10px] font-bold uppercase">Normal</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2 h-2 rounded-full bg-primary"></div>
+                            <span class="text-[10px] font-bold uppercase">Takip</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-2 h-2 rounded-full bg-error"></div>
+                            <span class="text-[10px] font-bold uppercase">Kritik</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-xl p-6 shadow-xl shadow-orange-900/5">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-headline font-bold text-lg">Görev Planı</h3>
+                        <span class="material-symbols-outlined text-stone-400">calendar_month</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 p-3 bg-orange-50 rounded-xl">
+                            <div class="w-10 h-10 bg-secondary-container rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-secondary">person</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold truncate">Gönüllü Takibi</p>
+                                <p class="text-[11px] text-stone-500">Onaylı gönüllüler istasyonlara atanabilir.</p>
+                            </div>
+                            <span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-1 rounded">AKTİF</span>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-3 hover:bg-orange-50 rounded-xl transition-colors border border-transparent hover:border-orange-100">
+                            <div class="w-10 h-10 bg-surface-container border-2 border-dashed border-orange-200 rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-stone-400">person_add</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-stone-500">Boş Görev Alanı</p>
+                                <p class="text-[11px] text-stone-400">Kritik istasyonlar için gönüllü atanabilir.</p>
+                            </div>
+                            <a href="{% url 'custom_admin_volunteers' %}" class="text-xs font-bold text-primary hover:underline">Ata</a>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'custom_admin_volunteers' %}"
+                       class="block text-center w-full mt-6 bg-surface-container text-stone-700 font-headline font-bold py-3 rounded-xl hover:bg-surface-container-high transition-colors">
+                        Gönüllüleri Yönet
+                    </a>
+                </div>
+
+                <div class="bg-tertiary-container rounded-xl p-6 relative overflow-hidden rotate-1 shadow-xl shadow-tertiary/10">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
+
+                    <h3 class="font-headline font-black text-xl mb-4 leading-tight">
+                        Haftalık Mama/Su Özeti
+                    </h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-70">İstasyon</p>
+                            <p class="text-3xl font-headline font-black">{{ stations|length }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Kritik</p>
+                            <p class="text-3xl font-headline font-black">
+                                {% with critical_count=0 %}
+                                    {{ critical_count }}
+                                {% endwith %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-2">
+                        <p class="text-xs font-bold bg-white/30 p-2 rounded-lg inline-block">
+                            Kritik sınır: %25 ve altı
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 border-l-4 border-secondary/30 ml-4">
+                    <h4 class="font-headline font-bold text-sm mb-4 text-secondary">Canlı Akış</h4>
+
+                    <div class="space-y-6">
+                        {% for station in stations|slice:":4" %}
+                        <div class="relative pl-6 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 {% if station.is_critical %}before:bg-error{% else %}before:bg-secondary{% endif %} before:rounded-full">
+                            <p class="text-xs font-bold">{{ station.name }}</p>
+                            <p class="text-[10px] text-stone-500">
+                                Mama {{ station.food_level }}% / Su {{ station.water_level }}%
+                            </p>
+                        </div>
+                        {% empty %}
+                        <div class="relative pl-6 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-stone-300 before:rounded-full">
+                            <p class="text-xs font-bold text-stone-400">Henüz istasyon yok</p>
+                            <p class="text-[10px] text-stone-400">Yeni istasyon ekleyerek başlayın.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</main>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_dashboard' %}">
+        <span class="material-symbols-outlined">dashboard</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_reports' %}">
+        <span class="material-symbols-outlined">analytics</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_volunteers' %}">
+        <span class="material-symbols-outlined">group</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-primary-container/20" href="{% url 'custom_admin_stations' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
+    </a>
+</nav>
+
 </body>
-</html>
+</html>
