@@ -1,78 +1,394 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html class="light" lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Paneli</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi - Admin Paneli</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "surface-container-highest": "#ffd6ab",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "on-primary-container": "#442100",
+                        "secondary": "#006666",
+                        "secondary-container": "#8dedec",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "on-surface": "#452800"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
-        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; }
-        .header a { color: white; text-decoration: none; margin-left: 16px; }
-        .container { max-width: 1150px; margin: 35px auto; padding: 0 20px; }
-        .title { margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-        .card { background: white; padding: 22px; border-radius: 14px; box-shadow: 0 8px 22px rgba(0,0,0,0.07); }
-        .card h3 { margin: 0 0 8px; font-size: 16px; color: #555; }
-        .number { font-size: 34px; font-weight: bold; color: #111827; }
-        .nav { margin: 24px 0; display: flex; gap: 12px; flex-wrap: wrap; }
-        .nav a { background: #2563eb; color: white; padding: 11px 16px; border-radius: 9px; text-decoration: none; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 13px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background: #e5e7eb; }
-        .badge { padding: 5px 9px; border-radius: 20px; font-size: 13px; background: #eee; }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+
+        .click-bounce-effect:active {
+            transform: scale(0.95);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(253,139,0,0.08), transparent 35%),
+                #fff5ed;
+        }
+
+        .soft-pattern {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image:
+                radial-gradient(#8c4a00 1px, transparent 1px);
+            background-size: 22px 22px;
+            z-index: 0;
+        }
     </style>
 </head>
-<body>
-    <div class="header">
-        <strong>Kampüs Hayvan Yönetimi - Admin Paneli</strong>
-        <div>
-            <a href="{% url 'home' %}">Siteye Dön</a>
-            <a href="{% url 'logout' %}">Çıkış</a>
+
+<body class="bg-surface font-body text-on-surface selection:bg-tertiary-container">
+<div class="soft-pattern"></div>
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 shadow-xl shadow-orange-900/5 flex-col py-6 gap-2 z-50">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center rotate-[-3deg] shadow-sm">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-orange-600 font-headline leading-tight">Admin Hub</h1>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
         </div>
     </div>
 
-    <div class="container">
-        <h1 class="title">Genel Bakış</h1>
+    <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg shadow-teal-900/20 font-headline text-sm font-semibold click-bounce-effect"
+           href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+            <span>Genel Bakış</span>
+        </a>
 
-        <div class="nav">
-            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
-            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
-            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
-            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
-        </div>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined">analytics</span>
+            <span>İlanlar</span>
+        </a>
 
-        <div class="grid">
-            <div class="card"><h3>Toplam İlan</h3><div class="number">{{ total_reports }}</div></div>
-            <div class="card"><h3>Bekleyen İlan</h3><div class="number">{{ pending_reports }}</div></div>
-            <div class="card"><h3>Onaylanan İlan</h3><div class="number">{{ approved_reports }}</div></div>
-            <div class="card"><h3>Reddedilen İlan</h3><div class="number">{{ rejected_reports }}</div></div>
-            <div class="card"><h3>Gönüllü Başvurusu</h3><div class="number">{{ total_volunteers }}</div></div>
-            <div class="card"><h3>Bekleyen Gönüllü</h3><div class="number">{{ pending_volunteers }}</div></div>
-            <div class="card"><h3>Besleme İstasyonu</h3><div class="number">{{ total_stations }}</div></div>
-            <div class="card"><h3>Kritik İstasyon</h3><div class="number">{{ critical_stations_count }}</div></div>
-        </div>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined">group</span>
+            <span>Gönüllüler</span>
+        </a>
 
-        <h2 style="margin-top: 35px;">Son Eklenen İlanlar</h2>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Kategori</th>
-                <th>Durum</th>
-                <th>Ad Soyad</th>
-                <th>Tarih</th>
-            </tr>
-            {% for report in latest_reports %}
-            <tr>
-                <td>{{ report.id }}</td>
-                <td>{{ report.get_category_display }}</td>
-                <td><span class="badge">{{ report.get_status_display }}</span></td>
-                <td>{{ report.full_name }}</td>
-                <td>{{ report.created_at|date:"d.m.Y H:i" }}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="5">Henüz ilan yok.</td></tr>
-            {% endfor %}
-        </table>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined">pets</span>
+            <span>Besleme İstasyonları</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Ayarlar</span>
+        </a>
+    </nav>
+
+    <div class="px-4 mt-6">
+        <a href="{% url 'new_animal' %}"
+           class="w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add_circle</span>
+            Yeni İlan
+        </a>
     </div>
+</aside>
+
+<main class="md:ml-64 min-h-screen relative z-10">
+    <header class="bg-orange-50/80 backdrop-blur-xl top-0 z-40 flex justify-between items-center w-full px-6 py-3 sticky">
+        <div class="flex items-center gap-6 flex-1">
+            <div class="relative w-full max-w-md hidden lg:block">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">search</span>
+                <input class="w-full pl-10 pr-4 py-2 bg-stone-100 border-none rounded-full text-sm focus:ring-2 focus:ring-secondary/20 font-body"
+                       placeholder="İlan, gönüllü veya istasyon ara..."
+                       type="text"/>
+            </div>
+
+            <h2 class="text-2xl font-black tracking-tight text-orange-700 font-headline lg:hidden">
+                Kampüs Hayvan Admin
+            </h2>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="{% url 'home' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+                <span class="material-symbols-outlined">home</span>
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors relative">
+                <span class="material-symbols-outlined">notifications</span>
+                {% if pending_reports > 0 %}
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+                {% endif %}
+            </a>
+
+            <div class="h-8 w-[1px] bg-stone-200 mx-2"></div>
+
+            <div class="flex items-center gap-3">
+                <span class="text-right hidden sm:block">
+                    <p class="text-xs font-bold text-on-surface">
+                        {% if request.user.first_name %}
+                            {{ request.user.first_name }}
+                        {% else %}
+                            {{ request.user.username }}
+                        {% endif %}
+                    </p>
+                    <p class="text-[10px] text-stone-500 font-bold uppercase">Admin</p>
+                </span>
+
+                <div class="w-10 h-10 rounded-full border-2 border-primary-container bg-primary-container flex items-center justify-center font-black text-on-primary-container">
+                    A
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="p-6 lg:p-10 space-y-10">
+        <section class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="md:col-span-2 bg-surface-container-low p-8 rounded-xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+                <div class="relative z-10">
+                    <h3 class="text-4xl font-headline font-extrabold text-primary tracking-tight leading-none mb-3">
+                        Hoş geldin,<br/>Admin!
+                    </h3>
+                    <p class="text-stone-600 max-w-[320px] font-medium leading-relaxed">
+                        Bugün sistemde {{ total_reports }} ilan, {{ total_volunteers }} gönüllü başvurusu ve {{ total_stations }} besleme istasyonu bulunuyor.
+                    </p>
+                </div>
+
+                <div class="flex gap-4 relative z-10 mt-5 flex-wrap">
+                    <span class="bg-tertiary-container px-4 py-1 rounded-md font-headline font-bold text-xs rotate-[-2deg] shadow-sm">
+                        {{ pending_reports }} BEKLEYEN İLAN
+                    </span>
+                    <span class="bg-secondary text-white px-4 py-1 rounded-md font-headline font-bold text-xs rotate-[1deg] shadow-sm">
+                        {{ critical_stations_count }} KRİTİK İSTASYON
+                    </span>
+                </div>
+
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 opacity-10 rotate-12">
+                    <span class="material-symbols-outlined text-[12rem]">pets</span>
+                </div>
+            </div>
+
+            <div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between border-b-4 border-primary/20 rotate-[0.5deg] min-h-[220px]">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-primary-container/20 rounded-lg">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">assignment</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-secondary bg-white/50 px-2 py-1 rounded-full">
+                        AKTİF
+                    </span>
+                </div>
+                <div>
+                    <p class="text-5xl font-headline font-black text-on-surface">{{ total_reports }}</p>
+                    <p class="text-sm font-bold text-stone-500 uppercase tracking-tighter">Toplam İlan</p>
+                </div>
+            </div>
+
+            <div class="bg-surface-container-highest p-6 rounded-xl flex flex-col justify-between rotate-[-0.5deg] min-h-[220px]">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-error/10 rounded-lg">
+                        <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-error bg-white/50 px-2 py-1 rounded-full">
+                        KRİTİK
+                    </span>
+                </div>
+                <div>
+                    <p class="text-5xl font-headline font-black text-error">{{ critical_stations_count }}</p>
+                    <p class="text-sm font-bold text-stone-500 uppercase tracking-tighter">Kritik İstasyon</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="flex items-end justify-between px-2">
+                    <div>
+                        <h4 class="text-2xl font-headline font-extrabold text-on-surface">Haftalık Sistem Özeti</h4>
+                        <p class="text-stone-500 text-sm font-medium">İlan, gönüllü ve istasyon durumları</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-stone-100 rounded-full text-xs font-bold text-stone-600">GÜNLÜK</span>
+                        <span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-bold shadow-md">HAFTALIK</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 relative min-h-[340px] flex items-end justify-between gap-4 overflow-hidden border-2 border-stone-100/50">
+                    <div class="absolute inset-0 flex flex-col justify-between p-8 opacity-20 pointer-events-none">
+                        <div class="border-b border-stone-300 w-full h-0"></div>
+                        <div class="border-b border-stone-300 w-full h-0"></div>
+                        <div class="border-b border-stone-300 w-full h-0"></div>
+                        <div class="border-b border-stone-300 w-full h-0"></div>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-secondary-container rounded-t-lg transition-all duration-500 group-hover:bg-secondary h-[35%]"></div>
+                        <span class="text-[10px] font-bold text-stone-400 uppercase">İlan</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-primary-container rounded-t-lg transition-all duration-500 group-hover:bg-primary h-[55%]"></div>
+                        <span class="text-[10px] font-bold text-stone-400 uppercase">Bekleyen</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-secondary-container rounded-t-lg transition-all duration-500 group-hover:bg-secondary h-[75%]"></div>
+                        <span class="text-[10px] font-bold text-stone-400 uppercase">Gönüllü</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 group-hover:bg-primary h-[45%]"></div>
+                        <span class="text-[10px] font-bold text-stone-400 uppercase">İstasyon</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 flex-1 group">
+                        <div class="w-full bg-error rounded-t-lg transition-all duration-500 h-[30%]"></div>
+                        <span class="text-[10px] font-bold text-stone-400 uppercase">Kritik</span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-container-low rounded-xl p-6 flex items-center justify-between gap-4 flex-wrap">
+                    <div class="flex items-center gap-4">
+                        <div class="flex -space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-[10px] font-black text-secondary border-2 border-surface">
+                                {{ total_volunteers }}
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-[10px] font-black text-on-surface border-2 border-surface">
+                                {{ pending_volunteers }}
+                            </div>
+                        </div>
+                        <p class="text-sm font-bold text-on-surface">
+                            İncelenmeyi bekleyen gönüllü başvuruları yönetilebilir.
+                        </p>
+                    </div>
+                    <a href="{% url 'custom_admin_volunteers' %}" class="bg-white px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:shadow-md transition-shadow">
+                        Başvuruları İncele
+                    </a>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h4 class="text-2xl font-headline font-extrabold text-on-surface px-2">Canlı Akış</h4>
+
+                <div class="space-y-4">
+                    <div class="bg-white p-5 rounded-xl shadow-sm hover:translate-y-[-2px] transition-transform flex gap-4 border-l-4 border-primary">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">person_add</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-xs text-stone-400 font-bold uppercase tracking-tight">Gönüllü Yönetimi</p>
+                            <p class="text-sm font-bold leading-snug">
+                                {{ pending_volunteers }} gönüllü başvurusu incelenmeyi bekliyor.
+                            </p>
+                            <a href="{% url 'custom_admin_volunteers' %}" class="text-[10px] font-black uppercase text-primary tracking-widest hover:underline">
+                                Gönüllüleri Aç
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm hover:translate-y-[-2px] transition-transform flex gap-4 border-l-4 border-secondary">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-xs text-stone-400 font-bold uppercase tracking-tight">İlan Yönetimi</p>
+                            <p class="text-sm font-bold leading-snug">
+                                {{ approved_reports }} ilan onaylandı, {{ pending_reports }} ilan beklemede.
+                            </p>
+                            <a href="{% url 'custom_admin_reports' %}" class="text-[10px] font-black uppercase text-secondary tracking-widest hover:underline">
+                                İlanları Aç
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm hover:translate-y-[-2px] transition-transform flex gap-4 border-l-4 border-tertiary">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-xs text-stone-400 font-bold uppercase tracking-tight">Besleme İstasyonları</p>
+                            <p class="text-sm font-bold leading-snug">
+                                {{ critical_stations_count }} istasyon kritik seviyede görünüyor.
+                            </p>
+                            <a href="{% url 'custom_admin_stations' %}" class="text-[10px] font-black uppercase text-primary tracking-widest hover:underline">
+                                İstasyonları Aç
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm hover:translate-y-[-2px] transition-transform flex gap-4 border-l-4 border-primary">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">report_problem</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-xs text-stone-400 font-bold uppercase tracking-tight">Sistem Özeti</p>
+                            <p class="text-sm font-bold leading-snug">
+                                Reddedilen ilan sayısı: {{ rejected_reports }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{% url 'custom_admin_reports' %}" class="block text-center w-full py-4 bg-stone-100 rounded-xl text-stone-500 text-xs font-black uppercase tracking-[0.2em] hover:bg-stone-200 transition-colors">
+                    Tüm Kayıtları Gör
+                </a>
+            </div>
+        </section>
+    </div>
+</main>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-primary-container/20" href="{% url 'custom_admin_dashboard' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_reports' %}">
+        <span class="material-symbols-outlined">analytics</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_volunteers' %}">
+        <span class="material-symbols-outlined">group</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_stations' %}">
+        <span class="material-symbols-outlined">pets</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'admin_settings' %}">
+        <span class="material-symbols-outlined">settings</span>
+    </a>
+</nav>
+
 </body>
 </html>
-
