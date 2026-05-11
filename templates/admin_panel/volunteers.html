@@ -1,78 +1,507 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html class="light" lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Gönüllü Yönetimi</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi | Gönüllü Yönetimi</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "surface-container-highest": "#ffd6ab",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "secondary": "#006666",
+                        "secondary-container": "#8dedec",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "error-container": "#f95630",
+                        "on-surface": "#452800",
+                        "on-surface-variant": "#7a5426",
+                        "on-primary-container": "#442100"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
-        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
-        .header a { color: white; text-decoration: none; margin-left: 16px; }
-        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
-        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
-        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
-        .danger { background: #dc2626; }
-        .warning { background: #f59e0b; }
-        .success { background: #16a34a; }
-        form.box { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: grid; gap: 10px; }
-        input, textarea, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
-        th { background: #e5e7eb; }
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background:
+                linear-gradient(120deg, rgba(0,102,102,0.22), transparent 30%),
+                linear-gradient(240deg, rgba(253,139,0,0.16), transparent 34%),
+                #fff5ed;
+            color: #452800;
+        }
+
+        h1, h2, h3, h4, h5, button, a {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+
+        .paper-texture {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: radial-gradient(#8c4a00 1px, transparent 1px);
+            background-size: 22px 22px;
+            z-index: 0;
+        }
+
+        .click-bounce-effect:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
-<body>
-    <div class="header">
-        <strong>Gönüllü Yönetimi</strong>
-        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+
+<body class="bg-surface text-on-surface selection:bg-tertiary-container">
+<div class="paper-texture"></div>
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 flex-col py-6 gap-2 z-50 shadow-xl shadow-orange-900/5">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-extrabold text-orange-600 tracking-tight">Admin Hub</h2>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="nav">
-            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
-            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
-            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
-            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+    <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-semibold text-sm">Genel Bakış</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-semibold text-sm">İlanlar</span>
+        </a>
+
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg shadow-teal-900/20 transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+            <span class="font-semibold text-sm">Gönüllüler</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined">pets</span>
+            <span class="font-semibold text-sm">Besleme İstasyonları</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-semibold text-sm">Ayarlar</span>
+        </a>
+    </nav>
+
+    <div class="px-4 mt-auto">
+        <a href="{% url 'new_animal' %}"
+           class="w-full py-4 bg-primary-container text-on-primary-container font-black rounded-xl shadow-lg shadow-primary/20 click-bounce-effect flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add</span>
+            Yeni İlan
+        </a>
+    </div>
+</aside>
+
+<main class="md:ml-64 min-h-screen relative z-10">
+    <header class="bg-orange-50/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-3 sticky top-0 z-40">
+        <div class="flex items-center gap-8">
+            <h1 class="text-2xl font-black tracking-tight text-orange-700">Kampüs Hayvan Admin</h1>
+
+            <form method="get" class="relative hidden lg:block">
+                <input
+                    class="bg-orange-100/50 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary w-72"
+                    placeholder="Gönüllü ara..."
+                    type="text"
+                    name="search"
+                    value="{{ search|default:'' }}"
+                />
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 text-sm">search</span>
+            </form>
         </div>
 
-        <form method="post" class="box">
-            {% csrf_token %}
-            <h2>Yeni Gönüllü Başvurusu Ekle</h2>
-            <input type="text" name="full_name" placeholder="Ad Soyad">
-            <input type="email" name="email" placeholder="E-posta">
-            <input type="text" name="phone" placeholder="Telefon">
-            <textarea name="skills" placeholder="Yetkinlikler"></textarea>
-            <input type="text" name="availability" placeholder="Uygunluk zamanı">
-            <button class="btn" type="submit">Başvuru Ekle</button>
-        </form>
+        <div class="flex items-center gap-4">
+            <a href="{% url 'custom_admin_dashboard' %}" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-orange-200/50 transition-colors">
+                <span class="material-symbols-outlined text-stone-600">dashboard</span>
+            </a>
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Ad Soyad</th>
-                <th>E-posta</th>
-                <th>Telefon</th>
-                <th>Yetkinlik</th>
-                <th>Durum</th>
-                <th>İşlem</th>
-            </tr>
-            {% for volunteer in volunteers %}
-            <tr>
-                <td>{{ volunteer.id }}</td>
-                <td>{{ volunteer.full_name }}</td>
-                <td>{{ volunteer.email }}</td>
-                <td>{{ volunteer.phone }}</td>
-                <td>{{ volunteer.skills|truncatechars:80 }}</td>
-                <td>{{ volunteer.get_status_display }}</td>
-                <td>
-                    <a class="btn success" href="{% url 'custom_admin_volunteer_approve' volunteer.id %}">Onayla</a>
-                    <a class="btn warning" href="{% url 'custom_admin_volunteer_reject' volunteer.id %}">Reddet</a>
-                    <a class="btn danger" href="{% url 'custom_admin_volunteer_delete' volunteer.id %}">Sil</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="7">Gönüllü başvurusu bulunamadı.</td></tr>
+            <a href="{% url 'home' %}" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-orange-200/50 transition-colors">
+                <span class="material-symbols-outlined text-stone-600">home</span>
+            </a>
+
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary ring-2 ring-orange-100 bg-primary-container flex items-center justify-center font-black">
+                A
+            </div>
+        </div>
+    </header>
+
+    <div class="p-6 lg:p-8 max-w-7xl mx-auto space-y-12">
+
+        <section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <span class="inline-block px-4 py-1 bg-tertiary-container text-on-surface font-black rounded-md rotate-[-2deg] mb-4 text-xs tracking-widest uppercase">
+                    Gönüllü Ağı
+                </span>
+
+                <h2 class="text-5xl font-black tracking-tight leading-tight text-on-surface">
+                    Gönüllü<br/>
+                    <span class="text-primary italic">Etki Alanını</span> Yönet
+                </h2>
+
+                <p class="mt-4 text-stone-600 max-w-xl">
+                    Yeni gönüllü başvurularını incele, uygun başvuruları onayla ve aktif gönüllü havuzunu yönet.
+                </p>
+            </div>
+
+            <div class="flex gap-3 flex-wrap">
+                <div class="bg-surface-container-high px-6 py-4 rounded-xl -rotate-1 shadow-sm">
+                    <p class="text-2xl font-black text-secondary">{{ volunteers|length }}</p>
+                    <p class="text-[10px] uppercase font-bold text-on-surface-variant">Toplam Kayıt</p>
+                </div>
+
+                <div class="bg-surface-container-high px-6 py-4 rounded-xl rotate-1 shadow-sm">
+                    <p class="text-2xl font-black text-primary">
+                        {% if active_status == "pending" %}
+                            {{ volunteers|length }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                    <p class="text-[10px] uppercase font-bold text-on-surface-variant">Bekleyen Görünüm</p>
+                </div>
+            </div>
+        </section>
+
+        {% if messages %}
+        <section class="space-y-3">
+            {% for message in messages %}
+            <div class="rounded-xl px-5 py-3 text-sm font-bold
+                {% if message.tags == 'error' %}
+                    bg-red-100 text-red-700
+                {% elif message.tags == 'success' %}
+                    bg-green-100 text-green-700
+                {% else %}
+                    bg-orange-100 text-orange-700
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
             {% endfor %}
-        </table>
+        </section>
+        {% endif %}
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="flex items-center justify-between gap-4 flex-wrap">
+                    <h3 class="text-2xl font-black text-on-surface">
+                        Yeni Başvurular
+                        <span class="text-stone-400 font-normal ml-2">Bekleme Listesi</span>
+                    </h3>
+
+                    <div class="flex gap-2 bg-surface-container-low p-1 rounded-full">
+                        <a href="{% url 'custom_admin_volunteers' %}"
+                           class="px-5 py-2 {% if not active_status %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant{% endif %} font-black rounded-full text-xs">
+                            TÜMÜ
+                        </a>
+
+                        <a href="{% url 'custom_admin_volunteers' %}?status=pending"
+                           class="px-5 py-2 {% if active_status == 'pending' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant{% endif %} font-black rounded-full text-xs">
+                            BEKLEYEN
+                        </a>
+
+                        <a href="{% url 'custom_admin_volunteers' %}?status=approved"
+                           class="px-5 py-2 {% if active_status == 'approved' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant{% endif %} font-black rounded-full text-xs">
+                            ONAYLI
+                        </a>
+
+                        <a href="{% url 'custom_admin_volunteers' %}?status=rejected"
+                           class="px-5 py-2 {% if active_status == 'rejected' %}bg-primary-container text-on-primary-container{% else %}text-on-surface-variant{% endif %} font-black rounded-full text-xs">
+                            REDDEDİLEN
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for volunteer in volunteers %}
+                    {% if volunteer.status == "pending" %}
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-b-4 border-tertiary transform transition-transform hover:-translate-y-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex gap-3">
+                                <div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">person</span>
+                                </div>
+
+                                <div>
+                                    <p class="font-black text-on-surface">{{ volunteer.full_name }}</p>
+                                    <p class="text-xs text-stone-500 font-medium italic">{{ volunteer.email }}</p>
+                                    <p class="text-xs text-stone-500 font-medium">{{ volunteer.phone }}</p>
+                                </div>
+                            </div>
+
+                            <span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-surface-container text-[10px] font-bold rounded-full">
+                                {{ volunteer.availability }}
+                            </span>
+                            <span class="px-3 py-1 bg-surface-container text-[10px] font-bold rounded-full">
+                                Beklemede
+                            </span>
+                        </div>
+
+                        <p class="text-sm text-stone-600 mb-6">
+                            {{ volunteer.skills|truncatechars:110 }}
+                        </p>
+
+                        <div class="flex gap-2">
+                            <a href="{% url 'custom_admin_volunteer_approve' volunteer.id %}"
+                               class="flex-1 py-2 bg-secondary text-white font-bold rounded-full text-sm click-bounce-effect text-center">
+                                Onayla
+                            </a>
+
+                            <a href="{% url 'custom_admin_volunteer_reject' volunteer.id %}"
+                               class="w-10 h-10 flex items-center justify-center bg-error-container/10 text-error rounded-full hover:bg-error-container/20">
+                                <span class="material-symbols-outlined">close</span>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% empty %}
+                    <div class="md:col-span-2 border-4 border-dashed border-orange-200 rounded-lg flex flex-col items-center justify-center p-10 text-center bg-white/50">
+                        <span class="material-symbols-outlined text-orange-300 text-4xl mb-2">person_add</span>
+                        <p class="text-sm font-bold text-stone-500">Henüz gönüllü başvurusu yok.</p>
+                        <p class="text-[11px] text-stone-400">Aşağıdaki formdan yeni başvuru ekleyebilirsin.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <aside class="space-y-6">
+                <form method="post" class="bg-white rounded-xl p-6 shadow-xl shadow-orange-900/5">
+                    {% csrf_token %}
+
+                    <h3 class="font-black text-xl text-on-surface mb-5">
+                        Yeni Gönüllü Başvurusu Ekle
+                    </h3>
+
+                    <div class="space-y-3">
+                        <input class="w-full rounded-xl border-orange-100 focus:ring-secondary" type="text" name="full_name" placeholder="Ad Soyad" required>
+                        <input class="w-full rounded-xl border-orange-100 focus:ring-secondary" type="email" name="email" placeholder="E-posta" required>
+                        <input class="w-full rounded-xl border-orange-100 focus:ring-secondary" type="text" name="phone" placeholder="Telefon" required>
+                        <textarea class="w-full rounded-xl border-orange-100 focus:ring-secondary" name="skills" placeholder="Yetkinlikler" required></textarea>
+                        <input class="w-full rounded-xl border-orange-100 focus:ring-secondary" type="text" name="availability" placeholder="Uygunluk zamanı" required>
+                    </div>
+
+                    <button class="mt-4 w-full py-3 bg-primary-container text-on-primary-container font-black rounded-full shadow-lg shadow-primary/20 click-bounce-effect" type="submit">
+                        Başvuru Ekle
+                    </button>
+                </form>
+
+                <div class="bg-secondary text-white rounded-xl p-8 overflow-hidden relative">
+                    <div class="relative z-10 space-y-4">
+                        <h3 class="text-3xl font-black leading-tight">Gönüllü Aktivitesi</h3>
+                        <p class="text-secondary-container text-sm leading-relaxed">
+                            Gönüllüler besleme istasyonları, kayıp ilan takibi ve medikal yardım süreçlerinde kullanılabilir.
+                        </p>
+                        <a href="{% url 'custom_admin_stations' %}" class="inline-block px-8 py-3 bg-tertiary-container text-on-surface font-black rounded-full text-sm click-bounce-effect">
+                            İstasyonları Aç
+                        </a>
+                    </div>
+
+                    <div class="mt-8 h-32 bg-white/10 rounded-2xl p-4 backdrop-blur-md">
+                        <div class="w-full h-full flex items-end gap-2">
+                            <div class="flex-1 bg-primary-container h-[20%] rounded-t-md opacity-40"></div>
+                            <div class="flex-1 bg-primary-container h-[35%] rounded-t-md opacity-50"></div>
+                            <div class="flex-1 bg-primary-container h-[60%] rounded-t-md opacity-70"></div>
+                            <div class="flex-1 bg-primary-container h-[90%] rounded-t-md opacity-100 shadow-lg shadow-primary/40"></div>
+                            <div class="flex-1 bg-primary-container h-[75%] rounded-t-md opacity-80"></div>
+                            <div class="flex-1 bg-primary-container h-[45%] rounded-t-md opacity-60"></div>
+                            <div class="flex-1 bg-primary-container h-[30%] rounded-t-md opacity-40"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-surface-container-highest rounded-xl p-8 flex flex-col justify-between border-b-8 border-primary">
+                    <div>
+                        <span class="material-symbols-outlined text-4xl text-primary mb-4">campaign</span>
+                        <h3 class="text-2xl font-black text-on-surface mb-2">Toplu Duyuru</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">
+                            Onaylı gönüllülere görev ve kampüs besleme istasyonu duyuruları yapılabilir.
+                        </p>
+                    </div>
+
+                    <button class="mt-8 w-full py-4 border-2 border-primary text-primary font-black rounded-xl hover:bg-primary/5 transition-colors">
+                        Duyuru Hazırla
+                    </button>
+                </div>
+            </aside>
+        </section>
+
+        <section class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <h3 class="text-3xl font-black text-on-surface">
+                    Gönüllü Listesi
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for volunteer in volunteers %}
+                <div class="bg-surface-container-low rounded-xl p-6 relative overflow-hidden group
+                    {% if volunteer.status == 'approved' %}
+                        border-2 border-secondary/20
+                    {% elif volunteer.status == 'rejected' %}
+                        border-2 border-error/20
+                    {% endif %}
+                ">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl transition-all group-hover:bg-primary/20"></div>
+
+                    <div class="flex justify-between items-start mb-6 relative">
+                        <div class="relative">
+                            <div class="w-20 h-20 rounded-2xl overflow-hidden rotate-[-3deg] border-4 border-white shadow-md bg-secondary-container flex items-center justify-center">
+                                <span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">person</span>
+                            </div>
+
+                            {% if volunteer.status == "approved" %}
+                            <div class="absolute -bottom-2 -right-2 bg-secondary text-white w-8 h-8 rounded-full border-4 border-surface-container-low flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            </div>
+                            {% elif volunteer.status == "rejected" %}
+                            <div class="absolute -bottom-2 -right-2 bg-error text-white w-8 h-8 rounded-full border-4 border-surface-container-low flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">close</span>
+                            </div>
+                            {% else %}
+                            <div class="absolute -bottom-2 -right-2 bg-primary-container text-on-primary-container w-8 h-8 rounded-full border-4 border-surface-container-low flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">hourglass_top</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-right">
+                            {% if volunteer.status == "approved" %}
+                            <span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-full mb-1">
+                                ONAYLI
+                            </span>
+                            {% elif volunteer.status == "rejected" %}
+                            <span class="inline-block px-3 py-1 bg-red-100 text-red-700 text-[10px] font-black rounded-full mb-1">
+                                REDDEDİLDİ
+                            </span>
+                            {% else %}
+                            <span class="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-[10px] font-black rounded-full mb-1">
+                                BEKLEMEDE
+                            </span>
+                            {% endif %}
+
+                            <p class="text-[10px] text-stone-500 font-bold">
+                                {{ volunteer.created_at|date:"d.m.Y" }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xl font-black text-on-surface mb-1">{{ volunteer.full_name }}</h4>
+                    <p class="text-sm text-on-surface-variant mb-1">{{ volunteer.email }}</p>
+                    <p class="text-sm text-on-surface-variant mb-4">{{ volunteer.phone }}</p>
+
+                    <div class="space-y-3">
+                        <p class="text-[10px] uppercase tracking-tighter font-black text-stone-400">Yetkinlikler</p>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-tertiary-container text-[10px] font-black rounded-md">
+                                {{ volunteer.availability }}
+                            </span>
+                            <span class="px-3 py-1 bg-tertiary-container text-[10px] font-black rounded-md">
+                                GÖNÜLLÜ
+                            </span>
+                        </div>
+
+                        <p class="text-sm text-stone-600">
+                            {{ volunteer.skills|truncatechars:120 }}
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex gap-2">
+                        <a href="{% url 'custom_admin_volunteer_approve' volunteer.id %}"
+                           class="flex-1 py-3 bg-on-surface text-surface text-xs font-black rounded-xl click-bounce-effect text-center">
+                            Onayla
+                        </a>
+
+                        <a href="{% url 'custom_admin_volunteer_reject' volunteer.id %}"
+                           class="flex-1 py-3 bg-primary text-white text-xs font-black rounded-xl click-bounce-effect text-center">
+                            Reddet
+                        </a>
+
+                        <a href="{% url 'custom_admin_volunteer_delete' volunteer.id %}"
+                           class="p-3 bg-error text-white rounded-xl hover:opacity-90 transition-colors">
+                            <span class="material-symbols-outlined">delete</span>
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="lg:col-span-3 bg-white rounded-xl p-10 text-center">
+                    <span class="material-symbols-outlined text-5xl text-orange-300 mb-3">group</span>
+                    <p class="font-black text-on-surface">Henüz gönüllü başvurusu bulunamadı.</p>
+                    <p class="text-sm text-stone-500">Sağdaki formdan yeni başvuru ekleyebilirsin.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
+</main>
+
+<a href="#"
+   class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-50">
+    <span class="material-symbols-outlined text-3xl">add</span>
+</a>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_dashboard' %}">
+        <span class="material-symbols-outlined">dashboard</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_reports' %}">
+        <span class="material-symbols-outlined">analytics</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-primary-container/20" href="{% url 'custom_admin_volunteers' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_stations' %}">
+        <span class="material-symbols-outlined">pets</span>
+    </a>
+</nav>
+
 </body>
-</html>
+</html>
