@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gönüllü Yönetimi</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
+        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
+        .header a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
+        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
+        .danger { background: #dc2626; }
+        .warning { background: #f59e0b; }
+        .success { background: #16a34a; }
+        form.box { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: grid; gap: 10px; }
+        input, textarea, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+        th { background: #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <strong>Gönüllü Yönetimi</strong>
+        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
+            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
+            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
+            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+        </div>
+
+        <form method="post" class="box">
+            {% csrf_token %}
+            <h2>Yeni Gönüllü Başvurusu Ekle</h2>
+            <input type="text" name="full_name" placeholder="Ad Soyad">
+            <input type="email" name="email" placeholder="E-posta">
+            <input type="text" name="phone" placeholder="Telefon">
+            <textarea name="skills" placeholder="Yetkinlikler"></textarea>
+            <input type="text" name="availability" placeholder="Uygunluk zamanı">
+            <button class="btn" type="submit">Başvuru Ekle</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Ad Soyad</th>
+                <th>E-posta</th>
+                <th>Telefon</th>
+                <th>Yetkinlik</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+            </tr>
+            {% for volunteer in volunteers %}
+            <tr>
+                <td>{{ volunteer.id }}</td>
+                <td>{{ volunteer.full_name }}</td>
+                <td>{{ volunteer.email }}</td>
+                <td>{{ volunteer.phone }}</td>
+                <td>{{ volunteer.skills|truncatechars:80 }}</td>
+                <td>{{ volunteer.get_status_display }}</td>
+                <td>
+                    <a class="btn success" href="{% url 'custom_admin_volunteer_approve' volunteer.id %}">Onayla</a>
+                    <a class="btn warning" href="{% url 'custom_admin_volunteer_reject' volunteer.id %}">Reddet</a>
+                    <a class="btn danger" href="{% url 'custom_admin_volunteer_delete' volunteer.id %}">Sil</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">Gönüllü başvurusu bulunamadı.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

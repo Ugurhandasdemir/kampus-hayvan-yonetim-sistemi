@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Besleme İstasyonları</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
+        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
+        .header a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
+        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
+        .danger { background: #dc2626; }
+        .success { background: #16a34a; }
+        form.box { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: grid; gap: 10px; }
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+        th { background: #e5e7eb; }
+        .critical { color: #dc2626; font-weight: bold; }
+        .normal { color: #16a34a; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <strong>Besleme İstasyonları</strong>
+        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
+            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
+            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
+            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+        </div>
+
+        <form method="post" class="box">
+            {% csrf_token %}
+            <h2>Yeni Besleme İstasyonu Ekle</h2>
+            <input type="text" name="name" placeholder="İstasyon adı">
+            <input type="text" name="location_name" placeholder="Konum adı">
+            <input type="number" step="0.000001" name="latitude" placeholder="Enlem">
+            <input type="number" step="0.000001" name="longitude" placeholder="Boylam">
+            <input type="number" name="food_level" min="0" max="100" value="100" placeholder="Mama seviyesi">
+            <input type="number" name="water_level" min="0" max="100" value="100" placeholder="Su seviyesi">
+            <select name="status">
+                <option value="active">Aktif</option>
+                <option value="maintenance">Bakımda</option>
+                <option value="inactive">Pasif</option>
+            </select>
+            <button class="btn" type="submit">İstasyon Ekle</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>İstasyon</th>
+                <th>Konum</th>
+                <th>Mama</th>
+                <th>Su</th>
+                <th>Durum</th>
+                <th>Kritik Uyarı</th>
+                <th>Güncelle</th>
+                <th>Sil</th>
+            </tr>
+            {% for station in stations %}
+            <tr>
+                <td>{{ station.id }}</td>
+                <td>{{ station.name }}</td>
+                <td>{{ station.location_name }}</td>
+                <td>{{ station.food_level }}%</td>
+                <td>{{ station.water_level }}%</td>
+                <td>{{ station.get_status_display }}</td>
+                <td>
+                    {% if station.is_critical %}
+                        <span class="critical">Kritik Seviye</span>
+                    {% else %}
+                        <span class="normal">Normal</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'custom_admin_station_update' station.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="food_level" min="0" max="100" value="{{ station.food_level }}">
+                        <input type="number" name="water_level" min="0" max="100" value="{{ station.water_level }}">
+                        <select name="status">
+                            <option value="active" {% if station.status == "active" %}selected{% endif %}>Aktif</option>
+                            <option value="maintenance" {% if station.status == "maintenance" %}selected{% endif %}>Bakımda</option>
+                            <option value="inactive" {% if station.status == "inactive" %}selected{% endif %}>Pasif</option>
+                        </select>
+                        <button class="btn success" type="submit">Güncelle</button>
+                    </form>
+                </td>
+                <td>
+                    <a class="btn danger" href="{% url 'custom_admin_station_delete' station.id %}">Sil</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9">Besleme istasyonu bulunamadı.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

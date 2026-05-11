@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Paneli</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
+        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .header a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 1150px; margin: 35px auto; padding: 0 20px; }
+        .title { margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        .card { background: white; padding: 22px; border-radius: 14px; box-shadow: 0 8px 22px rgba(0,0,0,0.07); }
+        .card h3 { margin: 0 0 8px; font-size: 16px; color: #555; }
+        .number { font-size: 34px; font-weight: bold; color: #111827; }
+        .nav { margin: 24px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .nav a { background: #2563eb; color: white; padding: 11px 16px; border-radius: 9px; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th, td { padding: 13px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #e5e7eb; }
+        .badge { padding: 5px 9px; border-radius: 20px; font-size: 13px; background: #eee; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <strong>Kampüs Hayvan Yönetimi - Admin Paneli</strong>
+        <div>
+            <a href="{% url 'home' %}">Siteye Dön</a>
+            <a href="{% url 'logout' %}">Çıkış</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="title">Genel Bakış</h1>
+
+        <div class="nav">
+            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
+            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
+            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
+            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+        </div>
+
+        <div class="grid">
+            <div class="card"><h3>Toplam İlan</h3><div class="number">{{ total_reports }}</div></div>
+            <div class="card"><h3>Bekleyen İlan</h3><div class="number">{{ pending_reports }}</div></div>
+            <div class="card"><h3>Onaylanan İlan</h3><div class="number">{{ approved_reports }}</div></div>
+            <div class="card"><h3>Reddedilen İlan</h3><div class="number">{{ rejected_reports }}</div></div>
+            <div class="card"><h3>Gönüllü Başvurusu</h3><div class="number">{{ total_volunteers }}</div></div>
+            <div class="card"><h3>Bekleyen Gönüllü</h3><div class="number">{{ pending_volunteers }}</div></div>
+            <div class="card"><h3>Besleme İstasyonu</h3><div class="number">{{ total_stations }}</div></div>
+            <div class="card"><h3>Kritik İstasyon</h3><div class="number">{{ critical_stations_count }}</div></div>
+        </div>
+
+        <h2 style="margin-top: 35px;">Son Eklenen İlanlar</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Durum</th>
+                <th>Ad Soyad</th>
+                <th>Tarih</th>
+            </tr>
+            {% for report in latest_reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.get_category_display }}</td>
+                <td><span class="badge">{{ report.get_status_display }}</span></td>
+                <td>{{ report.full_name }}</td>
+                <td>{{ report.created_at|date:"d.m.Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Henüz ilan yok.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+

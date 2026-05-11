@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>İlan Yönetimi</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
+        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
+        .header a { color: white; text-decoration: none; margin-left: 16px; }
+        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
+        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
+        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
+        .danger { background: #dc2626; }
+        .warning { background: #f59e0b; }
+        .success { background: #16a34a; }
+        form.filter { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+        th { background: #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <strong>İlan Yönetimi</strong>
+        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
+            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
+            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
+            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+        </div>
+
+        <form method="get" class="filter">
+            <input type="text" name="search" placeholder="Ad soyad ara" value="{{ search }}">
+            <select name="status">
+                <option value="">Tüm Durumlar</option>
+                <option value="pending" {% if active_status == "pending" %}selected{% endif %}>Beklemede</option>
+                <option value="approved" {% if active_status == "approved" %}selected{% endif %}>Onaylandı</option>
+                <option value="rejected" {% if active_status == "rejected" %}selected{% endif %}>Reddedildi</option>
+            </select>
+            <select name="category">
+                <option value="">Tüm Kategoriler</option>
+                <option value="lost" {% if active_category == "lost" %}selected{% endif %}>Kayıp</option>
+                <option value="adoption" {% if active_category == "adoption" %}selected{% endif %}>Sahiplendirme</option>
+                <option value="medical" {% if active_category == "medical" %}selected{% endif %}>Medikal Yardım</option>
+            </select>
+            <button class="btn" type="submit">Filtrele</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Kategori</th>
+                <th>Durum</th>
+                <th>Ad Soyad</th>
+                <th>Telefon</th>
+                <th>Açıklama</th>
+                <th>İşlem</th>
+            </tr>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.get_category_display }}</td>
+                <td>{{ report.get_status_display }}</td>
+                <td>{{ report.full_name }}</td>
+                <td>{{ report.phone }}</td>
+                <td>{{ report.details|truncatechars:80 }}</td>
+                <td>
+                    <a class="btn success" href="{% url 'custom_admin_report_approve' report.id %}">Onayla</a>
+                    <a class="btn warning" href="{% url 'custom_admin_report_reject' report.id %}">Reddet</a>
+                    <a class="btn danger" href="{% url 'custom_admin_report_delete' report.id %}">Sil</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">İlan bulunamadı.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
