@@ -1,84 +1,599 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html class="light" lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>İlan Yönetimi</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi | İlan Yönetimi</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "surface-container-highest": "#ffd6ab",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "secondary": "#006666",
+                        "secondary-container": "#8dedec",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "error-container": "#f95630",
+                        "on-surface": "#452800",
+                        "on-surface-variant": "#7a5426",
+                        "on-primary-container": "#442100"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
-        .header { background: #111827; color: white; padding: 18px 40px; display: flex; justify-content: space-between; }
-        .header a { color: white; text-decoration: none; margin-left: 16px; }
-        .container { max-width: 1200px; margin: 35px auto; padding: 0 20px; }
-        .nav { margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap; }
-        .nav a, .btn { background: #2563eb; color: white; padding: 9px 13px; border-radius: 8px; text-decoration: none; border: 0; cursor: pointer; }
-        .danger { background: #dc2626; }
-        .warning { background: #f59e0b; }
-        .success { background: #16a34a; }
-        form.filter { background: white; padding: 18px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
-        th { background: #e5e7eb; }
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background-color: #fff5ed;
+            color: #452800;
+        }
+
+        h1, h2, h3, h4, h5, button, a {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+            vertical-align: middle;
+        }
+
+        .paper-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: radial-gradient(#8c4a00 1px, transparent 1px);
+            background-size: 22px 22px;
+            z-index: 0;
+        }
+
+        .click-bounce-effect:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
-<body>
-    <div class="header">
-        <strong>İlan Yönetimi</strong>
-        <div><a href="{% url 'custom_admin_dashboard' %}">Dashboard</a><a href="{% url 'home' %}">Siteye Dön</a></div>
+
+<body class="bg-surface font-body text-on-surface selection:bg-tertiary-container">
+<div class="paper-grain"></div>
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 shadow-xl shadow-orange-900/5 z-50 flex-col py-6 gap-2">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-orange-600 font-headline leading-tight">Admin Hub</h1>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="nav">
-            <a href="{% url 'custom_admin_dashboard' %}">Dashboard</a>
-            <a href="{% url 'custom_admin_reports' %}">İlan Yönetimi</a>
-            <a href="{% url 'custom_admin_volunteers' %}">Gönüllü Yönetimi</a>
-            <a href="{% url 'custom_admin_stations' %}">Besleme İstasyonları</a>
+    <nav class="flex-1 flex flex-col gap-2">
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-headline text-sm font-semibold">Genel Bakış</span>
+        </a>
+
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg shadow-teal-900/20 transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+            <span class="font-headline text-sm font-semibold">İlanlar</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-headline text-sm font-semibold">Gönüllüler</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined">pets</span>
+            <span class="font-headline text-sm font-semibold">Besleme İstasyonları</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full transition-transform duration-200 hover:translate-x-1"
+           href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-headline text-sm font-semibold">Ayarlar</span>
+        </a>
+    </nav>
+
+    <div class="px-4 mt-auto">
+        <a href="{% url 'new_animal' %}"
+           class="w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-primary/20 click-bounce-effect">
+            <span class="material-symbols-outlined">add_circle</span>
+            Yeni İlan
+        </a>
+    </div>
+</aside>
+
+<header class="fixed top-0 md:left-64 left-0 right-0 z-40 bg-orange-50/80 backdrop-blur-xl flex justify-between items-center px-6 py-3">
+    <form method="get" class="flex items-center gap-4 flex-1">
+        <div class="relative w-full max-w-md">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">search</span>
+            <input
+                class="w-full bg-white border-none rounded-full pl-12 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary/20"
+                placeholder="İlan, hayvan veya kullanıcı ara..."
+                type="text"
+                name="search"
+                value="{{ search }}"
+            />
         </div>
 
-        <form method="get" class="filter">
-            <input type="text" name="search" placeholder="Ad soyad ara" value="{{ search }}">
-            <select name="status">
-                <option value="">Tüm Durumlar</option>
-                <option value="pending" {% if active_status == "pending" %}selected{% endif %}>Beklemede</option>
-                <option value="approved" {% if active_status == "approved" %}selected{% endif %}>Onaylandı</option>
-                <option value="rejected" {% if active_status == "rejected" %}selected{% endif %}>Reddedildi</option>
-            </select>
-            <select name="category">
-                <option value="">Tüm Kategoriler</option>
-                <option value="lost" {% if active_category == "lost" %}selected{% endif %}>Kayıp</option>
-                <option value="adoption" {% if active_category == "adoption" %}selected{% endif %}>Sahiplendirme</option>
-                <option value="medical" {% if active_category == "medical" %}selected{% endif %}>Medikal Yardım</option>
-            </select>
-            <button class="btn" type="submit">Filtrele</button>
-        </form>
+        {% if active_status %}
+            <input type="hidden" name="status" value="{{ active_status }}">
+        {% endif %}
 
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Kategori</th>
-                <th>Durum</th>
-                <th>Ad Soyad</th>
-                <th>Telefon</th>
-                <th>Açıklama</th>
-                <th>İşlem</th>
-            </tr>
-            {% for report in reports %}
-            <tr>
-                <td>{{ report.id }}</td>
-                <td>{{ report.get_category_display }}</td>
-                <td>{{ report.get_status_display }}</td>
-                <td>{{ report.full_name }}</td>
-                <td>{{ report.phone }}</td>
-                <td>{{ report.details|truncatechars:80 }}</td>
-                <td>
-                    <a class="btn success" href="{% url 'custom_admin_report_approve' report.id %}">Onayla</a>
-                    <a class="btn warning" href="{% url 'custom_admin_report_reject' report.id %}">Reddet</a>
-                    <a class="btn danger" href="{% url 'custom_admin_report_delete' report.id %}">Sil</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="7">İlan bulunamadı.</td></tr>
-            {% endfor %}
-        </table>
+        {% if active_category %}
+            <input type="hidden" name="category" value="{{ active_category }}">
+        {% endif %}
+    </form>
+
+    <div class="flex items-center gap-4">
+        <a href="{% url 'custom_admin_dashboard' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+            <span class="material-symbols-outlined">dashboard</span>
+        </a>
+
+        <a href="{% url 'home' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+            <span class="material-symbols-outlined">home</span>
+        </a>
+
+        <div class="h-8 w-[1px] bg-stone-200 mx-2"></div>
+
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary-container border-2 border-primary-container flex items-center justify-center font-black text-on-primary-container">
+                A
+            </div>
+
+            <div class="hidden lg:block text-left">
+                <p class="text-xs font-bold font-headline leading-none text-orange-700">
+                    {{ request.user.username }}
+                </p>
+                <p class="text-[10px] text-stone-500">Admin</p>
+            </div>
+        </div>
     </div>
+</header>
+
+<main class="md:ml-64 pt-24 pb-12 px-6 lg:px-8 min-h-screen relative overflow-hidden z-10">
+    <section class="mb-10 relative">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+                <h2 class="text-5xl font-extrabold font-headline tracking-tighter text-on-surface leading-none mb-2">
+                    İlan Yönetimi
+                </h2>
+                <p class="text-stone-500 font-medium">
+                    Kampüs topluluğundan gelen hayvan ilanlarını incele, onayla veya reddet.
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <div class="bg-tertiary-container text-on-surface px-6 py-3 rounded-md font-bold font-headline -rotate-2 shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined">analytics</span>
+                    {{ reports|length }} Aktif Kayıt
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if messages %}
+    <section class="mb-8 space-y-3">
+        {% for message in messages %}
+        <div class="rounded-xl px-5 py-3 text-sm font-bold
+            {% if message.tags == 'error' %}
+                bg-red-100 text-red-700
+            {% elif message.tags == 'success' %}
+                bg-green-100 text-green-700
+            {% else %}
+                bg-orange-100 text-orange-700
+            {% endif %}
+        ">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <section class="flex flex-wrap gap-4 mb-10">
+        <div class="bg-surface-container-low px-6 py-4 rounded-xl flex items-center gap-4 shadow-sm border border-orange-100 flex-wrap">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                Durum:
+            </span>
+
+            <a href="{% url 'custom_admin_reports' %}{% if active_category or search %}?{% if active_category %}category={{ active_category }}{% endif %}{% if active_category and search %}&{% endif %}{% if search %}search={{ search }}{% endif %}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if not active_status %}bg-secondary text-white shadow-md shadow-secondary/20{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Tümü
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?status=pending{% if active_category %}&category={{ active_category }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_status == 'pending' %}bg-secondary text-white shadow-md shadow-secondary/20{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Bekleyen
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?status=approved{% if active_category %}&category={{ active_category }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_status == 'approved' %}bg-secondary text-white shadow-md shadow-secondary/20{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Onaylanan
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?status=rejected{% if active_category %}&category={{ active_category }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_status == 'rejected' %}bg-secondary text-white shadow-md shadow-secondary/20{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Reddedilen
+            </a>
+        </div>
+
+        <div class="bg-surface-container-low px-6 py-4 rounded-xl flex items-center gap-4 shadow-sm border border-orange-100 flex-wrap">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                Kategori:
+            </span>
+
+            <a href="{% url 'custom_admin_reports' %}{% if active_status or search %}?{% if active_status %}status={{ active_status }}{% endif %}{% if active_status and search %}&{% endif %}{% if search %}search={{ search }}{% endif %}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if not active_category %}bg-primary-container text-on-primary-container{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Tümü
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?category=medical{% if active_status %}&status={{ active_status }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_category == 'medical' %}bg-primary-container text-on-primary-container{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Medikal
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?category=lost{% if active_status %}&status={{ active_status }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_category == 'lost' %}bg-primary-container text-on-primary-container{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Kayıp
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}?category=adoption{% if active_status %}&status={{ active_status }}{% endif %}{% if search %}&search={{ search }}{% endif %}"
+               class="px-4 py-1.5 rounded-full {% if active_category == 'adoption' %}bg-primary-container text-on-primary-container{% else %}bg-white text-stone-600{% endif %} text-xs font-bold">
+                Sahiplendirme
+            </a>
+        </div>
+    </section>
+
+    <section class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <div class="xl:col-span-8 space-y-6">
+            {% for report in reports %}
+            {% if forloop.first %}
+            <div class="bg-surface-container-low rounded-xl p-1 overflow-hidden transition-transform duration-300 hover:scale-[1.01] shadow-sm relative group">
+                <div class="bg-white rounded-[calc(0.75rem-1px)] p-6 h-full border border-orange-100">
+                    <div class="flex flex-col lg:flex-row items-start gap-6">
+                        <div class="relative w-full lg:w-48 h-52 lg:h-48 flex-shrink-0">
+                            {% if report.photo %}
+                                <img class="w-full h-full object-cover rounded-lg rotate-1 shadow-md" src="{{ report.photo.url }}" alt="İlan görseli">
+                            {% else %}
+                                <div class="w-full h-full rounded-lg rotate-1 shadow-md bg-surface-container-high flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-7xl text-primary">pets</span>
+                                </div>
+                            {% endif %}
+
+                            <span class="absolute -top-3 -right-3
+                                {% if report.category == 'medical' %}
+                                    bg-error-container text-white
+                                {% elif report.category == 'lost' %}
+                                    bg-tertiary-container text-on-surface
+                                {% else %}
+                                    bg-secondary text-white
+                                {% endif %}
+                                text-[10px] font-black px-3 py-1.5 rounded-md shadow-lg transform rotate-12">
+                                {{ report.get_category_display }}
+                            </span>
+                        </div>
+
+                        <div class="flex-1 w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-black font-headline text-on-surface">
+                                        {{ report.full_name }}
+                                    </h3>
+
+                                    <p class="text-sm text-stone-500 font-medium italic flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">phone</span>
+                                        {{ report.phone }}
+                                    </p>
+
+                                    {% if report.latitude and report.longitude %}
+                                    <p class="text-xs text-stone-400 font-medium mt-1">
+                                        Konum: {{ report.latitude }}, {{ report.longitude }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <span class="
+                                    {% if report.status == 'pending' %}
+                                        bg-orange-100 text-orange-700
+                                    {% elif report.status == 'approved' %}
+                                        bg-green-100 text-green-700
+                                    {% else %}
+                                        bg-red-100 text-red-700
+                                    {% endif %}
+                                    px-4 py-1 rounded-full text-xs font-bold flex items-center gap-2 w-fit">
+                                    <span class="w-2 h-2 rounded-full
+                                        {% if report.status == 'pending' %}
+                                            bg-orange-600 animate-pulse
+                                        {% elif report.status == 'approved' %}
+                                            bg-green-600
+                                        {% else %}
+                                            bg-red-600
+                                        {% endif %}
+                                    "></span>
+                                    {{ report.get_status_display }}
+                                </span>
+                            </div>
+
+                            <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+                                {{ report.details|truncatechars:220 }}
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{% url 'custom_admin_report_approve' report.id %}"
+                                   class="bg-teal-600 text-white px-6 py-2 rounded-full font-bold text-sm click-bounce-effect flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                                    Onayla
+                                </a>
+
+                                <a href="{% url 'animal_details' report.id %}"
+                                   class="bg-surface-container-high text-on-surface px-6 py-2 rounded-full font-bold text-sm click-bounce-effect flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">visibility</span>
+                                    Detay
+                                </a>
+
+                                <a href="{% url 'custom_admin_report_reject' report.id %}"
+                                   class="text-error font-bold text-sm px-4 py-2 rounded-full hover:bg-error/5 transition-colors">
+                                    Reddet
+                                </a>
+
+                                <a href="{% url 'custom_admin_report_delete' report.id %}"
+                                   class="text-white bg-error font-bold text-sm px-4 py-2 rounded-full hover:opacity-90 transition-colors">
+                                    Sil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="bg-surface-container-high rounded-xl p-6 border border-orange-100 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-1">
+                        <div class="relative group">
+                            {% if report.photo %}
+                                <img class="w-full aspect-square object-cover rounded-xl -rotate-2 group-hover:rotate-0 transition-transform shadow-xl" src="{{ report.photo.url }}" alt="İlan görseli">
+                            {% else %}
+                                <div class="w-full aspect-square rounded-xl -rotate-2 group-hover:rotate-0 transition-transform shadow-xl bg-white flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-6xl text-primary">pets</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-3 flex flex-col justify-between">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                            <div>
+                                <div class="flex items-center gap-3 mb-1 flex-wrap">
+                                    <h3 class="text-3xl font-black font-headline text-on-surface">
+                                        {{ report.full_name }}
+                                    </h3>
+
+                                    <span class="
+                                        {% if report.category == 'medical' %}
+                                            bg-error-container text-white
+                                        {% elif report.category == 'lost' %}
+                                            bg-tertiary-container text-on-surface
+                                        {% else %}
+                                            bg-secondary text-white
+                                        {% endif %}
+                                        px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
+                                        {{ report.get_category_display }}
+                                    </span>
+                                </div>
+
+                                <p class="text-stone-500 font-bold text-sm">
+                                    Telefon: {{ report.phone }} • {{ report.created_at|date:"d.m.Y H:i" }}
+                                </p>
+                            </div>
+
+                            <span class="
+                                {% if report.status == 'pending' %}
+                                    bg-orange-100 text-orange-700
+                                {% elif report.status == 'approved' %}
+                                    bg-green-100 text-green-700
+                                {% else %}
+                                    bg-red-100 text-red-700
+                                {% endif %}
+                                px-4 py-1 rounded-full text-xs font-black w-fit">
+                                {{ report.get_status_display }}
+                            </span>
+                        </div>
+
+                        <div class="my-6 space-y-4">
+                            <p class="text-on-surface-variant font-medium leading-relaxed max-w-2xl">
+                                {{ report.details|truncatechars:260 }}
+                            </p>
+
+                            <div class="flex gap-4 flex-wrap">
+                                <div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col">
+                                    <span class="text-[9px] uppercase font-bold text-stone-400">Kategori</span>
+                                    <span class="text-sm font-black text-secondary">{{ report.get_category_display }}</span>
+                                </div>
+
+                                <div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col">
+                                    <span class="text-[9px] uppercase font-bold text-stone-400">Durum</span>
+                                    <span class="text-sm font-black text-secondary">{{ report.get_status_display }}</span>
+                                </div>
+
+                                <div class="bg-surface-container-low px-4 py-2 rounded-lg flex flex-col">
+                                    <span class="text-[9px] uppercase font-bold text-stone-400">ID</span>
+                                    <span class="text-sm font-black text-secondary">#{{ report.id }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-orange-100 pt-6 gap-4 flex-wrap">
+                            <div class="text-xs font-bold text-stone-500">
+                                Admin incelemesi bekleyen kayıt
+                            </div>
+
+                            <div class="flex gap-3 flex-wrap">
+                                <a href="{% url 'custom_admin_report_approve' report.id %}"
+                                   class="bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-black font-headline shadow-lg shadow-primary/30 click-bounce-effect">
+                                    Onayla
+                                </a>
+
+                                <a href="{% url 'custom_admin_report_reject' report.id %}"
+                                   class="border-2 border-secondary text-secondary px-6 py-3 rounded-full font-black font-headline click-bounce-effect">
+                                    Reddet
+                                </a>
+
+                                <a href="{% url 'custom_admin_report_delete' report.id %}"
+                                   class="bg-error text-white px-6 py-3 rounded-full font-black font-headline click-bounce-effect">
+                                    Sil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% empty %}
+            <div class="bg-white rounded-xl p-10 text-center border border-orange-100">
+                <span class="material-symbols-outlined text-6xl text-orange-300 mb-3">pets</span>
+                <h3 class="text-xl font-black text-on-surface">İlan bulunamadı.</h3>
+                <p class="text-sm text-stone-500 mt-2">
+                    Filtreleri temizleyebilir veya yeni bir ilan ekleyebilirsin.
+                </p>
+
+                <a href="{% url 'new_animal' %}"
+                   class="inline-flex mt-6 bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-black">
+                    Yeni İlan Ekle
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <aside class="xl:col-span-4 space-y-6">
+            <div class="bg-tertiary-container/40 p-6 rounded-xl border-2 border-tertiary-container -rotate-1 relative shadow-lg">
+                <div class="absolute -top-4 -left-4 w-10 h-10 bg-white/60 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/50">
+                    <span class="material-symbols-outlined text-primary">priority_high</span>
+                </div>
+
+                <h4 class="font-headline font-black text-on-surface mb-2">Öncelikli Görev</h4>
+
+                <p class="text-sm text-on-surface leading-tight">
+                    Medikal kategorideki bekleyen ilanları öncelikli olarak inceleyin.
+                </p>
+            </div>
+
+            <div class="bg-secondary-container p-6 rounded-xl rotate-1 shadow-lg border border-secondary/10">
+                <h4 class="font-headline font-black text-secondary mb-4">Son İşlemler</h4>
+
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white/40 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+                        </div>
+                        <span class="text-xs font-bold text-secondary">
+                            Onaylanan ilanlar harita ve detay akışında kullanılabilir.
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white/40 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+                        </div>
+                        <span class="text-xs font-bold text-secondary">
+                            Reddedilen ilanlar sistemde kayıtlı kalır fakat pasif olarak izlenir.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface-container-low rounded-xl p-6 border border-orange-100 shadow-sm">
+                <h4 class="font-black font-headline text-on-surface mb-4">Hızlı Özet</h4>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-stone-500">Listelenen kayıt</span>
+                        <span class="text-lg font-black text-secondary">{{ reports|length }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-stone-500">Aktif durum filtresi</span>
+                        <span class="text-sm font-black text-primary">
+                            {% if active_status %}
+                                {{ active_status }}
+                            {% else %}
+                                Tümü
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-stone-500">Aktif kategori filtresi</span>
+                        <span class="text-sm font-black text-primary">
+                            {% if active_category %}
+                                {{ active_category }}
+                            {% else %}
+                                Tümü
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-white/40 backdrop-blur-md border border-white/50 px-8 py-4 rounded-full shadow-2xl hidden lg:flex items-center gap-4">
+        <div class="w-3 h-3 rounded-full bg-teal-500 animate-pulse"></div>
+        <span class="text-on-surface font-bold font-headline text-sm">
+            Sistem aktif: ilanlar, gönüllüler ve besleme istasyonları izleniyor.
+        </span>
+    </div>
+</main>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_dashboard' %}">
+        <span class="material-symbols-outlined">dashboard</span>
+    </a>
+
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-primary-container/20" href="{% url 'custom_admin_reports' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+    </a>
+
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_volunteers' %}">
+        <span class="material-symbols-outlined">group</span>
+    </a>
+
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_stations' %}">
+        <span class="material-symbols-outlined">pets</span>
+    </a>
+</nav>
+
 </body>
-</html>
+</html>
