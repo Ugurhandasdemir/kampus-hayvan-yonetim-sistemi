@@ -138,16 +138,7 @@
 
 <header class="fixed top-0 md:left-64 left-0 right-0 z-40 bg-orange-50/80 backdrop-blur-xl flex justify-between items-center px-6 py-3">
     <div class="flex items-center gap-4 flex-1">
-        <div class="relative w-full max-w-md hidden lg:block">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">search</span>
-            <input
-                class="w-full bg-white border-none rounded-full pl-12 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary/20"
-                placeholder="Ayar, kullanıcı veya sistem ara..."
-                type="text"
-            />
-        </div>
-
-        <h1 class="lg:hidden text-xl font-black text-orange-700">Admin Ayarları</h1>
+        <h1 class="text-xl font-black text-orange-700">Admin Ayarları</h1>
     </div>
 
     <div class="flex items-center gap-4">
@@ -327,24 +318,6 @@
                         </div>
                         <strong class="text-3xl font-black text-on-surface block">İstasyonlar</strong>
                         <span class="text-sm text-stone-500">Mama/su takibine git</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="bg-surface-container-highest rounded-xl p-8 border-b-8 border-primary shadow-xl shadow-orange-900/5">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div>
-                        <span class="material-symbols-outlined text-4xl text-primary mb-3">notifications</span>
-                        <h3 class="text-2xl font-black text-on-surface mb-2">Bildirim ve Profil Alanı</h3>
-                        <p class="text-sm text-on-surface-variant leading-relaxed max-w-xl">
-                            Stitch tasarımındaki profil ve bildirim alanı bu sayfaya sadeleştirilerek uyarlandı.
-                            Admin bilgileri burada güncellenebilir.
-                        </p>
-                    </div>
-
-                    <a href="{% url 'custom_admin_dashboard' %}"
-                       class="bg-white text-primary px-6 py-3 rounded-full font-black shadow-sm hover:shadow-md transition-shadow text-center">
-                        Dashboard'a Dön
                     </a>
                 </div>
             </div>
