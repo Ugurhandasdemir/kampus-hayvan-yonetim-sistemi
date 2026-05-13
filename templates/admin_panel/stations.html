@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -73,6 +76,54 @@
             background-image: radial-gradient(#8c4a00 1px, transparent 1px);
             background-size: 22px 22px;
             z-index: 0;
+        }
+
+        #station-map {
+            width: 100%;
+            height: 430px;
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 221, 186, 0.9);
+            box-shadow: 0 20px 45px rgba(140, 74, 0, 0.08);
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background: #e9f5f1;
+        }
+
+        .station-marker {
+            width: 22px;
+            height: 22px;
+            border-radius: 9999px;
+            border: 3px solid white;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        .station-marker-normal {
+            background: #006666;
+        }
+
+        .station-marker-critical {
+            background: #b02500;
+        }
+
+        .station-popup-title {
+            font-weight: 800;
+            color: #452800;
+            margin-bottom: 4px;
+        }
+
+        .station-popup-text {
+            font-size: 12px;
+            color: #6b5a48;
+            line-height: 1.5;
+        }
+
+        .leaflet-control-zoom a {
+            border-radius: 10px !important;
+            color: #452800 !important;
         }
     </style>
 </head>
@@ -344,44 +395,13 @@
                     {% endfor %}
                 </div>
 
-                <div id="station-map" class="bg-surface-container-high rounded-xl h-[400px] relative overflow-hidden">
-                    <div class="absolute inset-0 bg-teal-100 flex items-center justify-center">
-                        <div class="w-full h-full opacity-70"
-                             style="background-image: linear-gradient(45deg, rgba(0,102,102,.12) 25%, transparent 25%), linear-gradient(-45deg, rgba(0,102,102,.12) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(0,102,102,.12) 75%), linear-gradient(-45deg, transparent 75%, rgba(0,102,102,.12) 75%); background-size: 42px 42px; background-position: 0 0, 0 21px, 21px -21px, -21px 0;">
-                        </div>
-                    </div>
+                <div class="relative">
+                    <div id="station-map"></div>
 
-                    {% for station in stations %}
-                    <div class="absolute group"
-                         style="top: {% cycle '28%' '45%' '62%' '36%' %}; left: {% cycle '32%' '58%' '70%' '44%' %};">
-                        <div class="w-6 h-6 {% if station.is_critical %}bg-error animate-bounce{% else %}bg-secondary animate-pulse{% endif %} rounded-full border-2 border-white shadow-lg"></div>
-                        <div class="absolute hidden group-hover:block bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white p-2 rounded shadow-xl whitespace-nowrap z-10">
-                            <p class="text-[10px] font-bold">{{ station.name }}</p>
-                            <p class="text-[10px] text-stone-500">Mama {{ station.food_level }}% / Su {{ station.water_level }}%</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                    <div class="absolute top-4 right-4 flex flex-col gap-2">
-                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
-                            <span class="material-symbols-outlined">add</span>
-                        </button>
-                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
-                            <span class="material-symbols-outlined">remove</span>
-                        </button>
-                        <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-stone-50">
-                            <span class="material-symbols-outlined">my_location</span>
-                        </button>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg flex items-center gap-4 border border-white/50 flex-wrap">
+                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg flex items-center gap-4 border border-white/50 flex-wrap z-[500]">
                         <div class="flex items-center gap-1">
                             <div class="w-2 h-2 rounded-full bg-secondary"></div>
                             <span class="text-[10px] font-bold uppercase">Normal</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <div class="w-2 h-2 rounded-full bg-primary"></div>
-                            <span class="text-[10px] font-bold uppercase">Takip</span>
                         </div>
                         <div class="flex items-center gap-1">
                             <div class="w-2 h-2 rounded-full bg-error"></div>
@@ -443,9 +463,7 @@
                         <div>
                             <p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Kritik</p>
                             <p class="text-3xl font-headline font-black">
-                                {% with critical_count=0 %}
-                                    {{ critical_count }}
-                                {% endwith %}
+                                0
                             </p>
                         </div>
                     </div>
@@ -495,6 +513,94 @@
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
     </a>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Atatürk Üniversitesi / Erzurum merkezli varsayılan konum
+        const defaultLat = 39.90290;
+        const defaultLng = 41.25284;
+
+        const map = L.map("station-map", {
+            zoomControl: true,
+            scrollWheelZoom: true
+        }).setView([defaultLat, defaultLng], 16);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        const stations = [
+            {% for station in stations %}
+            {
+                name: "{{ station.name|escapejs }}",
+                location: "{{ station.location_name|escapejs }}",
+                lat: parseFloat("{{ station.latitude|default_if_none:'39.902900' }}"),
+                lng: parseFloat("{{ station.longitude|default_if_none:'41.252840' }}"),
+                food: parseInt("{{ station.food_level|default:'0' }}"),
+                water: parseInt("{{ station.water_level|default:'0' }}"),
+                status: "{{ station.get_status_display|escapejs }}",
+                critical: {% if station.is_critical %}true{% else %}false{% endif %}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        const bounds = [];
+
+        stations.forEach(function (station) {
+            const latIsValid = !Number.isNaN(station.lat) && station.lat >= 39.75 && station.lat <= 40.05;
+            const lngIsValid = !Number.isNaN(station.lng) && station.lng >= 41.05 && station.lng <= 41.45;
+
+            const markerLat = latIsValid ? station.lat : defaultLat;
+            const markerLng = lngIsValid ? station.lng : defaultLng;
+
+            const markerClass = station.critical
+                ? "station-marker station-marker-critical"
+                : "station-marker station-marker-normal";
+
+            const icon = L.divIcon({
+                className: "",
+                html: `<div class="${markerClass}"></div>`,
+                iconSize: [22, 22],
+                iconAnchor: [11, 11],
+                popupAnchor: [0, -12]
+            });
+
+            const marker = L.marker([markerLat, markerLng], { icon: icon }).addTo(map);
+
+            marker.bindPopup(`
+                <div>
+                    <div class="station-popup-title">${station.name}</div>
+                    <div class="station-popup-text">
+                        <strong>Konum:</strong> ${station.location}<br>
+                        <strong>Mama:</strong> %${station.food}<br>
+                        <strong>Su:</strong> %${station.water}<br>
+                        <strong>Durum:</strong> ${station.status}<br>
+                        <strong>Uyarı:</strong> ${station.critical ? "Kritik seviye" : "Normal seviye"}
+                    </div>
+                </div>
+            `);
+
+            bounds.push([markerLat, markerLng]);
+        });
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, {
+                padding: [40, 40],
+                maxZoom: 17
+            });
+        } else {
+            L.marker([defaultLat, defaultLng]).addTo(map)
+                .bindPopup("Atatürk Üniversitesi kampüs konumu")
+                .openPopup();
+        }
+
+        setTimeout(function () {
+            map.invalidateSize();
+            map.setView([defaultLat, defaultLng], 16);
+        }, 300);
+    });
+</script>
 
 </body>
 </html>
