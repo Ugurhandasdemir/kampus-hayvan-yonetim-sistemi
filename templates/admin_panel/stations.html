@@ -428,7 +428,7 @@
                         </div>
                         <div>
                             <p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Kritik</p>
-                            <p class="text-3xl font-headline font-black">{{ critical_stations_count }}</p>
+                            <p id="weeklyCriticalStationCount" class="text-3xl font-headline font-black">{{ critical_stations_count|default:0 }}</p>
                         </div>
                     </div>
 
@@ -582,6 +582,16 @@
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         ];
+
+        const weeklyCriticalStationCount = document.getElementById("weeklyCriticalStationCount");
+
+        if (weeklyCriticalStationCount) {
+            const criticalCount = stations.filter(function (station) {
+                return station.critical === true;
+            }).length;
+
+            weeklyCriticalStationCount.textContent = criticalCount;
+        }
 
         const bounds = [];
         const usedPositions = {};
