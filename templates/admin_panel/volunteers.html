@@ -190,18 +190,12 @@
 
             <div class="flex gap-3 flex-wrap">
                 <div class="bg-surface-container-high px-6 py-4 rounded-xl -rotate-1 shadow-sm">
-                    <p class="text-2xl font-black text-secondary">{{ volunteers|length }}</p>
+                    <p class="text-2xl font-black text-secondary">{{ total_volunteers }}</p>
                     <p class="text-[10px] uppercase font-bold text-on-surface-variant">Toplam Kayıt</p>
                 </div>
 
                 <div class="bg-surface-container-high px-6 py-4 rounded-xl rotate-1 shadow-sm">
-                    <p class="text-2xl font-black text-primary">
-                        {% if active_status == "pending" %}
-                            {{ volunteers|length }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </p>
+                    <p class="text-2xl font-black text-primary">{{ pending_volunteers }}</p>
                     <p class="text-[10px] uppercase font-bold text-on-surface-variant">Bekleyen Görünüm</p>
                 </div>
             </div>
@@ -230,7 +224,7 @@
                 <div class="flex items-center justify-between gap-4 flex-wrap">
                     <h3 class="text-2xl font-black text-on-surface">
                         Yeni Başvurular
-                        <span class="text-stone-400 font-normal ml-2">Bekleme Listesi</span>
+                        <span class="text-stone-400 font-normal ml-2">Başvuru Listesi</span>
                     </h3>
 
                     <div class="flex gap-2 bg-surface-container-low p-1 rounded-full">
@@ -258,7 +252,6 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {% for volunteer in volunteers %}
-                    {% if volunteer.status == "pending" %}
                     <div class="bg-white p-6 rounded-lg shadow-sm border-b-4 border-tertiary transform transition-transform hover:-translate-y-1">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex gap-3">
@@ -281,7 +274,7 @@
                                 {{ volunteer.availability }}
                             </span>
                             <span class="px-3 py-1 bg-surface-container text-[10px] font-bold rounded-full">
-                                Beklemede
+                                {{ volunteer.get_status_display }}
                             </span>
                         </div>
 
@@ -301,7 +294,6 @@
                             </a>
                         </div>
                     </div>
-                    {% endif %}
                     {% empty %}
                     <div class="md:col-span-2 border-4 border-dashed border-orange-200 rounded-lg flex flex-col items-center justify-center p-10 text-center bg-white/50">
                         <span class="material-symbols-outlined text-orange-300 text-4xl mb-2">person_add</span>
@@ -355,20 +347,6 @@
                             <div class="flex-1 bg-primary-container h-[30%] rounded-t-md opacity-40"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-surface-container-highest rounded-xl p-8 flex flex-col justify-between border-b-8 border-primary">
-                    <div>
-                        <span class="material-symbols-outlined text-4xl text-primary mb-4">campaign</span>
-                        <h3 class="text-2xl font-black text-on-surface mb-2">Toplu Duyuru</h3>
-                        <p class="text-sm text-on-surface-variant leading-relaxed">
-                            Onaylı gönüllülere görev ve kampüs besleme istasyonu duyuruları yapılabilir.
-                        </p>
-                    </div>
-
-                    <button class="mt-8 w-full py-4 border-2 border-primary text-primary font-black rounded-xl hover:bg-primary/5 transition-colors">
-                        Duyuru Hazırla
-                    </button>
                 </div>
             </aside>
         </section>
@@ -482,11 +460,6 @@
         </section>
     </div>
 </main>
-
-<a href="#"
-   class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-50">
-    <span class="material-symbols-outlined text-3xl">add</span>
-</a>
 
 <nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
     <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_dashboard' %}">
