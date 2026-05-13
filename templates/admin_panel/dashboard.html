@@ -133,13 +133,6 @@
 <main class="md:ml-64 min-h-screen relative z-10">
     <header class="bg-orange-50/80 backdrop-blur-xl top-0 z-40 flex justify-between items-center w-full px-6 py-3 sticky">
         <div class="flex items-center gap-6 flex-1">
-            <div class="relative w-full max-w-md hidden lg:block">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">search</span>
-                <input class="w-full pl-10 pr-4 py-2 bg-stone-100 border-none rounded-full text-sm focus:ring-2 focus:ring-secondary/20 font-body"
-                       placeholder="İlan, gönüllü veya istasyon ara..."
-                       type="text"/>
-            </div>
-
             <h2 class="text-2xl font-black tracking-tight text-orange-700 font-headline lg:hidden">
                 Kampüs Hayvan Admin
             </h2>
@@ -243,8 +236,9 @@
                         <p class="text-stone-500 text-sm font-medium">İlan, gönüllü ve istasyon durumları</p>
                     </div>
                     <div class="flex gap-2">
-                        <span class="px-3 py-1 bg-stone-100 rounded-full text-xs font-bold text-stone-600">GÜNLÜK</span>
-                        <span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-bold shadow-md">HAFTALIK</span>
+                        <span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-bold shadow-md">
+                            HAFTALIK
+                        </span>
                     </div>
                 </div>
 
@@ -256,28 +250,43 @@
                         <div class="border-b border-stone-300 w-full h-0"></div>
                     </div>
 
-                    <div class="flex flex-col items-center gap-3 flex-1 group">
-                        <div class="w-full bg-secondary-container rounded-t-lg transition-all duration-500 group-hover:bg-secondary h-[35%]"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-end gap-2 flex-1 h-64">
+                        <strong class="chart-value text-xs font-black text-secondary">{{ total_reports|default:0 }}</strong>
+                        <div class="chart-bar w-full max-w-[90px] bg-secondary rounded-t-lg transition-all duration-500 shadow-sm"
+                             data-value="{{ total_reports|default:0 }}"
+                             style="height:24px;"></div>
                         <span class="text-[10px] font-bold text-stone-400 uppercase">İlan</span>
                     </div>
 
-                    <div class="flex flex-col items-center gap-3 flex-1 group">
-                        <div class="w-full bg-primary-container rounded-t-lg transition-all duration-500 group-hover:bg-primary h-[55%]"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-end gap-2 flex-1 h-64">
+                        <strong class="chart-value text-xs font-black text-primary">{{ pending_reports|default:0 }}</strong>
+                        <div class="chart-bar w-full max-w-[90px] bg-primary-container rounded-t-lg transition-all duration-500 shadow-sm"
+                             data-value="{{ pending_reports|default:0 }}"
+                             style="height:24px;"></div>
                         <span class="text-[10px] font-bold text-stone-400 uppercase">Bekleyen</span>
                     </div>
 
-                    <div class="flex flex-col items-center gap-3 flex-1 group">
-                        <div class="w-full bg-secondary-container rounded-t-lg transition-all duration-500 group-hover:bg-secondary h-[75%]"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-end gap-2 flex-1 h-64">
+                        <strong class="chart-value text-xs font-black text-secondary">{{ total_volunteers|default:0 }}</strong>
+                        <div class="chart-bar w-full max-w-[90px] bg-secondary-container rounded-t-lg transition-all duration-500 shadow-sm"
+                             data-value="{{ total_volunteers|default:0 }}"
+                             style="height:24px;"></div>
                         <span class="text-[10px] font-bold text-stone-400 uppercase">Gönüllü</span>
                     </div>
 
-                    <div class="flex flex-col items-center gap-3 flex-1 group">
-                        <div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 group-hover:bg-primary h-[45%]"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-end gap-2 flex-1 h-64">
+                        <strong class="chart-value text-xs font-black text-primary">{{ total_stations|default:0 }}</strong>
+                        <div class="chart-bar w-full max-w-[90px] bg-surface-container-highest rounded-t-lg transition-all duration-500 shadow-sm"
+                             data-value="{{ total_stations|default:0 }}"
+                             style="height:24px;"></div>
                         <span class="text-[10px] font-bold text-stone-400 uppercase">İstasyon</span>
                     </div>
 
-                    <div class="flex flex-col items-center gap-3 flex-1 group">
-                        <div class="w-full bg-error rounded-t-lg transition-all duration-500 h-[30%]"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-end gap-2 flex-1 h-64">
+                        <strong class="chart-value text-xs font-black text-error">{{ critical_stations_count|default:0 }}</strong>
+                        <div class="chart-bar w-full max-w-[90px] bg-error rounded-t-lg transition-all duration-500 shadow-sm"
+                             data-value="{{ critical_stations_count|default:0 }}"
+                             style="height:24px;"></div>
                         <span class="text-[10px] font-bold text-stone-400 uppercase">Kritik</span>
                     </div>
                 </div>
@@ -285,7 +294,7 @@
                 <div class="bg-surface-container-low rounded-xl p-6 flex items-center justify-between gap-4 flex-wrap">
                     <div class="flex items-center gap-4">
                         <div class="flex -space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-[10px] font-black text-secondary border-2 border-surface">
+                            <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-[10px] font-black text-secondary border-2 border-surface">
                                 {{ total_volunteers }}
                             </div>
                             <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-[10px] font-black text-on-surface border-2 border-surface">
@@ -389,6 +398,35 @@
         <span class="material-symbols-outlined">settings</span>
     </a>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const bars = document.querySelectorAll(".chart-bar");
+        let maxValue = 0;
+
+        bars.forEach(function (bar) {
+            const value = Number(bar.dataset.value || 0);
+            if (value > maxValue) {
+                maxValue = value;
+            }
+        });
+
+        if (maxValue <= 0) {
+            maxValue = 1;
+        }
+
+        bars.forEach(function (bar) {
+            const value = Number(bar.dataset.value || 0);
+            const height = value === 0 ? 18 : Math.max(36, Math.round((value / maxValue) * 210));
+            bar.style.height = height + "px";
+
+            const valueText = bar.parentElement.querySelector(".chart-value");
+            if (valueText) {
+                valueText.textContent = value;
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
