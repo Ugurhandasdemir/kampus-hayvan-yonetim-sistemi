@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}İlanı Düzenle{% endblock %}
+
+{% block content %}
+<div class="edit-report-page">
+  <div class="edit-report-header">
+    <a href="{% url 'profile' %}" class="edit-back-btn">
+      <span class="material-symbols-outlined">arrow_back</span>
+      İlanlarıma Dön
+    </a>
+    <h2>İlanı Düzenle</h2>
+  </div>
+
+  <div class="edit-report-card">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if messages %}
+      <div class="edit-messages">
+        {% for message in messages %}
+        <p class="edit-message">{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Kategori -->
+      <div class="edit-field">
+        <label class="edit-label">Kategori</label>
+        <div class="edit-category-grid">
+          <label class="edit-cat-option">
+            <input type="radio" name="category" value="lost" {% if report.category == 'lost' %}checked{% endif %}>
+            <div class="edit-cat-box lost-cat">
+              <span class="material-symbols-outlined">search</span>
+              <span>Kayıp</span>
+            </div>
+          </label>
+          <label class="edit-cat-option">
+            <input type="radio" name="category" value="adoption" {% if report.category == 'adoption' %}checked{% endif %}>
+            <div class="edit-cat-box adoption-cat">
+              <span class="material-symbols-outlined">pets</span>
+              <span>Sahiplendirme</span>
+            </div>
+          </label>
+          <label class="edit-cat-option">
+            <input type="radio" name="category" value="medical" {% if report.category == 'medical' %}checked{% endif %}>
+            <div class="edit-cat-box medical-cat">
+              <span class="material-symbols-outlined">medical_services</span>
+              <span>Tıbbi Yardım</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Mevcut fotoğraf -->
+      {% if report.photo %}
+      <div class="edit-field">
+        <label class="edit-label">Mevcut Fotoğraf</label>
+        <img src="{{ report.photo.url }}" alt="Mevcut fotoğraf" class="edit-current-photo">
+      </div>
+      {% endif %}
+
+      <!-- Yeni fotoğraf -->
+      <div class="edit-field">
+        <label class="edit-label">Fotoğrafı Değiştir (opsiyonel)</label>
+        <input type="file" name="photo" accept="image/*" class="edit-file-input">
+      </div>
+
+      <!-- Açıklama -->
+      <div class="edit-field">
+        <label class="edit-label" for="details">Açıklama</label>
+        <textarea class="edit-textarea" id="details" name="details"
+                  rows="5" maxlength="500">{{ report.details }}</textarea>
+      </div>
+
+      <!-- Ad -->
+      <div class="edit-field">
+        <label class="edit-label" for="full_name">Ad Soyad</label>
+        <input class="edit-input" type="text" id="full_name" name="full_name"
+               value="{{ report.full_name }}">
+      </div>
+
+      <!-- Telefon -->
+      <div class="edit-field">
+        <label class="edit-label" for="phone">Telefon</label>
+        <input class="edit-input" type="tel" id="phone" name="phone"
+               value="{{ report.phone }}">
+      </div>
+
+      <div class="edit-actions">
+        <a href="{% url 'profile' %}" class="edit-cancel-btn">İptal</a>
+        <button type="submit" class="edit-save-btn">
+          <span class="material-symbols-outlined">save</span>
+          Kaydet
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+.edit-report-page { max-width: 680px; margin: 40px auto; padding: 0 16px; }
+
+.edit-report-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.edit-report-header h2 { font-size: 22px; font-weight: 800; margin: 0; }
+.edit-back-btn {
+  display: flex; align-items: center; gap: 4px;
+  color: var(--on-surface-variant); text-decoration: none;
+  font-size: 13px; font-weight: 600;
+  padding: 8px 12px; border-radius: 10px;
+  transition: background .2s;
+}
+.edit-back-btn:hover { background: var(--surface-container); }
+.edit-back-btn .material-symbols-outlined { font-size: 18px; }
+
+.edit-report-card {
+  background: var(--surface-container-lowest);
+  border-radius: 20px; padding: 32px;
+  box-shadow: 0 8px 24px var(--shadow-primary);
+}
+
+.edit-messages { margin-bottom: 20px; }
+.edit-message {
+  background: #ffdad6; color: #93000a;
+  padding: 10px 14px; border-radius: 10px;
+  font-size: 13px; margin-bottom: 8px;
+}
+
+.edit-field { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+.edit-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--on-surface-variant);
+}
+
+.edit-category-grid { display: flex; gap: 10px; }
+.edit-cat-option input { display: none; }
+.edit-cat-box {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 20px; border-radius: 14px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 2px solid transparent; transition: all .2s;
+}
+.edit-cat-option input:checked + .edit-cat-box { border-color: var(--primary); }
+.lost-cat     { background: var(--tertiary-container); color: var(--tertiary); }
+.adoption-cat { background: #ffdcc5; color: var(--primary); }
+.medical-cat  { background: var(--secondary-container); color: var(--secondary); }
+.edit-cat-box .material-symbols-outlined { font-size: 22px; }
+
+.edit-current-photo {
+  width: 100%; max-height: 200px; object-fit: cover;
+  border-radius: 12px;
+}
+
+.edit-file-input {
+  padding: 10px; background: var(--surface-container);
+  border: none; border-radius: 12px;
+  font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px;
+  cursor: pointer;
+}
+
+.edit-input, .edit-textarea {
+  padding: 12px 14px;
+  background: var(--surface-container);
+  border: none; border-radius: 12px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px; color: var(--on-surface);
+  outline: none; transition: background .2s;
+  resize: vertical;
+}
+.edit-input:focus, .edit-textarea:focus {
+  background: var(--surface-container-lowest);
+  box-shadow: 0 0 0 2px rgba(148,74,0,0.2);
+}
+
+.edit-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+.edit-cancel-btn {
+  padding: 12px 20px; border-radius: 12px;
+  background: var(--surface-container); color: var(--on-surface);
+  text-decoration: none; font-weight: 600; font-size: 14px;
+  transition: background .2s;
+}
+.edit-cancel-btn:hover { background: var(--surface-container-highest, #e2e2e2); }
+.edit-save-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 24px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  color: #fff; border: none; font-weight: 700; font-size: 14px;
+  cursor: pointer; font-family: 'Be Vietnam Pro', sans-serif;
+  transition: transform .15s;
+}
+.edit-save-btn:hover { transform: scale(0.97); }
+.edit-save-btn .material-symbols-outlined { font-size: 18px; }
+</style>
+{% endblock %}

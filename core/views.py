@@ -292,14 +292,55 @@ def admin_settings_view(request):
 
     if request.method == "POST":
         first_name = request.POST.get("first_name", "").strip()
-
         if first_name:
             request.user.first_name = first_name
             request.user.save()
-            messages.success(request, "Bilgiler guncellendi.")
+            messages.success(request, "Bilgiler güncellendi.")
             return redirect("admin_settings")
 
-    return render(request, "admin_settings.html")
+    context = {
+        "total_reports": AnimalReport.objects.count(),
+        "total_users": User.objects.count(),
+        "pending_reports": AnimalReport.objects.filter(status="pending").count(),
+        "approved_reports": AnimalReport.objects.filter(status="approved").count(),
+        "total_volunteers": VolunteerApplication.objects.count(),
+        "total_stations": FeedingStation.objects.count(),
+    }
+    return render(request, "admin_settings.html", context)
+
+@login_required
+def edit_report_view(request, report_id):
+    report = get_object_or_404(AnimalReport, id=report_id, reporter=request.user)
+
+    if request.method == "POST":
+        category = request.POST.get("category", "").strip()
+        details = request.POST.get("details", "").strip()
+        full_name = request.POST.get("full_name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        photo = request.FILES.get("photo")
+
+        valid_categories = {key for key, _ in AnimalReport.CATEGORY_CHOICES}
+
+        if category not in valid_categories or not details or not full_name or not phone:
+            messages.error(request, "Lütfen tüm alanları doldurun.")
+        else:
+            report.category = category
+            report.details = details
+            report.full_name = full_name
+            report.phone = phone
+
+            if photo:
+                try:
+                    report.photo = _resize_report_photo(photo)
+                except ValueError as exc:
+                    messages.error(request, str(exc))
+                    return render(request, "edit_report.html", {"report": report})
+
+            report.save()
+            messages.success(request, "İlan güncellendi.")
+            return redirect("profile")
+
+    return render(request, "edit_report.html", {"report": report})
 
 
 def _is_custom_admin(user):

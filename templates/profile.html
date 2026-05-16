@@ -45,7 +45,10 @@
             <span class="report-date">{{ report.created_at|date:"d M Y" }}</span>
             <div class="report-card-actions">
               <a href="{% url 'animal_details' report.id %}" class="report-action-btn view-btn">
-                <span class="material-symbols-outlined">visibility</span> Görüntüle
+                <span class="material-symbols-outlined">visibility</span> Gör
+              </a>
+              <a href="{% url 'edit_report' report.id %}" class="report-action-btn edit-btn">
+                <span class="material-symbols-outlined">edit</span> Düzenle
               </a>
               <form method="post" style="display:inline" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')">
                 {% csrf_token %}
@@ -146,6 +149,8 @@
 }
 .view-btn   { background:var(--surface-container); color:var(--on-surface); flex:1; justify-content:center; }
 .view-btn:hover   { background:var(--surface-container-highest,#e2e2e2); }
+.edit-btn { background:#e8f5e9; color:#2e7d32; }
+.edit-btn:hover { background:#c8e6c9; }
 .delete-btn { background:#ffdad6; color:#93000a; }
 .delete-btn:hover { background:#ffb4ab; }
 .report-action-btn .material-symbols-outlined { font-size:15px; }

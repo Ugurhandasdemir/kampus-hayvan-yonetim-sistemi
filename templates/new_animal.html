@@ -18,8 +18,8 @@
             <div class="yeni_nav_sol">
                 <span class="yeni_marka">PawsMap</span>
                 <div class="yeni_nav_linkler">
-                    <a class="yeni_nav_link" href="#">My Listings</a>
-                    <a class="yeni_nav_link" href="#">Map View</a>
+                    <a class="yeni_nav_link" href="{% url 'profile' %}">İlanlarım</a>
+                    <a class="yeni_nav_link" href="{% url 'map' %}">Harita</a>
                 </div>
             </div>
             <div class="yeni_nav_sag">
@@ -184,24 +184,24 @@
     </footer>
 
     <!-- Mobil Alt Navigasyon -->
-    <nav class="yeni_mobil_nav">
-        <a class="yeni_mobil_item" href="#">
-            <span class="material-symbols-outlined">map</span>
-            <span class="yeni_mobil_etiket">Map</span>
-        </a>
-        <a class="yeni_mobil_item yeni_mobil_item--aktif" href="#">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
-            <span class="yeni_mobil_etiket">Reports</span>
-        </a>
-        <a class="yeni_mobil_item" href="#">
-            <span class="material-symbols-outlined">pets</span>
-            <span class="yeni_mobil_etiket">Adoptions</span>
-        </a>
-        <a class="yeni_mobil_item" href="#">
-            <span class="material-symbols-outlined">account_circle</span>
-            <span class="yeni_mobil_etiket">Profile</span>
-        </a>
-    </nav>
+ <nav class="yeni_mobil_nav">
+    <a class="yeni_mobil_item" href="{% url 'map' %}">
+        <span class="material-symbols-outlined">map</span>
+        <span class="yeni_mobil_etiket">Map</span>
+    </a>
+    <a class="yeni_mobil_item yeni_mobil_item--aktif" href="{% url 'new_animal' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
+        <span class="yeni_mobil_etiket">Reports</span>
+    </a>
+    <a class="yeni_mobil_item" href="{% url 'map' %}?category=adoption">
+        <span class="material-symbols-outlined">pets</span>
+        <span class="yeni_mobil_etiket">Adoptions</span>
+    </a>
+    <a class="yeni_mobil_item" href="{% url 'profile' %}">
+        <span class="material-symbols-outlined">account_circle</span>
+        <span class="yeni_mobil_etiket">Profile</span>
+    </a>
+</nav>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
