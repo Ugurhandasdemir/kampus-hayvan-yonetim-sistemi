@@ -159,13 +159,13 @@
                 <span class="material-symbols-outlined text-stone-600">dashboard</span>
             </a>
 
-            <a href="{% url 'home' %}" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-orange-200/50 transition-colors">
+            <a href="{% url 'custom_admin_dashboard' %}" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-orange-200/50 transition-colors">
                 <span class="material-symbols-outlined text-stone-600">home</span>
             </a>
 
-            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary ring-2 ring-orange-100 bg-primary-container flex items-center justify-center font-black">
+            <a href="{% url 'admin_settings' %}" class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary ring-2 ring-orange-100 bg-primary-container flex items-center justify-center font-black hover:ring-primary transition-all">
                 A
-            </div>
+            </a>
         </div>
     </header>
 

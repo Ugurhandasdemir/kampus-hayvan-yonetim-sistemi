@@ -1,167 +1,344 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}İlanlarım{% endblock %}
+{% block title %}Profilim{% endblock %}
 
 {% block content %}
-<div class="profile-page">
+<div class="profile-layout">
 
-  <div class="profile-header">
-    <div class="profile-avatar">
-      <span class="material-symbols-outlined">account_circle</span>
-    </div>
-    <div class="profile-info">
-      <h2>{{ request.user.first_name|default:request.user.username }}</h2>
-      <p>{{ request.user.email }}</p>
-    </div>
-  </div>
+  <!-- SOL PANEL -->
+  <aside class="profile-sidebar">
 
-  <div class="profile-section">
-    <div class="profile-section-header">
-      <h3>Aktif İlanlarım</h3>
-      <a href="{% url 'new_animal' %}" class="paws-btn-primary" style="display:flex;">
-        <span class="material-symbols-outlined">add_circle</span>
-        Yeni İlan
-      </a>
+    <!-- Profil Kartı -->
+    <div class="profile-card">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar-circle">
+          <span class="material-symbols-outlined">account_circle</span>
+        </div>
+        <div class="profile-verified-badge">
+          <span class="material-symbols-outlined">verified</span>
+        </div>
+      </div>
+      <h2 class="profile-name">{{ request.user.first_name|default:request.user.username }}</h2>
+      <p class="profile-role">Kayıtlı Kurtarıcı</p>
+
+      <div class="profile-field">
+        <label class="profile-field-label">E-POSTA ADRESİ</label>
+        <p class="profile-field-value">{{ request.user.email }}</p>
+      </div>
+
+      <div class="profile-field">
+        <label class="profile-field-label">HAKKIMDA</label>
+        <textarea class="profile-bio" readonly>{{ request.user.first_name|default:request.user.username }} olarak topluluk hayvancılığına destek veriyorum.</textarea>
+      </div>
+
+      <button class="profile-update-btn" disabled>Profili Güncelle</button>
+    </div>
+
+    <!-- Son Aktiviteler -->
+    <div class="notif-card">
+      <div class="notif-header">
+        <h3>Son Aktiviteler</h3>
+        {% if user_reports %}
+        <span class="notif-new-badge">YENİ</span>
+        {% endif %}
+      </div>
+      {% for report in user_reports|slice:":3" %}
+      <div class="notif-item">
+        <div class="notif-dot notif-dot--{{ report.category }}"></div>
+        <div class="notif-content">
+          <p class="notif-text">
+            <strong>{{ report.full_name }}</strong> ilanın aktif
+          </p>
+          <p class="notif-time">{{ report.created_at|date:"d M Y" }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="notif-empty">Henüz aktivite yok.</p>
+      {% endfor %}
+    </div>
+
+  </aside>
+
+  <!-- SAĞ PANEL -->
+  <main class="profile-main">
+
+    <div class="reports-header">
+      <div>
+        <h2 class="reports-title">Aktif İlanlarım</h2>
+        <p class="reports-sub">{{ user_reports.count }} aktif hayvan ilanı yönetiyorsun.</p>
+      </div>
+      <a href="{% url 'map' %}" class="reports-history-link">Haritada Gör</a>
     </div>
 
     {% if user_reports %}
-      <div class="profile-reports-grid">
-        {% for report in user_reports %}
-        <div class="profile-report-card">
+    <div class="reports-grid">
+      {% for report in user_reports %}
+      <div class="report-item-card">
+        <div class="report-item-top">
           {% if report.photo %}
-            <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-img" />
+            <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-item-img" />
           {% else %}
-            <div class="report-card-img-placeholder">🐾</div>
+            <div class="report-item-img-placeholder">🐾</div>
           {% endif %}
-          <div class="report-card-body">
-            <span class="report-badge report-badge--{{ report.category }}">
-              {% if report.category == 'lost' %}Kayıp
-              {% elif report.category == 'adoption' %}Sahiplendirme
-              {% else %}Tıbbi Yardım{% endif %}
+          <div class="report-item-info">
+            <span class="report-item-badge badge--{{ report.category }}">
+              AKTİF &bull; {% if report.category == 'lost' %}KAYIP{% elif report.category == 'adoption' %}SAHİPLENDİRME{% else %}TIBBİ{% endif %}
             </span>
-            <h4>{{ report.full_name }}</h4>
-            <p>{{ report.details|truncatechars:80 }}</p>
-            <span class="report-date">{{ report.created_at|date:"d M Y" }}</span>
-            <div class="report-card-actions">
-              <a href="{% url 'animal_details' report.id %}" class="report-action-btn view-btn">
-                <span class="material-symbols-outlined">visibility</span> Gör
-              </a>
-              <a href="{% url 'edit_report' report.id %}" class="report-action-btn edit-btn">
-                <span class="material-symbols-outlined">edit</span> Düzenle
-              </a>
-              <form method="post" style="display:inline" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')">
-                {% csrf_token %}
-                <input type="hidden" name="delete_id" value="{{ report.id }}">
-                <button type="submit" class="report-action-btn delete-btn">
-                  <span class="material-symbols-outlined">delete</span> Sil
-                </button>
-              </form>
-            </div>
+            <h4 class="report-item-name">{{ report.full_name }}</h4>
+            <p class="report-item-detail">{{ report.details|truncatechars:65 }}</p>
           </div>
         </div>
-        {% endfor %}
+        <div class="report-item-actions">
+          <a href="{% url 'edit_report' report.id %}" class="report-item-btn btn-edit">İlanı Düzenle</a>
+          <a href="{% url 'animal_details' report.id %}" class="report-item-btn btn-view">Detayları Gör</a>
+          <form method="post" style="display:inline" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')">
+            {% csrf_token %}
+            <input type="hidden" name="delete_id" value="{{ report.id }}">
+            <button type="submit" class="report-item-btn btn-delete">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </form>
+        </div>
       </div>
+      {% endfor %}
+
+      <!-- Yeni İlan Kartı -->
+      <a href="{% url 'new_animal' %}" class="new-report-card">
+        <div class="new-report-icon">
+          <span class="material-symbols-outlined">add_a_photo</span>
+        </div>
+        <h4>Yeni İlan Oluştur</h4>
+        <p>Bir hayvanı fark ettiniz mi?<br>Topluluğa bildirin.</p>
+      </a>
+    </div>
+
     {% else %}
-      <div class="profile-empty">
-        <span class="material-symbols-outlined profile-empty-icon">pets</span>
-        <h4>Henüz bir ilanın yok</h4>
+    <div class="profile-empty-state">
+      <a href="{% url 'new_animal' %}" class="new-report-card new-report-card--large">
+        <div class="new-report-icon">
+          <span class="material-symbols-outlined">add_a_photo</span>
+        </div>
+        <h4>Yeni İlan Oluştur</h4>
         <p>Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.</p>
-        <a href="{% url 'new_animal' %}" class="paws-btn-primary" style="display:inline-flex;margin-top:16px;">
-          <span class="material-symbols-outlined">add_circle</span>
-          İlk İlanını Oluştur
-        </a>
-      </div>
+      </a>
+    </div>
     {% endif %}
-  </div>
+
+  </main>
 
 </div>
 
 <style>
-.profile-page { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+.profile-layout {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 0 20px;
+  align-items: start;
+}
 
-.profile-header {
-  display: flex; align-items: center; gap: 20px;
+/* ── SOL PANEL ── */
+.profile-sidebar { display: flex; flex-direction: column; gap: 18px; }
+
+.profile-card {
   background: var(--surface-container-lowest);
   border-radius: 20px;
-  padding: 28px;
-  box-shadow: 0 8px 24px var(--shadow-primary);
-  margin-bottom: 32px;
+  padding: 28px 22px 22px;
+  box-shadow: 0 4px 20px var(--shadow-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
-.profile-avatar .material-symbols-outlined {
-  font-size: 64px; color: var(--primary);
-}
-.profile-info h2 { margin:0; font-size:22px; font-weight:800; color:var(--on-surface); }
-.profile-info p  { margin:4px 0 0; font-size:14px; color:var(--on-surface-variant); }
 
-.profile-section { }
-.profile-section-header {
-  display: flex; justify-content: space-between; align-items: center;
+.profile-avatar-wrap { position: relative; margin-bottom: 12px; }
+.profile-avatar-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--primary-container);
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid var(--primary);
+}
+.profile-avatar-circle .material-symbols-outlined { font-size: 50px; color: var(--primary); }
+
+.profile-verified-badge {
+  position: absolute; bottom: 0; right: -2px;
+  background: #2e7d32; border-radius: 50%;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+.profile-verified-badge .material-symbols-outlined { font-size: 13px; color: #fff; }
+
+.profile-name { margin: 0 0 2px; font-size: 19px; font-weight: 800; color: var(--on-surface); }
+.profile-role { margin: 0 0 18px; font-size: 12px; color: var(--on-surface-variant); font-weight: 600; }
+
+.profile-field { width: 100%; text-align: left; margin-bottom: 14px; }
+.profile-field-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .12em;
+  color: var(--on-surface-variant); text-transform: uppercase;
+  display: block; margin-bottom: 3px;
+}
+.profile-field-value { font-size: 13px; color: var(--on-surface); margin: 0; }
+
+.profile-bio {
+  width: 100%; border: 1px solid var(--outline-variant, #e0e0e0);
+  border-radius: 10px; padding: 9px 10px; font-size: 12px;
+  color: var(--on-surface); background: var(--surface-container);
+  resize: none; line-height: 1.5; height: 88px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+.profile-update-btn {
+  margin-top: 14px; width: 100%;
+  background: var(--surface-container-high, #e0e0e0);
+  color: var(--on-surface); border: none; border-radius: 12px;
+  padding: 10px; font-size: 13px; font-weight: 700;
+  cursor: not-allowed; opacity: .7;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+/* Bildirimler */
+.notif-card {
+  background: var(--surface-container-lowest);
+  border-radius: 20px; padding: 18px 20px;
+  box-shadow: 0 4px 20px var(--shadow-primary);
+}
+.notif-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.notif-header h3 { margin: 0; font-size: 14px; font-weight: 700; }
+.notif-new-badge {
+  background: #e53935; color: #fff;
+  font-size: 9px; font-weight: 800; letter-spacing: .08em;
+  padding: 2px 8px; border-radius: 999px;
+}
+.notif-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 13px; }
+.notif-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 4px;
+}
+.notif-dot--lost { background: #6a4f00; }
+.notif-dot--adoption { background: var(--primary); }
+.notif-dot--medical { background: var(--secondary); }
+.notif-text { margin: 0 0 2px; font-size: 12px; color: var(--on-surface); }
+.notif-time { margin: 0; font-size: 10px; color: #999; }
+.notif-empty { font-size: 12px; color: var(--on-surface-variant); text-align: center; padding: 8px 0; }
+
+/* ── SAĞ PANEL ── */
+.reports-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
   margin-bottom: 20px;
 }
-.profile-section-header h3 { font-size:18px; font-weight:700; margin:0; }
+.reports-title { margin: 0 0 4px; font-size: 22px; font-weight: 800; color: var(--on-surface); }
+.reports-sub { margin: 0; font-size: 13px; color: var(--on-surface-variant); }
+.reports-history-link {
+  font-size: 13px; font-weight: 700; color: var(--primary);
+  text-decoration: none; white-space: nowrap;
+}
+.reports-history-link:hover { text-decoration: underline; }
 
-.profile-reports-grid {
+.reports-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px;
 }
 
-.profile-report-card {
+/* Rapor Kartı */
+.report-item-card {
   background: var(--surface-container-lowest);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px var(--shadow-primary);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 4px 16px var(--shadow-primary);
   transition: transform .2s;
 }
-.profile-report-card:hover { transform: translateY(-4px); }
+.report-item-card:hover { transform: translateY(-3px); }
 
-.report-card-img { width:100%; height:160px; object-fit:cover; display:block; }
-.report-card-img-placeholder {
-  width:100%; height:120px;
+.report-item-top { display: flex; }
+.report-item-img {
+  width: 110px; height: 130px;
+  object-fit: cover; flex-shrink: 0;
+}
+.report-item-img-placeholder {
+  width: 110px; height: 130px; flex-shrink: 0;
   background: var(--surface-container);
-  display:flex; align-items:center; justify-content:center;
-  font-size:40px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
 }
-.report-card-body { padding: 16px; }
-
-.report-badge {
-  display:inline-block; padding:3px 10px;
-  border-radius:999px; font-size:10px; font-weight:700;
-  text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;
+.report-item-info {
+  padding: 13px 13px 10px; flex: 1;
+  display: flex; flex-direction: column;
 }
-.report-badge--lost     { background:var(--tertiary-container); color:var(--tertiary); }
-.report-badge--adoption { background:#ffdcc5; color:var(--primary); }
-.report-badge--medical  { background:var(--secondary-container); color:var(--secondary); }
 
-.report-card-body h4 { margin:0 0 6px; font-size:16px; font-weight:700; color:var(--on-surface); }
-.report-card-body p  { margin:0 0 6px; font-size:12px; color:var(--on-surface-variant); line-height:1.5; }
-.report-date { font-size:11px; color:#999; display:block; margin-bottom:12px; }
-
-.report-card-actions { display:flex; gap:8px; }
-.report-action-btn {
-  display:flex; align-items:center; gap:4px;
-  padding:8px 12px; border-radius:10px;
-  font-size:12px; font-weight:600;
-  border:none; cursor:pointer; text-decoration:none;
-  transition:background .2s;
-  font-family:'Be Vietnam Pro',sans-serif;
+.report-item-badge {
+  display: inline-block; font-size: 9px; font-weight: 800;
+  letter-spacing: .07em; padding: 3px 8px; border-radius: 999px;
+  text-transform: uppercase; margin-bottom: 7px; width: fit-content;
 }
-.view-btn   { background:var(--surface-container); color:var(--on-surface); flex:1; justify-content:center; }
-.view-btn:hover   { background:var(--surface-container-highest,#e2e2e2); }
-.edit-btn { background:#e8f5e9; color:#2e7d32; }
-.edit-btn:hover { background:#c8e6c9; }
-.delete-btn { background:#ffdad6; color:#93000a; }
-.delete-btn:hover { background:#ffb4ab; }
-.report-action-btn .material-symbols-outlined { font-size:15px; }
+.badge--lost     { background: #fff9c4; color: #7a5c00; }
+.badge--adoption { background: #ffe0b2; color: #7a3900; }
+.badge--medical  { background: #e0f2f1; color: #005c5c; }
 
-.profile-empty {
-  text-align:center; padding:60px 20px;
-  background:var(--surface-container-lowest);
-  border-radius:20px;
+.report-item-name {
+  margin: 0 0 4px; font-size: 14px; font-weight: 800; color: var(--on-surface);
 }
-.profile-empty-icon { font-size:64px; color:var(--outline-variant); display:block; margin-bottom:16px; }
-.profile-empty h4   { font-size:18px; margin:0 0 8px; }
-.profile-empty p    { color:var(--on-surface-variant); font-size:14px; }
+.report-item-detail {
+  margin: 0; font-size: 11px; color: var(--on-surface-variant);
+  line-height: 1.4; flex: 1;
+}
+
+.report-item-actions {
+  display: flex; gap: 6px; padding: 10px 12px;
+  border-top: 1px solid var(--surface-container, #f0f0f0);
+  background: var(--surface-container-low, #f8f8f8);
+}
+.report-item-btn {
+  flex: 1; text-align: center; padding: 7px 8px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; text-decoration: none;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+  font-family: 'Be Vietnam Pro', sans-serif; transition: background .15s;
+}
+.btn-edit { background: var(--surface-container, #e8e8e8); color: var(--on-surface); }
+.btn-edit:hover { background: var(--surface-container-high, #d8d8d8); }
+.btn-view { background: var(--primary); color: #fff; }
+.btn-view:hover { opacity: .88; }
+.btn-delete { background: #ffdad6; color: #93000a; flex: 0; padding: 7px 8px; }
+.btn-delete:hover { background: #ffb4ab; }
+.btn-delete .material-symbols-outlined { font-size: 14px; }
+
+/* Yeni İlan Kartı */
+.new-report-card {
+  background: var(--surface-container-lowest);
+  border-radius: 16px;
+  border: 2px dashed var(--outline-variant, #ccc);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 28px 16px; min-height: 180px;
+  text-decoration: none; color: var(--on-surface);
+  transition: border-color .2s, transform .2s;
+}
+.new-report-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+.new-report-card--large {
+  min-height: 240px; max-width: 340px; margin: 0 auto;
+}
+.new-report-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--surface-container);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.new-report-icon .material-symbols-outlined { font-size: 26px; color: var(--primary); }
+.new-report-card h4 { margin: 0 0 6px; font-size: 14px; font-weight: 800; }
+.new-report-card p { margin: 0; font-size: 12px; color: var(--on-surface-variant); line-height: 1.5; }
+
+.profile-empty-state { display: flex; justify-content: center; padding: 40px 0; }
+
+@media (max-width: 800px) {
+  .profile-layout { grid-template-columns: 1fr; }
+  .reports-grid { grid-template-columns: 1fr; }
+}
 </style>
 {% endblock %}

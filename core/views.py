@@ -62,7 +62,7 @@ def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect("custom_admin_dashboard")
-        return redirect("home")
+        return redirect("map")
 
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
@@ -100,14 +100,14 @@ def login_view(request):
                 if user.is_staff:
                     return redirect("custom_admin_dashboard")
 
-                return redirect("home")
+                return redirect("map")
 
     return render(request, "login.html")
 
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect("map")
 
     if request.method == "POST":
         full_name = request.POST.get("full_name", "").strip()
@@ -134,7 +134,7 @@ def register_view(request):
                 new_user.save()
                 login(request, new_user)
                 messages.success(request, "Hesabin olusturuldu. Hos geldin!")
-                return redirect("home")
+                return redirect("map")
 
     return render(request, "register.html")
 

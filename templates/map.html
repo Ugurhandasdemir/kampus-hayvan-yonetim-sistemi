@@ -182,5 +182,35 @@ reports.forEach(function(r) {
     .addTo(map)
     .bindPopup(popup);
 });
+
+// Bölge arama (Nominatim)
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) return;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            map.flyTo([lat, lon], 13, { animate: true, duration: 1.2 });
+          } else {
+            alert('Bölge bulunamadı. Farklı bir arama deneyin.');
+          }
+        })
+        .catch(() => alert('Arama sırasında hata oluştu.'));
+    }
+  });
+
+  const searchIcon = document.querySelector('.paws-search-icon');
+  if (searchIcon) {
+    searchIcon.style.cursor = 'pointer';
+    searchIcon.addEventListener('click', () => searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+  }
+}
 </script>
 {% endblock %}

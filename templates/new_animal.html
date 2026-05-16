@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>New Report | PawsMap</title>
+    <title>Yeni İlan | PawsMap</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
@@ -23,10 +23,10 @@
                 </div>
             </div>
             <div class="yeni_nav_sag">
-                <button class="yeni_rapor_btn" type="button">New Report</button>
-                <div class="yeni_profil_daire">
+                <button class="yeni_rapor_btn" type="button">Yeni İlan</button>
+                <a href="{% url 'profile' %}" class="yeni_profil_daire" style="display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;">
                     <span class="material-symbols-outlined yeni_profil_ikon">person</span>
-                </div>
+                </a>
             </div>
         </nav>
     </header>
@@ -35,9 +35,9 @@
 
         <!-- Başlık -->
         <div class="yeni_baslik_bolumu">
-            <span class="yeni_etiket">Community Sanctuary</span>
+            <span class="yeni_etiket">Topluluk Koruma</span>
             <h1 class="yeni_baslik">
-                Report an <br/><span class="yeni_baslik_vurgu">Animal's Need</span>
+                Bildir <br/><span class="yeni_baslik_vurgu">Hayvanın İhtiyacını</span>
             </h1>
             <div class="yeni_baslik_blur"></div>
         </div>
@@ -62,10 +62,10 @@
                         <div class="yeni_foto_ikon_daire">
                             <span class="material-symbols-outlined yeni_foto_ikon">add_a_photo</span>
                         </div>
-                        <h3 class="yeni_foto_baslik">Drop a photo here</h3>
-                        <p class="yeni_foto_aciklama">High-quality photos help us identify and help animals faster.</p>
+                        <h3 class="yeni_foto_baslik">Fotoğrafı buraya bırakın</h3>
+                        <p class="yeni_foto_aciklama">Yüksek kaliteli fotoğraflar hayvanları daha hızlı tanımamıza yardımcı olur.</p>
                         <label class="yeni_foto_btn" for="photo">
-                            Choose Files
+                            Dosya Seç
                             <input class="yeni_gizli_input" id="photo" name="photo" type="file" accept="image/*"/>
                         </label>
                         <img class="yeni_foto_onizleme" id="photoPreview" alt="Selected photo preview"/>
@@ -76,14 +76,14 @@
                 <!-- Harita -->
                 <div class="yeni_harita_kart">
                     <div class="yeni_harita_ust">
-                        <label class="yeni_harita_baslik">Mark Location</label>
-                        <span class="yeni_harita_chip">Pin Location</span>
+                        <label class="yeni_harita_baslik">Konum İşaretle</label>
+                        <span class="yeni_harita_chip">Konumu Sabitle</span>
                     </div>
                     <div class="yeni_harita_alan" id="reportMap"></div>
                     <input type="hidden" id="latitude" name="latitude" value="{{ request.POST.latitude|default:'41.008200' }}"/>
                     <input type="hidden" id="longitude" name="longitude" value="{{ request.POST.longitude|default:'28.978400' }}"/>
                     <p class="yeni_harita_koordinat" id="selectedCoordinates"></p>
-                    <p class="yeni_harita_ipucu">Tap the map to adjust the exact encounter location.</p>
+                    <p class="yeni_harita_ipucu">Konumu ayarlamak için haritaya tıklayın.</p>
                 </div>
 
             </div>
@@ -93,14 +93,14 @@
 
                 <!-- Kategori Seçimi -->
                 <section class="yeni_bolum">
-                    <label class="yeni_bolum_baslik">Select Category</label>
+                    <label class="yeni_bolum_baslik">Kategori Seç</label>
                     <div class="yeni_kategori_grid">
 
                         <label class="yeni_kategori_secenegi">
                             <input class="yeni_kategori_radio" name="category" type="radio" value="lost" checked/>
                             <div class="yeni_kategori_kutu yeni_kategori_kutu--kayip">
                                 <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--kayip">search</span>
-                                <span class="yeni_kategori_metin">Lost</span>
+                                <span class="yeni_kategori_metin">Kayıp</span>
                             </div>
                         </label>
 
@@ -108,7 +108,7 @@
                             <input class="yeni_kategori_radio" name="category" type="radio" value="adoption"/>
                             <div class="yeni_kategori_kutu yeni_kategori_kutu--sahip">
                                 <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--sahip">pets</span>
-                                <span class="yeni_kategori_metin">Adoption</span>
+                                <span class="yeni_kategori_metin">Sahiplendirme</span>
                             </div>
                         </label>
 
@@ -116,7 +116,7 @@
                             <input class="yeni_kategori_radio" name="category" type="radio" value="medical"/>
                             <div class="yeni_kategori_kutu yeni_kategori_kutu--saglik">
                                 <span class="material-symbols-outlined yeni_kategori_ikon yeni_kategori_ikon--saglik">medical_services</span>
-                                <span class="yeni_kategori_metin">Medical</span>
+                                <span class="yeni_kategori_metin">Tıbbi Yardım</span>
                             </div>
                         </label>
 
@@ -126,28 +126,28 @@
                 <!-- Açıklama -->
                 <section class="yeni_bolum">
                     <div class="yeni_aciklama_ust">
-                        <label class="yeni_bolum_baslik" for="details">The Story</label>
-                        <span class="yeni_karakter_siniri">MAX 500 CHARS</span>
+                        <label class="yeni_bolum_baslik" for="details">Açıklama</label>
+                        <span class="yeni_karakter_siniri">MAX 500 KARAKTER</span>
                     </div>
                     <textarea class="yeni_textarea" id="details" name="details"
-                              placeholder="Describe the animal's behavior, physical markers, or urgent needs..."
+                              placeholder="Hayvanın davranışlarını, fiziksel özelliklerini veya acil ihtiyaçlarını açıklayın..."
                               rows="6" maxlength="500">{{ request.POST.details|default:'' }}</textarea>
                 </section>
 
                 <!-- İletişim Bilgileri -->
                 <section class="yeni_bolum">
-                    <label class="yeni_bolum_baslik">Responder Details</label>
+                    <label class="yeni_bolum_baslik">İletişim Bilgileri</label>
                     <div class="yeni_iletisim_grid">
                         <div class="yeni_iletisim_alan">
-                            <label class="yeni_kucuk_label" for="full_name">Full Name</label>
+                            <label class="yeni_kucuk_label" for="full_name">Ad Soyad</label>
                             <input class="yeni_input" id="full_name" name="full_name"
-                                   placeholder="Sarah Jenkins" type="text"
+                                   placeholder="Ahmet Yılmaz" type="text"
                                    value="{{ request.POST.full_name|default:'' }}"/>
                         </div>
                         <div class="yeni_iletisim_alan">
-                            <label class="yeni_kucuk_label" for="phone">Contact Number</label>
+                            <label class="yeni_kucuk_label" for="phone">Telefon Numarası</label>
                             <input class="yeni_input" id="phone" name="phone"
-                                   placeholder="+1 (555) 000-0000" type="tel"
+                                   placeholder="+90 (5XX) XXX-XXXX" type="tel"
                                    value="{{ request.POST.phone|default:'' }}"/>
                         </div>
                     </div>
@@ -155,8 +155,8 @@
 
                 <!-- Gönder -->
                 <div class="yeni_gonder_satiri">
-                    <button class="yeni_gonder_btn" type="submit">Publish Report</button>
-                    <p class="yeni_gonder_aciklama">By publishing, you agree to our community safety guidelines and privacy policy.</p>
+                    <button class="yeni_gonder_btn" type="submit">İlanı Yayımla</button>
+                    <p class="yeni_gonder_aciklama">Yayımlamanız, topluluk güvenlik yönergelerini ve gizlilik politikasını kabul ettiğinizi gösterir.</p>
                 </div>
 
             </div>
@@ -169,17 +169,17 @@
         <div class="yeni_footer_icerik">
             <div class="yeni_footer_marka_bolumu">
                 <span class="yeni_footer_marka">PawsMap</span>
-                <p class="yeni_footer_aciklama">Connecting lost hearts with loving homes through community-driven rescue mapping.</p>
+                <p class="yeni_footer_aciklama">Topluluk destekli kurtarma haritasıyla kayıp kalpleri sevgi dolu yuvalarla buluşturuyoruz.</p>
             </div>
             <div class="yeni_footer_linkler">
-                <a class="yeni_footer_link" href="#">About Our Mission</a>
-                <a class="yeni_footer_link" href="#">Success Stories</a>
-                <a class="yeni_footer_link" href="#">Privacy</a>
-                <a class="yeni_footer_link" href="#">Contact</a>
+                <a class="yeni_footer_link" href="#">Misyonumuz</a>
+                <a class="yeni_footer_link" href="#">Başarı Hikayeleri</a>
+                <a class="yeni_footer_link" href="#">Gizlilik</a>
+                <a class="yeni_footer_link" href="#">İletişim</a>
             </div>
         </div>
         <div class="yeni_footer_alt">
-            <p class="yeni_footer_telif">© 2024 PawsMap Sanctuary. All rights reserved.</p>
+            <p class="yeni_footer_telif">© 2024 PawsMap. Tüm hakları saklıdır.</p>
         </div>
     </footer>
 
@@ -187,19 +187,19 @@
  <nav class="yeni_mobil_nav">
     <a class="yeni_mobil_item" href="{% url 'map' %}">
         <span class="material-symbols-outlined">map</span>
-        <span class="yeni_mobil_etiket">Map</span>
+        <span class="yeni_mobil_etiket">Harita</span>
     </a>
     <a class="yeni_mobil_item yeni_mobil_item--aktif" href="{% url 'new_animal' %}">
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
-        <span class="yeni_mobil_etiket">Reports</span>
+        <span class="yeni_mobil_etiket">İlanlar</span>
     </a>
     <a class="yeni_mobil_item" href="{% url 'map' %}?category=adoption">
         <span class="material-symbols-outlined">pets</span>
-        <span class="yeni_mobil_etiket">Adoptions</span>
+        <span class="yeni_mobil_etiket">Sahiplendirme</span>
     </a>
     <a class="yeni_mobil_item" href="{% url 'profile' %}">
         <span class="material-symbols-outlined">account_circle</span>
-        <span class="yeni_mobil_etiket">Profile</span>
+        <span class="yeni_mobil_etiket">Profil</span>
     </a>
 </nav>
 

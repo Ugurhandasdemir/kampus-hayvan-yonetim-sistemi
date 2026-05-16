@@ -139,7 +139,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <a href="{% url 'home' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+            <a href="{% url 'custom_admin_dashboard' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
                 <span class="material-symbols-outlined">home</span>
             </a>
 
@@ -164,9 +164,9 @@
                     <p class="text-[10px] text-stone-500 font-bold uppercase">Admin</p>
                 </span>
 
-                <div class="w-10 h-10 rounded-full border-2 border-primary-container bg-primary-container flex items-center justify-center font-black text-on-primary-container">
+                <a href="{% url 'admin_settings' %}" class="w-10 h-10 rounded-full border-2 border-primary-container bg-primary-container flex items-center justify-center font-black text-on-primary-container hover:ring-2 hover:ring-primary transition-all">
                     A
-                </div>
+                </a>
             </div>
         </div>
     </header>
