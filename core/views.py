@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -56,6 +57,18 @@ def _resize_report_photo(uploaded_file):
 
 def home(request):
     return render(request, "home.html")
+
+
+def setup_admin(request):
+    if request.GET.get("key") != "pawsmap-setup-2026":
+        return HttpResponse("forbidden", status=403)
+    username = "admin"
+    email = "admin@pawsmap.online"
+    password = "admin1234"
+    if User.objects.filter(username=username).exists():
+        return HttpResponse(f"already exists: {username}")
+    User.objects.create_superuser(username=username, email=email, password=password)
+    return HttpResponse(f"created: {username} / {password}")
 
 
 def login_view(request):
