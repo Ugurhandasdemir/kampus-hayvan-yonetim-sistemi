@@ -32,7 +32,9 @@
             "primary-fixed": "#ffdcc5",
             "on-primary-fixed": "#301400",
             secondary: "#006a63",
-            "secondary-container": "#8bf1e6"
+            "secondary-container": "#8bf1e6",
+            tertiary: "#835500",
+            "tertiary-container": "#db9830"
           },
           borderRadius: {
             DEFAULT: "1rem",
@@ -49,9 +51,6 @@
     }
   </script>
 
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-
   <style>
     body {
       background: #f9f9f9;
@@ -64,10 +63,6 @@
     .material-symbols-outlined {
       font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
       vertical-align: middle;
-    }
-
-    .pawsmap-shell {
-      padding-top: 96px;
     }
   </style>
 </head>
@@ -109,9 +104,11 @@
     </div>
   </header>
 
-  <main class="pawsmap-shell flex-grow">
+  <!-- Main Content Canvas -->
+  <main class="flex-grow pt-24 pb-32 px-4 md:px-12 max-w-7xl mx-auto w-full">
+
     {% if messages %}
-    <section class="max-w-7xl mx-auto px-4 md:px-8 mt-4 space-y-2">
+    <section class="mb-6 space-y-2">
       {% for message in messages %}
       <p class="rounded-xl px-4 py-3 text-sm font-semibold
         {% if message.tags == 'error' %}bg-red-100 text-red-700
@@ -123,155 +120,209 @@
     </section>
     {% endif %}
 
-    <div class="profile-layout">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-      <!-- SOL PANEL -->
-      <aside class="profile-sidebar">
+      <!-- Profile Sidebar -->
+      <aside class="lg:col-span-4 space-y-8">
 
-        <!-- Profil Kartı -->
-        <div class="profile-card">
-          <div class="profile-avatar-wrap">
-            <div class="profile-avatar-circle">
-              <span class="material-symbols-outlined">account_circle</span>
+        <!-- Profile Card -->
+        <div class="bg-surface-container-lowest rounded-lg p-8 shadow-sm">
+          <div class="relative w-32 h-32 mx-auto mb-6">
+            <div class="w-full h-full rounded-full bg-primary-container/30 border-4 border-surface shadow-md flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined" style="font-size:80px; font-variation-settings: 'FILL' 1;">account_circle</span>
             </div>
-            <div class="profile-verified-badge">
-              <span class="material-symbols-outlined">verified</span>
+            <div class="absolute bottom-1 right-1 bg-green-600 text-white p-1.5 rounded-full shadow-md border-2 border-white">
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
             </div>
           </div>
 
-          <h2 class="profile-name">{{ request.user.first_name|default:request.user.username }}</h2>
-          <p class="profile-role">Kayıtlı Kurtarıcı</p>
+          <div class="text-center mb-8">
+            <h1 class="text-2xl font-extrabold text-on-surface tracking-tight font-headline">
+              {{ request.user.first_name|default:request.user.username }}
+            </h1>
+            <p class="text-on-surface-variant font-medium text-sm mt-1">Kayıtlı Kurtarıcı • Kampüs</p>
+          </div>
 
-          <form method="post" class="profile-form">
+          <form method="post" class="space-y-6">
             {% csrf_token %}
             <input type="hidden" name="action" value="update_profile">
 
-            <div class="profile-field">
-              <label class="profile-field-label">E-POSTA ADRESİ</label>
-              <p class="profile-field-value">{{ request.user.email }}</p>
+            <div class="group">
+              <label class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/60 block mb-2 px-1">
+                E-posta Adresi
+              </label>
+              <div class="bg-surface-container-low rounded-xl px-4 py-3 text-on-surface font-medium border border-transparent break-all">
+                {{ request.user.email }}
+              </div>
             </div>
 
-            <div class="profile-field">
-              <label class="profile-field-label" for="profile-name-input">AD SOYAD</label>
+            <div class="group">
+              <label for="profile-name-input" class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/60 block mb-2 px-1">
+                Ad Soyad
+              </label>
               <input
                 id="profile-name-input"
-                class="profile-input"
                 type="text"
                 name="first_name"
                 value="{{ request.user.first_name|default:request.user.username }}"
+                class="w-full bg-surface-container-low rounded-xl px-4 py-3 text-on-surface font-medium border-none focus:ring-2 focus:ring-primary/30 transition-all"
               />
             </div>
 
-            <div class="profile-field">
-              <label class="profile-field-label" for="profile-bio-input">HAKKIMDA</label>
+            <div class="group">
+              <label for="profile-bio-input" class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/60 block mb-2 px-1">
+                Hakkımda
+              </label>
               <textarea
                 id="profile-bio-input"
-                class="profile-bio"
                 name="bio"
                 maxlength="300"
+                class="w-full bg-surface-container-low rounded-xl px-4 py-3 text-on-surface font-medium border-none focus:ring-2 focus:ring-primary/30 transition-all h-24 resize-none"
+                placeholder="Kendinden bahset..."
               >{{ user_profile.bio }}</textarea>
             </div>
 
-            <button type="submit" class="profile-update-btn">Profili Güncelle</button>
+            <div class="pt-2">
+              <button type="submit" class="w-full bg-surface-container-high text-on-surface font-bold py-3 rounded-xl hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2 active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                Profili Güncelle
+              </button>
+            </div>
           </form>
         </div>
 
-        <!-- Son Aktiviteler -->
-        <div class="notif-card">
-          <div class="notif-header">
-            <h3>Son Aktiviteler</h3>
+        <!-- Recent Activity -->
+        <div class="bg-surface-container-low rounded-lg p-8">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold tracking-tight font-headline">Son Aktiviteler</h2>
             {% if user_reports %}
-            <span class="notif-new-badge">YENİ</span>
+            <span class="bg-primary-fixed text-on-primary-fixed text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter">
+              YENİ
+            </span>
             {% endif %}
           </div>
 
-          {% for report in user_reports|slice:":3" %}
-          <div class="notif-item notif-item--{{ report.category }}">
-            <div class="notif-icon notif-icon--{{ report.category }}">
-              {% if report.category == 'lost' %}
-              <span class="material-symbols-outlined">pets</span>
-              {% elif report.category == 'adoption' %}
-              <span class="material-symbols-outlined">favorite</span>
-              {% else %}
-              <span class="material-symbols-outlined">medical_services</span>
-              {% endif %}
+          <div class="space-y-4">
+            {% for report in user_reports|slice:":3" %}
+            <div class="flex gap-4 p-3 bg-surface-container-lowest rounded-2xl shadow-sm transition-transform hover:scale-[1.02]
+              {% if report.category == 'lost' %}border-l-4 border-primary
+              {% elif report.category == 'adoption' %}border-l-4 border-secondary
+              {% else %}border-l-4 border-tertiary{% endif %}">
+              <div class="p-2 rounded-xl h-fit
+                {% if report.category == 'lost' %}bg-primary-fixed/30 text-primary
+                {% elif report.category == 'adoption' %}bg-secondary-container/30 text-secondary
+                {% else %}bg-tertiary-container/20 text-tertiary{% endif %}">
+                {% if report.category == 'lost' %}
+                <span class="material-symbols-outlined text-[20px]">pets</span>
+                {% elif report.category == 'adoption' %}
+                <span class="material-symbols-outlined text-[20px]">favorite</span>
+                {% else %}
+                <span class="material-symbols-outlined text-[20px]">medical_services</span>
+                {% endif %}
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-on-surface leading-tight truncate">
+                  {{ report.full_name }} ilanı aktif
+                </p>
+                <p class="text-xs text-on-surface-variant mt-1 line-clamp-1">
+                  {% if report.category == 'lost' %}Kayıp ilanı
+                  {% elif report.category == 'adoption' %}Sahiplendirme ilanı
+                  {% else %}Tıbbi yardım ilanı{% endif %}
+                </p>
+                <span class="text-[10px] font-medium mt-2 block uppercase tracking-wide
+                  {% if report.category == 'lost' %}text-primary
+                  {% elif report.category == 'adoption' %}text-secondary
+                  {% else %}text-tertiary{% endif %}">
+                  {{ report.created_at|date:"d M Y" }}
+                </span>
+              </div>
             </div>
-            <div class="notif-content">
-              <p class="notif-text">
-                <strong>{{ report.full_name }}</strong> ilanı aktif
-              </p>
-              <p class="notif-time">{{ report.created_at|date:"d M Y" }}</p>
-            </div>
+            {% empty %}
+            <p class="text-sm text-on-surface-variant text-center py-6">Henüz aktivite yok.</p>
+            {% endfor %}
           </div>
-          {% empty %}
-          <p class="notif-empty">Henüz aktivite yok.</p>
-          {% endfor %}
         </div>
-
       </aside>
 
-      <!-- SAĞ PANEL -->
-      <main class="profile-main">
-
-        <div class="reports-header">
+      <!-- Active Reports Dashboard -->
+      <section class="lg:col-span-8 space-y-6">
+        <div class="flex items-baseline justify-between px-2">
           <div>
-            <h2 class="reports-title">Aktif İlanlarım</h2>
-            <p class="reports-sub">{{ user_reports.count }} aktif hayvan ilanı yönetiyorsun.</p>
+            <h2 class="text-3xl font-extrabold tracking-tight text-on-surface font-headline">Aktif İlanlarım</h2>
+            <p class="text-on-surface-variant mt-1 text-sm">{{ user_reports.count }} aktif hayvan ilanı yönetiyorsun.</p>
           </div>
-          <a href="{% url 'map' %}" class="reports-history-link">Haritada Gör</a>
+          <a href="{% url 'map' %}" class="text-primary font-bold text-sm hover:underline whitespace-nowrap">Haritada Gör</a>
         </div>
 
         {% if user_reports %}
-        <div class="reports-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {% for report in user_reports %}
-          <div class="report-card">
-
-            <!-- Görsel alanı -->
-            <div class="report-card-image-wrap">
+          <div class="bg-surface-container-lowest rounded-lg overflow-hidden group shadow-[0px_8px_24px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0px_16px_40px_rgba(148,74,0,0.06)]">
+            <div class="h-64 relative overflow-hidden">
               {% if report.photo %}
-              <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-image" />
+              <img
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                src="{{ report.photo.url }}"
+                alt="{{ report.full_name }}"
+              />
               {% else %}
-              <div class="report-card-image-placeholder">
-                <span class="material-symbols-outlined">pets</span>
+              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-fixed to-primary-container/40 text-primary">
+                <span class="material-symbols-outlined" style="font-size:72px; font-variation-settings: 'FILL' 1;">pets</span>
               </div>
               {% endif %}
 
-              <!-- Durum rozeti -->
-              <div class="report-card-badge badge--{{ report.category }}">
-                {% if report.status == 'approved' %}Kapatıldı{% else %}Aktif{% endif %}
-                &bull;
+              <!-- Status badge -->
+              <div class="absolute top-4 left-4
+                {% if report.category == 'lost' %}bg-primary text-white
+                {% elif report.category == 'adoption' %}bg-secondary text-white
+                {% else %}bg-tertiary text-white{% endif %}
+                text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                {% if report.status == 'approved' %}Kapatıldı{% else %}Aktif{% endif %} •
                 {% if report.category == 'lost' %}KAYIP
                 {% elif report.category == 'adoption' %}SAHİPLENDİRME
-                {% else %}TIBBİ
-                {% endif %}
+                {% else %}TIBBİ{% endif %}
               </div>
 
-              <!-- Alt bilgi -->
-              <div class="report-card-footer-overlay">
-                <div>
-                  <h3 class="report-card-name">{{ report.full_name }}</h3>
-                  <p class="report-card-sub">{{ report.created_at|date:"d M Y" }}</p>
+              <!-- Bottom overlay -->
+              <div class="absolute bottom-4 left-4 right-4 bg-surface/40 backdrop-blur-md p-4 rounded-2xl flex justify-between items-center">
+                <div class="min-w-0">
+                  <h3 class="text-xl font-bold text-on-surface font-headline truncate">{{ report.full_name }}</h3>
+                  <p class="text-xs text-on-surface-variant font-medium">{{ report.created_at|date:"d M Y" }}</p>
                 </div>
-                <a href="{% url 'animal_details' report.id %}" class="report-card-share-btn" title="Detayları gör">
+                <a href="{% url 'animal_details' report.id %}" class="bg-primary-container p-2 rounded-xl text-on-primary-container shadow-sm hover:scale-105 active:scale-95 transition-transform" title="Detayları gör">
                   <span class="material-symbols-outlined">open_in_new</span>
                 </a>
               </div>
             </div>
 
-            <!-- İçerik alanı -->
-            <div class="report-card-body">
-              <p class="report-card-detail">{{ report.details|truncatechars:90 }}</p>
+            <div class="p-6">
+              <div class="flex gap-2 mb-4 flex-wrap">
+                <span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full uppercase">
+                  {{ report.created_at|date:"d M" }}
+                </span>
+                <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase
+                  {% if report.status == 'approved' %}bg-green-100 text-green-700
+                  {% elif report.status == 'pending' %}bg-orange-100 text-orange-700
+                  {% else %}bg-stone-100 text-stone-600{% endif %}">
+                  {% if report.status == 'approved' %}Onaylı
+                  {% elif report.status == 'pending' %}Beklemede
+                  {% else %}{{ report.status }}{% endif %}
+                </span>
+              </div>
+              <p class="text-sm text-on-surface-variant leading-relaxed line-clamp-2 min-h-[40px]">
+                {{ report.details|truncatechars:120 }}
+              </p>
 
-              <div class="report-card-actions">
-                <a href="{% url 'edit_report' report.id %}" class="report-btn btn-edit">
-                  İlanı Düzenle
+              <div class="mt-6 pt-4 border-t border-surface-container-low flex gap-2">
+                <a href="{% url 'edit_report' report.id %}" class="flex-1 bg-surface-container-high text-on-surface font-bold py-2 rounded-xl text-sm text-center transition-colors hover:bg-surface-container-highest">
+                  Düzenle
                 </a>
 
                 {% if report.status != 'approved' %}
-                <form method="post" action="{% url 'mark_report_found' report.id %}" style="flex:1">
+                <form method="post" action="{% url 'mark_report_found' report.id %}" class="flex-1 m-0">
                   {% csrf_token %}
-                  <button type="submit" class="report-btn btn-found">
+                  <button type="submit" class="w-full bg-primary text-white font-bold py-2 rounded-xl text-sm transition-colors hover:bg-orange-600">
                     {% if report.category == 'lost' %}Bulundu
                     {% elif report.category == 'adoption' %}Sahiplenildi
                     {% else %}Çözüldü
@@ -280,11 +331,11 @@
                 </form>
                 {% endif %}
 
-                <form method="post" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')" style="flex:0">
+                <form method="post" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')" class="m-0">
                   {% csrf_token %}
                   <input type="hidden" name="delete_id" value="{{ report.id }}">
-                  <button type="submit" class="report-btn btn-delete" title="Sil">
-                    <span class="material-symbols-outlined">delete</span>
+                  <button type="submit" class="bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-xl transition-colors" title="Sil">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
                   </button>
                 </form>
               </div>
@@ -292,31 +343,32 @@
           </div>
           {% endfor %}
 
-          <!-- Yeni İlan Kartı -->
-          <a href="{% url 'new_animal' %}" class="new-report-card">
-            <div class="new-report-icon">
-              <span class="material-symbols-outlined">add_a_photo</span>
+          <!-- Add New Report Card -->
+          <a href="{% url 'new_animal' %}" class="md:col-span-2 bg-primary/5 rounded-lg border-2 border-dashed border-primary/20 p-12 flex flex-col items-center justify-center text-center group cursor-pointer hover:bg-primary/10 transition-colors">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-primary shadow-sm mb-4 transition-transform group-hover:scale-110 group-active:scale-95">
+              <span class="material-symbols-outlined text-[32px]">add_a_photo</span>
             </div>
-            <h4>Yeni İlan Oluştur</h4>
-            <p>Bir hayvanı fark ettin mi?<br>Topluluğa bildirin.</p>
+            <h3 class="text-xl font-extrabold text-primary tracking-tight font-headline">Yeni İlan Oluştur</h3>
+            <p class="text-on-surface-variant max-w-xs mt-2 text-sm font-medium">
+              Bir hayvanı fark ettin mi? Topluluğa bildir.
+            </p>
           </a>
 
         </div>
 
         {% else %}
-        <div class="profile-empty-state">
-          <a href="{% url 'new_animal' %}" class="new-report-card new-report-card--large">
-            <div class="new-report-icon">
-              <span class="material-symbols-outlined">add_a_photo</span>
-            </div>
-            <h4>Yeni İlan Oluştur</h4>
-            <p>Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.</p>
-          </a>
-        </div>
+        <a href="{% url 'new_animal' %}" class="block bg-primary/5 rounded-lg border-2 border-dashed border-primary/20 p-16 flex flex-col items-center justify-center text-center group cursor-pointer hover:bg-primary/10 transition-colors">
+          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-primary shadow-sm mb-4 transition-transform group-hover:scale-110 group-active:scale-95">
+            <span class="material-symbols-outlined text-[40px]">add_a_photo</span>
+          </div>
+          <h3 class="text-2xl font-extrabold text-primary tracking-tight font-headline">Yeni İlan Oluştur</h3>
+          <p class="text-on-surface-variant max-w-md mt-2 font-medium">
+            Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.
+          </p>
+        </a>
         {% endif %}
 
-      </main>
-
+      </section>
     </div>
   </main>
 
