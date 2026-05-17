@@ -38,6 +38,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '.vercel.app',
     'kampus-hayvan-yonetim-sistemi.vercel.app',
+    'pawsmap.online',
+    'www.pawsmap.online',
 ]
 
 VERCEL_URL = os.getenv('VERCEL_URL')
