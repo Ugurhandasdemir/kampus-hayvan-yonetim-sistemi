@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Profilim{% endblock %}
+{% block title %}Profilim | PawsMap{% endblock %}
 
 {% block content %}
 <div class="profile-layout">
@@ -19,20 +19,42 @@
           <span class="material-symbols-outlined">verified</span>
         </div>
       </div>
+
       <h2 class="profile-name">{{ request.user.first_name|default:request.user.username }}</h2>
       <p class="profile-role">Kayıtlı Kurtarıcı</p>
 
-      <div class="profile-field">
-        <label class="profile-field-label">E-POSTA ADRESİ</label>
-        <p class="profile-field-value">{{ request.user.email }}</p>
-      </div>
+      <form method="post" class="profile-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_profile">
 
-      <div class="profile-field">
-        <label class="profile-field-label">HAKKIMDA</label>
-        <textarea class="profile-bio" readonly>{{ request.user.first_name|default:request.user.username }} olarak topluluk hayvancılığına destek veriyorum.</textarea>
-      </div>
+        <div class="profile-field">
+          <label class="profile-field-label">E-POSTA ADRESİ</label>
+          <p class="profile-field-value">{{ request.user.email }}</p>
+        </div>
 
-      <button class="profile-update-btn" disabled>Profili Güncelle</button>
+        <div class="profile-field">
+          <label class="profile-field-label" for="profile-name-input">AD SOYAD</label>
+          <input
+            id="profile-name-input"
+            class="profile-input"
+            type="text"
+            name="first_name"
+            value="{{ request.user.first_name|default:request.user.username }}"
+          />
+        </div>
+
+        <div class="profile-field">
+          <label class="profile-field-label" for="profile-bio-input">HAKKIMDA</label>
+          <textarea
+            id="profile-bio-input"
+            class="profile-bio"
+            name="bio"
+            maxlength="300"
+          >{{ user_profile.bio }}</textarea>
+        </div>
+
+        <button type="submit" class="profile-update-btn">Profili Güncelle</button>
+      </form>
     </div>
 
     <!-- Son Aktiviteler -->
@@ -43,12 +65,21 @@
         <span class="notif-new-badge">YENİ</span>
         {% endif %}
       </div>
+
       {% for report in user_reports|slice:":3" %}
-      <div class="notif-item">
-        <div class="notif-dot notif-dot--{{ report.category }}"></div>
+      <div class="notif-item notif-item--{{ report.category }}">
+        <div class="notif-icon notif-icon--{{ report.category }}">
+          {% if report.category == 'lost' %}
+          <span class="material-symbols-outlined">pets</span>
+          {% elif report.category == 'adoption' %}
+          <span class="material-symbols-outlined">favorite</span>
+          {% else %}
+          <span class="material-symbols-outlined">medical_services</span>
+          {% endif %}
+        </div>
         <div class="notif-content">
           <p class="notif-text">
-            <strong>{{ report.full_name }}</strong> ilanın aktif
+            <strong>{{ report.full_name }}</strong> ilanı aktif
           </p>
           <p class="notif-time">{{ report.created_at|date:"d M Y" }}</p>
         </div>
@@ -73,32 +104,71 @@
 
     {% if user_reports %}
     <div class="reports-grid">
+
       {% for report in user_reports %}
-      <div class="report-item-card">
-        <div class="report-item-top">
+      <div class="report-card">
+
+        <!-- Görsel alanı -->
+        <div class="report-card-image-wrap">
           {% if report.photo %}
-            <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-item-img" />
+          <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-image" />
           {% else %}
-            <div class="report-item-img-placeholder">🐾</div>
+          <div class="report-card-image-placeholder">
+            <span class="material-symbols-outlined">pets</span>
+          </div>
           {% endif %}
-          <div class="report-item-info">
-            <span class="report-item-badge badge--{{ report.category }}">
-              AKTİF &bull; {% if report.category == 'lost' %}KAYIP{% elif report.category == 'adoption' %}SAHİPLENDİRME{% else %}TIBBİ{% endif %}
-            </span>
-            <h4 class="report-item-name">{{ report.full_name }}</h4>
-            <p class="report-item-detail">{{ report.details|truncatechars:65 }}</p>
+
+          <!-- Durum rozeti -->
+          <div class="report-card-badge badge--{{ report.category }}">
+            {% if report.status == 'approved' %}Kapatıldı{% else %}Aktif{% endif %}
+            &bull;
+            {% if report.category == 'lost' %}KAYIP
+            {% elif report.category == 'adoption' %}SAHİPLENDİRME
+            {% else %}TIBBİ
+            {% endif %}
+          </div>
+
+          <!-- Alt bilgi -->
+          <div class="report-card-footer-overlay">
+            <div>
+              <h3 class="report-card-name">{{ report.full_name }}</h3>
+              <p class="report-card-sub">{{ report.created_at|date:"d M Y" }}</p>
+            </div>
+            <a href="{% url 'animal_details' report.id %}" class="report-card-share-btn" title="Detayları gör">
+              <span class="material-symbols-outlined">open_in_new</span>
+            </a>
           </div>
         </div>
-        <div class="report-item-actions">
-          <a href="{% url 'edit_report' report.id %}" class="report-item-btn btn-edit">İlanı Düzenle</a>
-          <a href="{% url 'animal_details' report.id %}" class="report-item-btn btn-view">Detayları Gör</a>
-          <form method="post" style="display:inline" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')">
-            {% csrf_token %}
-            <input type="hidden" name="delete_id" value="{{ report.id }}">
-            <button type="submit" class="report-item-btn btn-delete">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
-          </form>
+
+        <!-- İçerik alanı -->
+        <div class="report-card-body">
+          <p class="report-card-detail">{{ report.details|truncatechars:90 }}</p>
+
+          <div class="report-card-actions">
+            <a href="{% url 'edit_report' report.id %}" class="report-btn btn-edit">
+              İlanı Düzenle
+            </a>
+
+            {% if report.status != 'approved' %}
+            <form method="post" action="{% url 'mark_report_found' report.id %}" style="flex:1">
+              {% csrf_token %}
+              <button type="submit" class="report-btn btn-found">
+                {% if report.category == 'lost' %}Bulundu
+                {% elif report.category == 'adoption' %}Sahiplenildi
+                {% else %}Çözüldü
+                {% endif %}
+              </button>
+            </form>
+            {% endif %}
+
+            <form method="post" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')" style="flex:0">
+              {% csrf_token %}
+              <input type="hidden" name="delete_id" value="{{ report.id }}">
+              <button type="submit" class="report-btn btn-delete" title="Sil">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
       {% endfor %}
@@ -109,8 +179,9 @@
           <span class="material-symbols-outlined">add_a_photo</span>
         </div>
         <h4>Yeni İlan Oluştur</h4>
-        <p>Bir hayvanı fark ettiniz mi?<br>Topluluğa bildirin.</p>
+        <p>Bir hayvanı fark ettin mi?<br>Topluluğa bildirin.</p>
       </a>
+
     </div>
 
     {% else %}
@@ -130,215 +201,595 @@
 </div>
 
 <style>
+/* ── Layout ── */
 .profile-layout {
-  display: grid;
-  grid-template-columns: 290px 1fr;
-  gap: 24px;
-  max-width: 1100px;
-  margin: 32px auto;
-  padding: 0 20px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 28px;
+    max-width: 1140px;
+    margin: 32px auto;
+    padding: 0 20px;
+    align-items: start;
 }
 
-/* ── SOL PANEL ── */
-.profile-sidebar { display: flex; flex-direction: column; gap: 18px; }
+/* ── Sol Panel ── */
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
+/* ── Profil Kartı ── */
 .profile-card {
-  background: var(--surface-container-lowest);
-  border-radius: 20px;
-  padding: 28px 22px 22px;
-  box-shadow: 0 4px 20px var(--shadow-primary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+    background: var(--surface-container-lowest);
+    border-radius: 20px;
+    padding: 28px 22px 22px;
+    box-shadow: 0 4px 20px var(--shadow-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.profile-avatar-wrap { position: relative; margin-bottom: 12px; }
-.profile-avatar-circle {
-  width: 80px; height: 80px; border-radius: 50%;
-  background: var(--primary-container);
-  display: flex; align-items: center; justify-content: center;
-  border: 3px solid var(--primary);
+.profile-avatar-wrap {
+    position: relative;
+    margin-bottom: 14px;
 }
-.profile-avatar-circle .material-symbols-outlined { font-size: 50px; color: var(--primary); }
+
+.profile-avatar-circle {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--primary-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--primary);
+}
+
+.profile-avatar-circle .material-symbols-outlined {
+    font-size: 52px;
+    color: var(--primary);
+}
 
 .profile-verified-badge {
-  position: absolute; bottom: 0; right: -2px;
-  background: #2e7d32; border-radius: 50%;
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid #fff;
+    position: absolute;
+    bottom: 0;
+    right: -2px;
+    background: #2e7d32;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
 }
-.profile-verified-badge .material-symbols-outlined { font-size: 13px; color: #fff; }
 
-.profile-name { margin: 0 0 2px; font-size: 19px; font-weight: 800; color: var(--on-surface); }
-.profile-role { margin: 0 0 18px; font-size: 12px; color: var(--on-surface-variant); font-weight: 600; }
+.profile-verified-badge .material-symbols-outlined {
+    font-size: 14px;
+    color: #fff;
+}
 
-.profile-field { width: 100%; text-align: left; margin-bottom: 14px; }
+.profile-name {
+    margin: 0 0 2px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--on-surface);
+}
+
+.profile-role {
+    margin: 0 0 20px;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    font-weight: 600;
+}
+
+/* ── Form ── */
+.profile-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.profile-field {
+    width: 100%;
+    text-align: left;
+}
+
 .profile-field-label {
-  font-size: 9px; font-weight: 800; letter-spacing: .12em;
-  color: var(--on-surface-variant); text-transform: uppercase;
-  display: block; margin-bottom: 3px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--on-surface-variant);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
 }
-.profile-field-value { font-size: 13px; color: var(--on-surface); margin: 0; }
+
+.profile-field-value {
+    font-size: 13px;
+    color: var(--on-surface);
+    margin: 0;
+    padding: 9px 10px;
+    background: var(--surface-container);
+    border-radius: 10px;
+}
+
+.profile-input {
+    width: 100%;
+    border: 1px solid var(--outline-variant, #e0e0e0);
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-size: 13px;
+    color: var(--on-surface);
+    background: var(--surface-container-low);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: border-color 0.15s;
+}
+
+.profile-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
 
 .profile-bio {
-  width: 100%; border: 1px solid var(--outline-variant, #e0e0e0);
-  border-radius: 10px; padding: 9px 10px; font-size: 12px;
-  color: var(--on-surface); background: var(--surface-container);
-  resize: none; line-height: 1.5; height: 88px;
-  font-family: 'Be Vietnam Pro', sans-serif;
+    width: 100%;
+    border: 1px solid var(--outline-variant, #e0e0e0);
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-size: 12px;
+    color: var(--on-surface);
+    background: var(--surface-container-low);
+    resize: none;
+    line-height: 1.5;
+    height: 90px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: border-color 0.15s;
+}
+
+.profile-bio:focus {
+    outline: none;
+    border-color: var(--primary);
 }
 
 .profile-update-btn {
-  margin-top: 14px; width: 100%;
-  background: var(--surface-container-high, #e0e0e0);
-  color: var(--on-surface); border: none; border-radius: 12px;
-  padding: 10px; font-size: 13px; font-weight: 700;
-  cursor: not-allowed; opacity: .7;
-  font-family: 'Be Vietnam Pro', sans-serif;
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: opacity 0.15s, transform 0.1s;
 }
 
-/* Bildirimler */
+.profile-update-btn:hover {
+    opacity: 0.88;
+}
+
+.profile-update-btn:active {
+    transform: scale(0.97);
+}
+
+/* ── Aktiviteler ── */
 .notif-card {
-  background: var(--surface-container-lowest);
-  border-radius: 20px; padding: 18px 20px;
-  box-shadow: 0 4px 20px var(--shadow-primary);
+    background: var(--surface-container-lowest);
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 20px var(--shadow-primary);
 }
+
 .notif-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
 }
-.notif-header h3 { margin: 0; font-size: 14px; font-weight: 700; }
+
+.notif-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
 .notif-new-badge {
-  background: #e53935; color: #fff;
-  font-size: 9px; font-weight: 800; letter-spacing: .08em;
-  padding: 2px 8px; border-radius: 999px;
+    background: #e53935;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 999px;
 }
-.notif-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 13px; }
-.notif-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  flex-shrink: 0; margin-top: 4px;
-}
-.notif-dot--lost { background: #6a4f00; }
-.notif-dot--adoption { background: var(--primary); }
-.notif-dot--medical { background: var(--secondary); }
-.notif-text { margin: 0 0 2px; font-size: 12px; color: var(--on-surface); }
-.notif-time { margin: 0; font-size: 10px; color: #999; }
-.notif-empty { font-size: 12px; color: var(--on-surface-variant); text-align: center; padding: 8px 0; }
 
-/* ── SAĞ PANEL ── */
+.notif-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 14px;
+    border-left: 3px solid transparent;
+    background: var(--surface-container-low);
+}
+
+.notif-item--lost {
+    border-left-color: #835500;
+}
+
+.notif-item--adoption {
+    border-left-color: var(--primary);
+}
+
+.notif-item--medical {
+    border-left-color: var(--secondary);
+}
+
+.notif-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notif-icon .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.notif-icon--lost {
+    background: #fff9c4;
+    color: #7a5c00;
+}
+
+.notif-icon--adoption {
+    background: #ffe0b2;
+    color: var(--primary);
+}
+
+.notif-icon--medical {
+    background: #e0f2f1;
+    color: var(--secondary);
+}
+
+.notif-content {
+    flex: 1;
+}
+
+.notif-text {
+    margin: 0 0 2px;
+    font-size: 12px;
+    color: var(--on-surface);
+}
+
+.notif-time {
+    margin: 0;
+    font-size: 10px;
+    color: #999;
+}
+
+.notif-empty {
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    text-align: center;
+    padding: 8px 0;
+}
+
+/* ── Sağ Panel ── */
 .reports-header {
-  display: flex; justify-content: space-between; align-items: flex-end;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
 }
-.reports-title { margin: 0 0 4px; font-size: 22px; font-weight: 800; color: var(--on-surface); }
-.reports-sub { margin: 0; font-size: 13px; color: var(--on-surface-variant); }
+
+.reports-title {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--on-surface);
+}
+
+.reports-sub {
+    margin: 0;
+    font-size: 13px;
+    color: var(--on-surface-variant);
+}
+
 .reports-history-link {
-  font-size: 13px; font-weight: 700; color: var(--primary);
-  text-decoration: none; white-space: nowrap;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    white-space: nowrap;
 }
-.reports-history-link:hover { text-decoration: underline; }
 
+.reports-history-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Rapor Grid ── */
 .reports-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
 }
 
-/* Rapor Kartı */
-.report-item-card {
-  background: var(--surface-container-lowest);
-  border-radius: 16px; overflow: hidden;
-  box-shadow: 0 4px 16px var(--shadow-primary);
-  transition: transform .2s;
-}
-.report-item-card:hover { transform: translateY(-3px); }
-
-.report-item-top { display: flex; }
-.report-item-img {
-  width: 110px; height: 130px;
-  object-fit: cover; flex-shrink: 0;
-}
-.report-item-img-placeholder {
-  width: 110px; height: 130px; flex-shrink: 0;
-  background: var(--surface-container);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px;
-}
-.report-item-info {
-  padding: 13px 13px 10px; flex: 1;
-  display: flex; flex-direction: column;
+/* ── Rapor Kartı ── */
+.report-card {
+    background: var(--surface-container-lowest);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow-primary);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.report-item-badge {
-  display: inline-block; font-size: 9px; font-weight: 800;
-  letter-spacing: .07em; padding: 3px 8px; border-radius: 999px;
-  text-transform: uppercase; margin-bottom: 7px; width: fit-content;
-}
-.badge--lost     { background: #fff9c4; color: #7a5c00; }
-.badge--adoption { background: #ffe0b2; color: #7a3900; }
-.badge--medical  { background: #e0f2f1; color: #005c5c; }
-
-.report-item-name {
-  margin: 0 0 4px; font-size: 14px; font-weight: 800; color: var(--on-surface);
-}
-.report-item-detail {
-  margin: 0; font-size: 11px; color: var(--on-surface-variant);
-  line-height: 1.4; flex: 1;
+.report-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(148, 74, 0, 0.1);
 }
 
-.report-item-actions {
-  display: flex; gap: 6px; padding: 10px 12px;
-  border-top: 1px solid var(--surface-container, #f0f0f0);
-  background: var(--surface-container-low, #f8f8f8);
+.report-card-image-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
 }
-.report-item-btn {
-  flex: 1; text-align: center; padding: 7px 8px; border-radius: 8px;
-  font-size: 11px; font-weight: 700; text-decoration: none;
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 3px;
-  font-family: 'Be Vietnam Pro', sans-serif; transition: background .15s;
-}
-.btn-edit { background: var(--surface-container, #e8e8e8); color: var(--on-surface); }
-.btn-edit:hover { background: var(--surface-container-high, #d8d8d8); }
-.btn-view { background: var(--primary); color: #fff; }
-.btn-view:hover { opacity: .88; }
-.btn-delete { background: #ffdad6; color: #93000a; flex: 0; padding: 7px 8px; }
-.btn-delete:hover { background: #ffb4ab; }
-.btn-delete .material-symbols-outlined { font-size: 14px; }
 
-/* Yeni İlan Kartı */
+.report-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s;
+}
+
+.report-card:hover .report-card-image {
+    transform: scale(1.06);
+}
+
+.report-card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--surface-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-card-image-placeholder .material-symbols-outlined {
+    font-size: 48px;
+    color: var(--outline);
+}
+
+.report-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.badge--lost {
+    background: #fff9c4;
+    color: #7a5c00;
+}
+
+.badge--adoption {
+    background: #ffe0b2;
+    color: #7a3900;
+}
+
+.badge--medical {
+    background: #e0f2f1;
+    color: #005c5c;
+}
+
+.report-card-footer-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(249, 249, 249, 0.45);
+    backdrop-filter: blur(10px);
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.report-card-name {
+    margin: 0 0 2px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--on-surface);
+}
+
+.report-card-sub {
+    margin: 0;
+    font-size: 11px;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+}
+
+.report-card-share-btn {
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    padding: 6px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+.report-card-share-btn:hover {
+    opacity: 0.8;
+}
+
+.report-card-share-btn .material-symbols-outlined {
+    font-size: 18px;
+}
+
+/* ── Rapor Kartı Body ── */
+.report-card-body {
+    padding: 14px 16px 14px;
+}
+
+.report-card-detail {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    line-height: 1.5;
+}
+
+.report-card-actions {
+    display: flex;
+    gap: 6px;
+    border-top: 1px solid var(--surface-container);
+    padding-top: 12px;
+}
+
+.report-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: background 0.15s, opacity 0.15s;
+    width: 100%;
+}
+
+.btn-edit {
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+}
+
+.btn-edit:hover {
+    background: var(--surface-variant);
+}
+
+.btn-found {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-found:hover {
+    opacity: 0.88;
+}
+
+.btn-delete {
+    flex: 0;
+    background: #ffdad6;
+    color: #93000a;
+    padding: 8px 9px;
+}
+
+.btn-delete:hover {
+    background: #ffb4ab;
+}
+
+.btn-delete .material-symbols-outlined {
+    font-size: 15px;
+}
+
+/* ── Yeni İlan Kartı ── */
 .new-report-card {
-  background: var(--surface-container-lowest);
-  border-radius: 16px;
-  border: 2px dashed var(--outline-variant, #ccc);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 28px 16px; min-height: 180px;
-  text-decoration: none; color: var(--on-surface);
-  transition: border-color .2s, transform .2s;
+    background: var(--surface-container-lowest);
+    border-radius: 18px;
+    border: 2px dashed var(--outline-variant, #ccc);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px 16px;
+    min-height: 190px;
+    text-decoration: none;
+    color: var(--on-surface);
+    transition: border-color 0.2s, transform 0.2s;
 }
-.new-report-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+
+.new-report-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px);
+}
+
 .new-report-card--large {
-  min-height: 240px; max-width: 340px; margin: 0 auto;
+    min-height: 250px;
+    max-width: 360px;
+    margin: 0 auto;
 }
+
 .new-report-icon {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--surface-container);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 12px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--surface-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
 }
-.new-report-icon .material-symbols-outlined { font-size: 26px; color: var(--primary); }
-.new-report-card h4 { margin: 0 0 6px; font-size: 14px; font-weight: 800; }
-.new-report-card p { margin: 0; font-size: 12px; color: var(--on-surface-variant); line-height: 1.5; }
 
-.profile-empty-state { display: flex; justify-content: center; padding: 40px 0; }
+.new-report-card:hover .new-report-icon {
+    transform: scale(1.1);
+}
 
-@media (max-width: 800px) {
-  .profile-layout { grid-template-columns: 1fr; }
-  .reports-grid { grid-template-columns: 1fr; }
+.new-report-icon .material-symbols-outlined {
+    font-size: 28px;
+    color: var(--primary);
+}
+
+.new-report-card h4 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.new-report-card p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+    line-height: 1.5;
+}
+
+/* ── Empty State ── */
+.profile-empty-state {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 820px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 {% endblock %}

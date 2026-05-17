@@ -14,6 +14,7 @@ urlpatterns = [
     path('new-animal/', views.new_animal_view, name='new_animal'),
     path('map/', views.map_view, name='map'),
     path('profile/', views.profile_view, name='profile'),
+    path('profile/<int:report_id>/found/', views.mark_report_found, name='mark_report_found'),
     path('admin-settings/', views.admin_settings_view, name='admin_settings'),
     path('profile/edit/<int:report_id>/', views.edit_report_view, name='edit_report'),
     path('admin-panel/', views.custom_admin_dashboard, name='custom_admin_dashboard'),

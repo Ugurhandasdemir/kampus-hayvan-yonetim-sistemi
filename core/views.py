@@ -17,7 +17,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from PIL import Image, ImageOps, UnidentifiedImageError
 
-from .models import AnimalReport, FeedingStation, VolunteerApplication
+from .models import AnimalReport, FeedingStation, UserProfile, VolunteerApplication
 
 
 PHOTO_TARGET_SIZE = (800, 1000)
@@ -283,18 +283,45 @@ def map_view(request):
 @login_required
 def profile_view(request):
     user_reports = AnimalReport.objects.filter(reporter=request.user).order_by("-created_at")
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        report_id = request.POST.get("delete_id")
+        action = request.POST.get("action")
 
-        if report_id:
-            report = get_object_or_404(AnimalReport, id=report_id, reporter=request.user)
-            report.delete()
-            messages.success(request, "Ilan silindi.")
+        if action == "update_profile":
+            first_name = request.POST.get("first_name", "").strip()
+            bio = request.POST.get("bio", "").strip()
+            if first_name:
+                request.user.first_name = first_name
+                request.user.save(update_fields=["first_name"])
+            user_profile.bio = bio[:300]
+            user_profile.save(update_fields=["bio"])
+            messages.success(request, "Profil güncellendi.")
             return redirect("profile")
 
-    context = {"user_reports": user_reports}
+        delete_id = request.POST.get("delete_id")
+        if delete_id:
+            report = get_object_or_404(AnimalReport, id=delete_id, reporter=request.user)
+            report.delete()
+            messages.success(request, "İlan silindi.")
+            return redirect("profile")
+
+    context = {
+        "user_reports": user_reports,
+        "user_profile": user_profile,
+    }
     return render(request, "profile.html", context)
+
+
+@login_required
+def mark_report_found(request, report_id):
+    report = get_object_or_404(AnimalReport, id=report_id, reporter=request.user)
+    if request.method == "POST":
+        report.status = "approved"
+        report.save(update_fields=["status"])
+        label = {"lost": "Bulundu", "adoption": "Sahiplenildi", "medical": "Çözüldü"}.get(report.category, "Güncellendi")
+        messages.success(request, f"İlan '{label}' olarak işaretlendi.")
+    return redirect("profile")
 
 
 @login_required

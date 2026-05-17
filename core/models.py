@@ -63,6 +63,22 @@ class VolunteerApplication(models.Model):
         verbose_name_plural = "Gönüllü Başvuruları"
 
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    bio = models.TextField(max_length=300, blank=True, default="")
+
+    def __str__(self):
+        return f"Profile: {self.user.username}"
+
+    class Meta:
+        verbose_name = "Kullanıcı Profili"
+        verbose_name_plural = "Kullanıcı Profilleri"
+
+
 class FeedingStation(models.Model):
     STATUS_CHOICES = [
         ("active", "Aktif"),
