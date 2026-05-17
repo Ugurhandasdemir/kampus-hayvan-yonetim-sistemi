@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Admin Ayarları{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_settings.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="admin-settings-page">
@@ -94,49 +100,4 @@
 
 </div>
 
-<style>
-.admin-settings-page { max-width: 800px; margin: 40px auto; padding: 0 16px; }
-.admin-settings-page h2 { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
-
-.settings-card {
-  background: var(--surface-container-lowest);
-  border-radius: 20px; padding: 28px;
-  box-shadow: 0 8px 24px var(--shadow-primary);
-  margin-bottom: 24px;
-}
-.settings-card h3 { font-size: 16px; font-weight: 700; margin: 0 0 20px; color: var(--on-surface); }
-
-.settings-field { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
-.settings-field label { font-size: 11px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: .05em; }
-.settings-field input {
-  padding: 10px 14px; background: var(--surface-container);
-  border: none; border-radius: 12px;
-  font-family: 'Be Vietnam Pro', sans-serif; font-size: 14px; color: var(--on-surface);
-  outline: none; transition: background .2s;
-}
-.settings-field input:focus { background: var(--surface-container-lowest); box-shadow: 0 0 0 2px rgba(148,74,0,0.2); }
-.settings-field input:disabled { opacity: .5; cursor: not-allowed; }
-
-.settings-stats { display: flex; gap: 12px; flex-wrap: wrap; }
-.stat-box {
-  flex: 1; min-width: 110px;
-  background: var(--surface-container);
-  border-radius: 14px; padding: 18px 12px;
-  display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
-}
-.stat-box .material-symbols-outlined { font-size: 28px; }
-.stat-box strong { font-size: 26px; font-weight: 800; color: var(--on-surface); }
-.stat-box span   { font-size: 11px; color: var(--on-surface-variant); }
-
-.quick-links { display: flex; gap: 12px; flex-wrap: wrap; }
-.quick-link-btn {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 18px; border-radius: 12px;
-  background: var(--surface-container); color: var(--on-surface);
-  text-decoration: none; font-weight: 600; font-size: 13px;
-  transition: background .2s, transform .15s;
-}
-.quick-link-btn:hover { background: #ffdcc5; color: var(--primary); transform: translateY(-2px); }
-.quick-link-btn .material-symbols-outlined { font-size: 18px; }
-</style>
 {% endblock %}
