@@ -1,207 +1,340 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Profilim | PawsMap</title>
 
-{% block title %}Profilim | PawsMap{% endblock %}
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
-{% endblock %}
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-{% block content %}
-<div class="profile-layout">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#f9f9f9",
+            surface: "#f9f9f9",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f3",
+            "surface-container": "#eeeeee",
+            "surface-container-high": "#e8e8e8",
+            "surface-container-highest": "#e2e2e2",
+            "on-surface": "#1a1c1c",
+            "on-surface-variant": "#554337",
+            primary: "#944a00",
+            "primary-container": "#f28c38",
+            "on-primary-container": "#602e00",
+            "primary-fixed": "#ffdcc5",
+            "on-primary-fixed": "#301400",
+            secondary: "#006a63",
+            "secondary-container": "#8bf1e6"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Be Vietnam Pro", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
 
-  <!-- SOL PANEL -->
-  <aside class="profile-sidebar">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
-    <!-- Profil Kartı -->
-    <div class="profile-card">
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar-circle">
-          <span class="material-symbols-outlined">account_circle</span>
-        </div>
-        <div class="profile-verified-badge">
-          <span class="material-symbols-outlined">verified</span>
-        </div>
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: "Be Vietnam Pro", sans-serif;
+      color: #1a1c1c;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      vertical-align: middle;
+    }
+
+    .pawsmap-shell {
+      padding-top: 96px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+
+  <!-- TopNavBar -->
+  <header class="bg-surface/80 backdrop-blur-xl fixed top-0 z-50 w-full shadow-[0px_12px_32px_rgba(148,74,0,0.08)]">
+    <div class="flex justify-between items-center px-6 md:px-8 py-4 w-full max-w-7xl mx-auto font-headline tracking-tight">
+      <div class="flex items-center gap-8">
+        <a href="{% url 'map' %}" class="flex items-center gap-2 text-2xl font-extrabold text-orange-700 hover:text-orange-600 transition-colors">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
+          PawsMap
+        </a>
+        <nav class="hidden md:flex gap-6">
+          <a class="text-gray-600 font-medium hover:text-orange-600 transition-colors" href="{% url 'profile' %}">İlanlarım</a>
+          <a class="text-gray-600 font-medium hover:text-orange-600 transition-colors" href="{% url 'map' %}">Harita</a>
+        </nav>
       </div>
-
-      <h2 class="profile-name">{{ request.user.first_name|default:request.user.username }}</h2>
-      <p class="profile-role">Kayıtlı Kurtarıcı</p>
-
-      <form method="post" class="profile-form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="update_profile">
-
-        <div class="profile-field">
-          <label class="profile-field-label">E-POSTA ADRESİ</label>
-          <p class="profile-field-value">{{ request.user.email }}</p>
+      <div class="flex items-center gap-3">
+        <a href="{% url 'new_animal' %}" class="bg-primary hover:bg-orange-600 text-white px-5 py-2 rounded-xl font-bold transition-transform active:scale-95 flex items-center gap-2 shadow-lg">
+          <span class="material-symbols-outlined text-[20px]">add</span>
+          <span class="hidden sm:inline">Yeni İlan</span>
+        </a>
+        <div class="p-2 text-orange-700 font-bold border-b-2 border-orange-700">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
         </div>
-
-        <div class="profile-field">
-          <label class="profile-field-label" for="profile-name-input">AD SOYAD</label>
-          <input
-            id="profile-name-input"
-            class="profile-input"
-            type="text"
-            name="first_name"
-            value="{{ request.user.first_name|default:request.user.username }}"
-          />
-        </div>
-
-        <div class="profile-field">
-          <label class="profile-field-label" for="profile-bio-input">HAKKIMDA</label>
-          <textarea
-            id="profile-bio-input"
-            class="profile-bio"
-            name="bio"
-            maxlength="300"
-          >{{ user_profile.bio }}</textarea>
-        </div>
-
-        <button type="submit" class="profile-update-btn">Profili Güncelle</button>
-      </form>
-    </div>
-
-    <!-- Son Aktiviteler -->
-    <div class="notif-card">
-      <div class="notif-header">
-        <h3>Son Aktiviteler</h3>
-        {% if user_reports %}
-        <span class="notif-new-badge">YENİ</span>
+        {% if request.user.is_staff %}
+        <a href="{% url 'custom_admin_dashboard' %}" class="hidden md:flex p-2 text-stone-500 hover:text-orange-600 transition-colors" title="Admin Paneli">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+        </a>
         {% endif %}
+        <form action="{% url 'logout' %}" method="post" class="m-0">
+          {% csrf_token %}
+          <button type="submit" class="p-2 text-stone-500 hover:text-orange-600 transition-colors" title="Çıkış">
+            <span class="material-symbols-outlined">logout</span>
+          </button>
+        </form>
       </div>
+    </div>
+  </header>
 
-      {% for report in user_reports|slice:":3" %}
-      <div class="notif-item notif-item--{{ report.category }}">
-        <div class="notif-icon notif-icon--{{ report.category }}">
-          {% if report.category == 'lost' %}
-          <span class="material-symbols-outlined">pets</span>
-          {% elif report.category == 'adoption' %}
-          <span class="material-symbols-outlined">favorite</span>
-          {% else %}
-          <span class="material-symbols-outlined">medical_services</span>
-          {% endif %}
-        </div>
-        <div class="notif-content">
-          <p class="notif-text">
-            <strong>{{ report.full_name }}</strong> ilanı aktif
-          </p>
-          <p class="notif-time">{{ report.created_at|date:"d M Y" }}</p>
-        </div>
-      </div>
-      {% empty %}
-      <p class="notif-empty">Henüz aktivite yok.</p>
+  <main class="pawsmap-shell flex-grow">
+    {% if messages %}
+    <section class="max-w-7xl mx-auto px-4 md:px-8 mt-4 space-y-2">
+      {% for message in messages %}
+      <p class="rounded-xl px-4 py-3 text-sm font-semibold
+        {% if message.tags == 'error' %}bg-red-100 text-red-700
+        {% elif message.tags == 'success' %}bg-green-100 text-green-700
+        {% else %}bg-orange-100 text-orange-700{% endif %}">
+        {{ message }}
+      </p>
       {% endfor %}
-    </div>
-
-  </aside>
-
-  <!-- SAĞ PANEL -->
-  <main class="profile-main">
-
-    <div class="reports-header">
-      <div>
-        <h2 class="reports-title">Aktif İlanlarım</h2>
-        <p class="reports-sub">{{ user_reports.count }} aktif hayvan ilanı yönetiyorsun.</p>
-      </div>
-      <a href="{% url 'map' %}" class="reports-history-link">Haritada Gör</a>
-    </div>
-
-    {% if user_reports %}
-    <div class="reports-grid">
-
-      {% for report in user_reports %}
-      <div class="report-card">
-
-        <!-- Görsel alanı -->
-        <div class="report-card-image-wrap">
-          {% if report.photo %}
-          <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-image" />
-          {% else %}
-          <div class="report-card-image-placeholder">
-            <span class="material-symbols-outlined">pets</span>
-          </div>
-          {% endif %}
-
-          <!-- Durum rozeti -->
-          <div class="report-card-badge badge--{{ report.category }}">
-            {% if report.status == 'approved' %}Kapatıldı{% else %}Aktif{% endif %}
-            &bull;
-            {% if report.category == 'lost' %}KAYIP
-            {% elif report.category == 'adoption' %}SAHİPLENDİRME
-            {% else %}TIBBİ
-            {% endif %}
-          </div>
-
-          <!-- Alt bilgi -->
-          <div class="report-card-footer-overlay">
-            <div>
-              <h3 class="report-card-name">{{ report.full_name }}</h3>
-              <p class="report-card-sub">{{ report.created_at|date:"d M Y" }}</p>
-            </div>
-            <a href="{% url 'animal_details' report.id %}" class="report-card-share-btn" title="Detayları gör">
-              <span class="material-symbols-outlined">open_in_new</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- İçerik alanı -->
-        <div class="report-card-body">
-          <p class="report-card-detail">{{ report.details|truncatechars:90 }}</p>
-
-          <div class="report-card-actions">
-            <a href="{% url 'edit_report' report.id %}" class="report-btn btn-edit">
-              İlanı Düzenle
-            </a>
-
-            {% if report.status != 'approved' %}
-            <form method="post" action="{% url 'mark_report_found' report.id %}" style="flex:1">
-              {% csrf_token %}
-              <button type="submit" class="report-btn btn-found">
-                {% if report.category == 'lost' %}Bulundu
-                {% elif report.category == 'adoption' %}Sahiplenildi
-                {% else %}Çözüldü
-                {% endif %}
-              </button>
-            </form>
-            {% endif %}
-
-            <form method="post" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')" style="flex:0">
-              {% csrf_token %}
-              <input type="hidden" name="delete_id" value="{{ report.id }}">
-              <button type="submit" class="report-btn btn-delete" title="Sil">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-
-      <!-- Yeni İlan Kartı -->
-      <a href="{% url 'new_animal' %}" class="new-report-card">
-        <div class="new-report-icon">
-          <span class="material-symbols-outlined">add_a_photo</span>
-        </div>
-        <h4>Yeni İlan Oluştur</h4>
-        <p>Bir hayvanı fark ettin mi?<br>Topluluğa bildirin.</p>
-      </a>
-
-    </div>
-
-    {% else %}
-    <div class="profile-empty-state">
-      <a href="{% url 'new_animal' %}" class="new-report-card new-report-card--large">
-        <div class="new-report-icon">
-          <span class="material-symbols-outlined">add_a_photo</span>
-        </div>
-        <h4>Yeni İlan Oluştur</h4>
-        <p>Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.</p>
-      </a>
-    </div>
+    </section>
     {% endif %}
 
+    <div class="profile-layout">
+
+      <!-- SOL PANEL -->
+      <aside class="profile-sidebar">
+
+        <!-- Profil Kartı -->
+        <div class="profile-card">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-circle">
+              <span class="material-symbols-outlined">account_circle</span>
+            </div>
+            <div class="profile-verified-badge">
+              <span class="material-symbols-outlined">verified</span>
+            </div>
+          </div>
+
+          <h2 class="profile-name">{{ request.user.first_name|default:request.user.username }}</h2>
+          <p class="profile-role">Kayıtlı Kurtarıcı</p>
+
+          <form method="post" class="profile-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_profile">
+
+            <div class="profile-field">
+              <label class="profile-field-label">E-POSTA ADRESİ</label>
+              <p class="profile-field-value">{{ request.user.email }}</p>
+            </div>
+
+            <div class="profile-field">
+              <label class="profile-field-label" for="profile-name-input">AD SOYAD</label>
+              <input
+                id="profile-name-input"
+                class="profile-input"
+                type="text"
+                name="first_name"
+                value="{{ request.user.first_name|default:request.user.username }}"
+              />
+            </div>
+
+            <div class="profile-field">
+              <label class="profile-field-label" for="profile-bio-input">HAKKIMDA</label>
+              <textarea
+                id="profile-bio-input"
+                class="profile-bio"
+                name="bio"
+                maxlength="300"
+              >{{ user_profile.bio }}</textarea>
+            </div>
+
+            <button type="submit" class="profile-update-btn">Profili Güncelle</button>
+          </form>
+        </div>
+
+        <!-- Son Aktiviteler -->
+        <div class="notif-card">
+          <div class="notif-header">
+            <h3>Son Aktiviteler</h3>
+            {% if user_reports %}
+            <span class="notif-new-badge">YENİ</span>
+            {% endif %}
+          </div>
+
+          {% for report in user_reports|slice:":3" %}
+          <div class="notif-item notif-item--{{ report.category }}">
+            <div class="notif-icon notif-icon--{{ report.category }}">
+              {% if report.category == 'lost' %}
+              <span class="material-symbols-outlined">pets</span>
+              {% elif report.category == 'adoption' %}
+              <span class="material-symbols-outlined">favorite</span>
+              {% else %}
+              <span class="material-symbols-outlined">medical_services</span>
+              {% endif %}
+            </div>
+            <div class="notif-content">
+              <p class="notif-text">
+                <strong>{{ report.full_name }}</strong> ilanı aktif
+              </p>
+              <p class="notif-time">{{ report.created_at|date:"d M Y" }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <p class="notif-empty">Henüz aktivite yok.</p>
+          {% endfor %}
+        </div>
+
+      </aside>
+
+      <!-- SAĞ PANEL -->
+      <main class="profile-main">
+
+        <div class="reports-header">
+          <div>
+            <h2 class="reports-title">Aktif İlanlarım</h2>
+            <p class="reports-sub">{{ user_reports.count }} aktif hayvan ilanı yönetiyorsun.</p>
+          </div>
+          <a href="{% url 'map' %}" class="reports-history-link">Haritada Gör</a>
+        </div>
+
+        {% if user_reports %}
+        <div class="reports-grid">
+
+          {% for report in user_reports %}
+          <div class="report-card">
+
+            <!-- Görsel alanı -->
+            <div class="report-card-image-wrap">
+              {% if report.photo %}
+              <img src="{{ report.photo.url }}" alt="{{ report.full_name }}" class="report-card-image" />
+              {% else %}
+              <div class="report-card-image-placeholder">
+                <span class="material-symbols-outlined">pets</span>
+              </div>
+              {% endif %}
+
+              <!-- Durum rozeti -->
+              <div class="report-card-badge badge--{{ report.category }}">
+                {% if report.status == 'approved' %}Kapatıldı{% else %}Aktif{% endif %}
+                &bull;
+                {% if report.category == 'lost' %}KAYIP
+                {% elif report.category == 'adoption' %}SAHİPLENDİRME
+                {% else %}TIBBİ
+                {% endif %}
+              </div>
+
+              <!-- Alt bilgi -->
+              <div class="report-card-footer-overlay">
+                <div>
+                  <h3 class="report-card-name">{{ report.full_name }}</h3>
+                  <p class="report-card-sub">{{ report.created_at|date:"d M Y" }}</p>
+                </div>
+                <a href="{% url 'animal_details' report.id %}" class="report-card-share-btn" title="Detayları gör">
+                  <span class="material-symbols-outlined">open_in_new</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- İçerik alanı -->
+            <div class="report-card-body">
+              <p class="report-card-detail">{{ report.details|truncatechars:90 }}</p>
+
+              <div class="report-card-actions">
+                <a href="{% url 'edit_report' report.id %}" class="report-btn btn-edit">
+                  İlanı Düzenle
+                </a>
+
+                {% if report.status != 'approved' %}
+                <form method="post" action="{% url 'mark_report_found' report.id %}" style="flex:1">
+                  {% csrf_token %}
+                  <button type="submit" class="report-btn btn-found">
+                    {% if report.category == 'lost' %}Bulundu
+                    {% elif report.category == 'adoption' %}Sahiplenildi
+                    {% else %}Çözüldü
+                    {% endif %}
+                  </button>
+                </form>
+                {% endif %}
+
+                <form method="post" onsubmit="return confirm('Bu ilanı silmek istediğine emin misin?')" style="flex:0">
+                  {% csrf_token %}
+                  <input type="hidden" name="delete_id" value="{{ report.id }}">
+                  <button type="submit" class="report-btn btn-delete" title="Sil">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          <!-- Yeni İlan Kartı -->
+          <a href="{% url 'new_animal' %}" class="new-report-card">
+            <div class="new-report-icon">
+              <span class="material-symbols-outlined">add_a_photo</span>
+            </div>
+            <h4>Yeni İlan Oluştur</h4>
+            <p>Bir hayvanı fark ettin mi?<br>Topluluğa bildirin.</p>
+          </a>
+
+        </div>
+
+        {% else %}
+        <div class="profile-empty-state">
+          <a href="{% url 'new_animal' %}" class="new-report-card new-report-card--large">
+            <div class="new-report-icon">
+              <span class="material-symbols-outlined">add_a_photo</span>
+            </div>
+            <h4>Yeni İlan Oluştur</h4>
+            <p>Kayıp, sahiplendirme veya tıbbi yardım ilanı oluşturabilirsin.</p>
+          </a>
+        </div>
+        {% endif %}
+
+      </main>
+
+    </div>
   </main>
 
-</div>
+  <!-- BottomNavBar (Mobile Only) -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-surface/80 backdrop-blur-xl z-50 rounded-t-[2rem] shadow-[0px_-8px_24px_rgba(0,0,0,0.05)]">
+    <a class="flex flex-col items-center justify-center text-gray-500 text-[11px] font-semibold uppercase tracking-wider" href="{% url 'map' %}">
+      <span class="material-symbols-outlined">map</span>
+      <span class="mt-1">Harita</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-gray-500 text-[11px] font-semibold uppercase tracking-wider" href="{% url 'new_animal' %}">
+      <span class="material-symbols-outlined">add_circle</span>
+      <span class="mt-1">Yeni İlan</span>
+    </a>
+    <a class="flex flex-col items-center justify-center bg-orange-100 text-orange-800 rounded-full px-6 py-2 text-[11px] font-semibold uppercase tracking-wider" href="{% url 'profile' %}">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+      <span class="mt-1">Profil</span>
+    </a>
+  </nav>
 
-{% endblock %}
+</body>
+</html>

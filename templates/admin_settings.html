@@ -1,103 +1,365 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi | Admin Ayarları</title>
 
-{% block title %}Admin Ayarları{% endblock %}
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin_settings.css' %}">
-{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-{% block content %}
-<div class="admin-settings-page">
-  <h2>⚙️ Admin Ayarları</h2>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "surface-container-highest": "#ffd6ab",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "on-primary-container": "#442100",
+                        "secondary": "#006666",
+                        "secondary-container": "#8dedec",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "on-surface": "#452800",
+                        "on-surface-variant": "#7a5426"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "2rem",
+                        xl: "3rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
 
-  {% if messages %}
-  <div style="margin-bottom:20px;">
-    {% for message in messages %}
-    <p style="background:#d4edda;color:#155724;padding:10px 14px;border-radius:10px;font-size:13px;">{{ message }}</p>
-    {% endfor %}
-  </div>
-  {% endif %}
+    <style>
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background-color: #fff5ed;
+            color: #452800;
+        }
 
-  <!-- Profil Güncelleme -->
-  <div class="settings-card">
-    <h3>Profil Bilgileri</h3>
-    <form method="post">
-      {% csrf_token %}
-      <div class="settings-field">
-        <label>Ad Soyad</label>
-        <input type="text" name="first_name" value="{{ request.user.first_name }}" placeholder="Ad Soyad" />
-      </div>
-      <div class="settings-field">
-        <label>E-posta</label>
-        <input type="email" value="{{ request.user.email }}" disabled />
-      </div>
-      <button type="submit" class="paws-btn-primary" style="display:inline-flex;margin-top:8px;">
-        <span class="material-symbols-outlined">save</span> Kaydet
-      </button>
-    </form>
-  </div>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+            vertical-align: middle;
+        }
 
-  <!-- Sistem İstatistikleri -->
-  <div class="settings-card">
-    <h3>Sistem Özeti</h3>
-    <div class="settings-stats">
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:var(--primary)">campaign</span>
-        <strong>{{ total_reports }}</strong>
-        <span>Toplam İlan</span>
-      </div>
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:#835500">schedule</span>
-        <strong>{{ pending_reports }}</strong>
-        <span>Bekleyen</span>
-      </div>
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:#2e7d32">check_circle</span>
-        <strong>{{ approved_reports }}</strong>
-        <span>Onaylanan</span>
-      </div>
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:var(--secondary)">group</span>
-        <strong>{{ total_users }}</strong>
-        <span>Kullanıcı</span>
-      </div>
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:#6a1b9a">volunteer_activism</span>
-        <strong>{{ total_volunteers }}</strong>
-        <span>Gönüllü</span>
-      </div>
-      <div class="stat-box">
-        <span class="material-symbols-outlined" style="color:var(--tertiary)">restaurant</span>
-        <strong>{{ total_stations }}</strong>
-        <span>İstasyon</span>
-      </div>
+        .click-bounce-effect:active {
+            transform: scale(0.95);
+        }
+
+        .soft-pattern {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: radial-gradient(#8c4a00 1px, transparent 1px);
+            background-size: 22px 22px;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body text-on-surface selection:bg-tertiary-container">
+<div class="soft-pattern"></div>
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 shadow-xl shadow-orange-900/5 z-50 flex-col py-6 gap-2">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center rotate-[-3deg] shadow-sm">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-orange-600 font-headline leading-tight">Admin Hub</h1>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Hızlı Erişim -->
-  <div class="settings-card">
-    <h3>Hızlı Erişim</h3>
-    <div class="quick-links">
-      <a href="{% url 'custom_admin_dashboard' %}" class="quick-link-btn">
+    <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Genel Bakış</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined">analytics</span>
+            <span>İlanlar</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined">group</span>
+            <span>Gönüllüler</span>
+        </a>
+
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full font-headline text-sm font-semibold hover:translate-x-1 transition-transform duration-200 click-bounce-effect"
+           href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined">pets</span>
+            <span>Besleme İstasyonları</span>
+        </a>
+
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg shadow-teal-900/20 font-headline text-sm font-semibold click-bounce-effect"
+           href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+            <span>Ayarlar</span>
+        </a>
+    </nav>
+
+    <div class="px-4 mt-6">
+        <a href="{% url 'new_animal' %}"
+           class="w-full bg-primary-container text-on-primary-container font-headline font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined">add_circle</span>
+            Yeni İlan
+        </a>
+    </div>
+</aside>
+
+<main class="md:ml-64 min-h-screen relative z-10">
+    <header class="bg-orange-50/80 backdrop-blur-xl top-0 z-40 flex justify-between items-center w-full px-6 py-3 sticky">
+        <div class="flex items-center gap-6 flex-1">
+            <h2 class="text-2xl font-black tracking-tight text-orange-700 font-headline lg:hidden">
+                Kampüs Hayvan Admin
+            </h2>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="{% url 'custom_admin_dashboard' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors">
+                <span class="material-symbols-outlined">home</span>
+            </a>
+
+            <a href="{% url 'custom_admin_reports' %}" class="p-2 text-stone-600 hover:bg-orange-200/50 rounded-full transition-colors relative">
+                <span class="material-symbols-outlined">notifications</span>
+                {% if pending_reports > 0 %}
+                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+                {% endif %}
+            </a>
+
+            <div class="h-8 w-[1px] bg-stone-200 mx-2"></div>
+
+            <div class="flex items-center gap-3">
+                <span class="text-right hidden sm:block">
+                    <p class="text-xs font-bold text-on-surface">
+                        {% if request.user.first_name %}
+                            {{ request.user.first_name }}
+                        {% else %}
+                            {{ request.user.username }}
+                        {% endif %}
+                    </p>
+                    <p class="text-[10px] text-stone-500 font-bold uppercase">Admin</p>
+                </span>
+
+                <a href="{% url 'admin_settings' %}" class="w-10 h-10 rounded-full border-2 border-primary-container bg-primary-container flex items-center justify-center font-black text-on-primary-container hover:ring-2 hover:ring-primary transition-all">
+                    A
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="p-6 lg:p-10 space-y-8 max-w-6xl">
+        <section>
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-5xl font-extrabold font-headline tracking-tighter text-on-surface leading-none mb-2">
+                        Admin Ayarları
+                    </h2>
+                    <p class="text-stone-500 font-medium">
+                        Profil bilgilerini düzenle, sistem özetini incele ve hızlı erişim bağlantılarını kullan.
+                    </p>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="bg-tertiary-container text-on-surface px-6 py-3 rounded-md font-bold font-headline -rotate-2 shadow-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined">settings</span>
+                        Yönetici Paneli
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% if messages %}
+        <section class="space-y-3">
+            {% for message in messages %}
+            <div class="rounded-xl px-5 py-3 text-sm font-bold
+                {% if message.tags == 'error' %}
+                    bg-red-100 text-red-700
+                {% elif message.tags == 'success' %}
+                    bg-green-100 text-green-700
+                {% else %}
+                    bg-orange-100 text-orange-700
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Profil Bilgileri -->
+            <div class="lg:col-span-2 bg-white rounded-xl p-8 shadow-sm border border-stone-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -mr-8 -mt-8 opacity-50 z-0"></div>
+
+                <div class="relative z-10 flex items-start gap-6 mb-6">
+                    <div class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-black text-3xl shadow-md">
+                        {% if request.user.first_name %}{{ request.user.first_name|first|upper }}{% else %}{{ request.user.username|first|upper }}{% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-lg font-headline font-bold text-on-surface">Profil Bilgileri</h4>
+                        <p class="text-sm text-stone-500">Yönetici hesap bilgilerini güncelle.</p>
+                        <div class="flex items-center gap-3 p-3 bg-secondary-container/40 rounded-xl border border-secondary/10 mt-4">
+                            <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                            <div>
+                                <p class="font-headline font-bold text-secondary text-sm">Süper Yönetici</p>
+                                <p class="text-xs text-secondary/80">Tüm modüllere ve kullanıcı yönetimine tam erişim.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% csrf_token %}
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ad Soyad</label>
+                        <input type="text" name="first_name" value="{{ request.user.first_name }}" placeholder="Ad Soyad"
+                               class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-secondary/40 font-medium"/>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">E-posta</label>
+                        <input type="email" value="{{ request.user.email }}" disabled
+                               class="w-full bg-surface-container-low/60 border-none rounded-xl py-2.5 px-4 text-stone-500 font-medium cursor-not-allowed"/>
+                    </div>
+
+                    <div class="sm:col-span-2 flex justify-end pt-2">
+                        <button type="submit"
+                                class="px-6 py-2.5 rounded-full bg-secondary text-white font-headline font-semibold hover:bg-secondary/90 transition-colors shadow-md shadow-secondary/20 flex items-center gap-2 click-bounce-effect">
+                            <span class="material-symbols-outlined text-sm">save</span>
+                            Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Hızlı Erişim -->
+            <div class="bg-gradient-to-br from-stone-800 to-stone-900 rounded-xl p-6 shadow-lg text-white">
+                <div class="flex items-center gap-3 mb-5 border-b border-stone-700 pb-4">
+                    <span class="material-symbols-outlined text-orange-400">bolt</span>
+                    <h4 class="text-lg font-headline font-bold">Hızlı Erişim</h4>
+                </div>
+
+                <div class="space-y-2">
+                    <a href="{% url 'custom_admin_dashboard' %}"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-stone-700/40 hover:bg-stone-700/70 transition-colors click-bounce-effect">
+                        <span class="material-symbols-outlined text-orange-300">dashboard</span>
+                        <span class="font-headline font-semibold text-sm">Dashboard</span>
+                    </a>
+                    <a href="{% url 'custom_admin_reports' %}"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-stone-700/40 hover:bg-stone-700/70 transition-colors click-bounce-effect">
+                        <span class="material-symbols-outlined text-orange-300">list_alt</span>
+                        <span class="font-headline font-semibold text-sm">İlan Yönetimi</span>
+                    </a>
+                    <a href="{% url 'custom_admin_volunteers' %}"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-stone-700/40 hover:bg-stone-700/70 transition-colors click-bounce-effect">
+                        <span class="material-symbols-outlined text-orange-300">people</span>
+                        <span class="font-headline font-semibold text-sm">Gönüllüler</span>
+                    </a>
+                    <a href="{% url 'custom_admin_stations' %}"
+                       class="flex items-center gap-3 px-4 py-3 rounded-xl bg-stone-700/40 hover:bg-stone-700/70 transition-colors click-bounce-effect">
+                        <span class="material-symbols-outlined text-orange-300">restaurant</span>
+                        <span class="font-headline font-semibold text-sm">İstasyonlar</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sistem Özeti -->
+        <section>
+            <div class="flex items-end justify-between px-1 mb-5">
+                <div>
+                    <h4 class="text-2xl font-headline font-extrabold text-on-surface">Sistem Özeti</h4>
+                    <p class="text-stone-500 text-sm font-medium">Mevcut sistem istatistikleri</p>
+                </div>
+                <span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-bold shadow-md">
+                    GENEL DURUM
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">campaign</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ total_reports }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">Toplam İlan</p>
+                </div>
+
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined" style="color:#835500; font-variation-settings: 'FILL' 1;">schedule</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ pending_reports }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">Bekleyen</p>
+                </div>
+
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined" style="color:#2e7d32; font-variation-settings: 'FILL' 1;">check_circle</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ approved_reports }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">Onaylanan</p>
+                </div>
+
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">group</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ total_users }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">Kullanıcı</p>
+                </div>
+
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined" style="color:#6a1b9a; font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ total_volunteers }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">Gönüllü</p>
+                </div>
+
+                <div class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-2 border border-orange-100/60">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+                    <p class="text-3xl font-headline font-black text-on-surface">{{ total_stations }}</p>
+                    <p class="text-[11px] font-bold text-stone-500 uppercase tracking-tighter">İstasyon</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white/70 backdrop-blur-xl border border-white/50 rounded-full p-2 shadow-2xl flex items-center justify-between z-50">
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_dashboard' %}">
         <span class="material-symbols-outlined">dashboard</span>
-        Dashboard
-      </a>
-      <a href="{% url 'custom_admin_reports' %}" class="quick-link-btn">
-        <span class="material-symbols-outlined">list_alt</span>
-        İlan Yönetimi
-      </a>
-      <a href="{% url 'custom_admin_volunteers' %}" class="quick-link-btn">
-        <span class="material-symbols-outlined">people</span>
-        Gönüllüler
-      </a>
-      <a href="{% url 'custom_admin_stations' %}" class="quick-link-btn">
-        <span class="material-symbols-outlined">restaurant</span>
-        İstasyonlar
-      </a>
-    </div>
-  </div>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_reports' %}">
+        <span class="material-symbols-outlined">analytics</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_volunteers' %}">
+        <span class="material-symbols-outlined">group</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-stone-400" href="{% url 'custom_admin_stations' %}">
+        <span class="material-symbols-outlined">pets</span>
+    </a>
+    <a class="w-12 h-12 rounded-full flex items-center justify-center text-primary bg-primary-container/20" href="{% url 'admin_settings' %}">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+    </a>
+</nav>
 
-</div>
-
-{% endblock %}
+</body>
+</html>

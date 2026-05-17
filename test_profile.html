@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Giriş | Kampüs Pati Topluluğu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="/static/css/login.css" rel="stylesheet">
+</head>
+<body class="login_sayfa">
+    <div class="login_grain_overlay"></div>
+    <main class="login_ana_kapsayici">
+
+        <!-- Sol Panel: Görsel ve Alıntı -->
+        <div class="login_sol_panel">
+            <img alt="Güneşli üniversite kampüsü çimeninde oturan mutlu bir golden retriever, arkada bulanık öğrenciler"
+                 class="login_sol_gorsel"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T72iTtr81RNt0xM87P1PYsWRHRxH--rtdEXGf9rSooqPXWbWvfEy4tTxc5flYYWhlgMbZ_ooiO8_g7h5TjLAYN3q4n-KsPaokuFh6rhj8LwZBakF1I_Bb4m9Wd2YoAWuwyfoicdDCvj1uk53gEMURAFEejY0D_bjKyZy745I-twcuuaumpZJ1tK2kh1QGEtstoZJZy0KSBAp7kebO7UgoZfizfg69f2UoPLLxVkPZGeMqvX9QNlCq-TBDpq9FYZ3afXnIX1iCT2B">
+            <div class="login_sol_gradient"></div>
+            <div class="login_sol_icerik">
+                <div class="login_soz_kutusu">
+                    <span class="login_soz_metin">"En iyi dostlar, en iyi bakımı hak eder."</span>
+                    <span class="login_soz_kaynak">&mdash; Kampüs Pati Topluluğu</span>
+                </div>
+                <h1 class="kampus_baslik">
+                    Kampüsteki <br>dostlarımızı koruyoruz.
+                </h1>
+                <p class="login_sol_aciklama">
+                    Yerel can dostlarımızın iyiliği için çalışan öğrenci gönüllüsünün arasına katıl.
+                </p>
+            </div>
+        </div>
+
+        <!-- Sağ Panel: Giriş Formu -->
+        <div class="login_sag_panel">
+            <div class="login_ust_ikon_kapsayici">
+                <div class="login_ust_ikon_daire">
+                    <span class="login_ust_ikon" data-icon="pets">pets</span>
+                </div>
+            </div>
+
+            <div class="login_form_karti">
+
+                <div class="login_karsilama">
+                    <div class="login_logo_satiri">
+                        <span class="login_logo_ikon" data-icon="potted_plant" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+                        <span class="login_logo_yazi">Kampüs Pati</span>
+                    </div>
+                    <h2 class="login_karsilama_baslik">Tekrar Hoş Geldin</h2>
+                    <p class="login_karsilama_alt">Gönüllü paneline giriş yap</p>
+                </div>
+
+                
+
+                <form action="/login/" class="login_form" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="b0VKRMFuXoqjAerR43l7rlt5CPDao3rxaSNgw4Sg9NGiK3dBN2EtqRrfSS7rRune">
+                    
+                    <input name="next" type="hidden" value="/profile/">
+                    
+                    <div class="login_alanlar">
+                        <div class="login_alan">
+                            <label class="login_label" for="email">Kullanıcı Adı veya E-posta</label>
+                            <input class="login_input" id="email" name="email" placeholder="kullaniciadi veya ad@universite.edu.tr" required type="text" value="">
+                        </div>
+                        <div class="login_alan">
+                            <div class="login_sifre_satir">
+                                <label class="login_label" for="password">Şifre</label>
+                                <a class="login_unuttum" href="#">Unuttun mu?</a>
+                            </div>
+                            <input class="login_input" id="password" name="password" placeholder="••••••••" required type="password">
+                        </div>
+                    </div>
+
+                    <div class="login_hatirla_satir">
+                        <input class="login_checkbox" id="remember" type="checkbox">
+                        <label class="login_checkbox_label" for="remember">Oturumumu hatırla</label>
+                    </div>
+
+                    <button class="login_btn" type="submit">
+                        Giriş Yap
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                </form>
+
+                <!-- <div class="login_altbolum">
+                    <div class="login_ayirac">
+                        <span class="login_ayirac_metin">Veya şununla devam et</span>
+                    </div>
+                    <div class="login_sosyal_grid">
+                        <button class="login_sosyal_btn" type="button">
+                            <img alt="Google Logosu" class="login_sosyal_logo"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB50i-DjOi5SjPFKEKigj2LZPmWDbF6h8bLKAN49B40sdlySdHRVcKwP4x_ZQjFHwniAKRNkX31LxzKFGNAHh7hG8E4qQN2i77EW8_86rSGYFkHdBxcHx5bYqui4YR33S5hNNM9YREWw9EKdtr9PHzuV5YsrD4qg1bl5luJHemce_KhHd_edXPVsIQkCMEUHP8c42wQnSIF7xL-Gi9Ha6bmeRfPkKJ4h3AoZWz3b2qZPIZ2_f7xmIQEtTXnokU44g8TbyW_S-7D6g29">
+                            Google
+                        </button>
+                        <button class="login_sosyal_btn" type="button">
+                            <span class="material-symbols-outlined" data-icon="school">school</span>
+                            Öğrenci SSO
+                        </button>
+                    </div>
+                </div> -->
+
+                <p class="login_kayit_metin">
+                    Topluluğa yeni mi katıldın?
+                    <a class="login_kayit_link" href="/register/">Harekete katıl</a>
+                </p>
+
+            </div>
+        </div>
+
+    </main>
+</body>
+</html>
