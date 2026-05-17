@@ -67,8 +67,8 @@
                     {% endif %}
                     <div class="login_alanlar">
                         <div class="login_alan">
-                            <label class="login_label" for="email">Üniversite E-postası</label>
-                            <input class="login_input" id="email" name="email" placeholder="ad@universite.edu.tr" required type="email" value="{{ request.POST.email|default:'' }}">
+                            <label class="login_label" for="email">Kullanıcı Adı veya E-posta</label>
+                            <input class="login_input" id="email" name="email" placeholder="kullaniciadi veya ad@universite.edu.tr" required type="text" value="{{ request.POST.email|default:'' }}">
                         </div>
                         <div class="login_alan">
                             <div class="login_sifre_satir">
