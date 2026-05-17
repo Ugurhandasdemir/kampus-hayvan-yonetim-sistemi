@@ -3,3 +3,5 @@ Pillow==11.3.0
 whitenoise==6.7.0
 dj-database-url==2.2.0
 psycopg[binary]==3.2.3
+cloudinary==1.41.0
+django-cloudinary-storage==0.3.0
