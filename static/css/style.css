@@ -284,6 +284,16 @@ h1,h2,h3,h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
 .lost-icon     { background: var(--tertiary-container); color: var(--tertiary); }
 .adoption-icon { background: #ffdcc5; color: var(--primary); }
 .medical-icon  { background: var(--secondary-container); color: var(--secondary); }
+.station-icon  { background: #d6f0ee; color: #006666; }
+
+.paws-filter-btn.station-filter {
+  background: var(--surface-container-lowest);
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+.paws-filter-btn.station-active { background: #d6f0ee; color: #006666; box-shadow: 0 4px 12px rgba(0,102,102,0.15); }
 
 .paws-filter-label { flex: 1; }
 
@@ -298,6 +308,7 @@ h1,h2,h3,h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
 .lost-count     { color: var(--tertiary); background: var(--tertiary-container); }
 .adoption-count { color: var(--primary); background: #ffdcc5; }
 .medical-count  { color: var(--secondary); background: var(--secondary-container); }
+.station-count  { color: #006666; background: #d6f0ee; }
 
 /* ===================== LEAFLET POPUP ===================== */
 .paws-popup .leaflet-popup-content-wrapper {

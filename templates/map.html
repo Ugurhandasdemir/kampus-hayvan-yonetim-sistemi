@@ -78,12 +78,12 @@
           <span class="paws-filter-label">Tıbbi Yardım</span>
           <span class="paws-filter-count medical-count">{{ counts.medical }}</span>
         </a>
-        <button type="button" id="toggleStationsBtn" class="paws-filter-btn active station-toggle">
-          <span class="paws-filter-icon" style="background:#006666;color:#fff;">
+        <button type="button" id="toggleStationsBtn" class="paws-filter-btn station-filter active station-active">
+          <span class="paws-filter-icon station-icon">
             <span class="material-symbols-outlined">restaurant</span>
           </span>
           <span class="paws-filter-label">Besleme İst.</span>
-          <span class="paws-filter-count" id="stationCount">{{ stations_count }}</span>
+          <span class="paws-filter-count station-count" id="stationCount">{{ stations_count }}</span>
         </button>
       </div>
     </div>
@@ -253,10 +253,10 @@ if (toggleBtn) {
     stationsVisible = !stationsVisible;
     if (stationsVisible) {
       map.addLayer(stationLayer);
-      toggleBtn.classList.add('active');
+      toggleBtn.classList.add('active', 'station-active');
     } else {
       map.removeLayer(stationLayer);
-      toggleBtn.classList.remove('active');
+      toggleBtn.classList.remove('active', 'station-active');
     }
   });
 }
