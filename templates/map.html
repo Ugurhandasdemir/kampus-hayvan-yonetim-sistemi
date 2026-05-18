@@ -78,13 +78,6 @@
           <span class="paws-filter-label">Tıbbi Yardım</span>
           <span class="paws-filter-count medical-count">{{ counts.medical }}</span>
         </a>
-        <button type="button" id="toggleStationsBtn" class="paws-filter-btn station-filter active station-active">
-          <span class="paws-filter-icon station-icon">
-            <span class="material-symbols-outlined">restaurant</span>
-          </span>
-          <span class="paws-filter-label">Besleme İst.</span>
-          <span class="paws-filter-count station-count" id="stationCount">{{ stations_count }}</span>
-        </button>
       </div>
     </div>
 
@@ -246,29 +239,12 @@ function renderStations(list) {
 
 renderStations(stations);
 
-const toggleBtn = document.getElementById('toggleStationsBtn');
-let stationsVisible = true;
-if (toggleBtn) {
-  toggleBtn.addEventListener('click', function() {
-    stationsVisible = !stationsVisible;
-    if (stationsVisible) {
-      map.addLayer(stationLayer);
-      toggleBtn.classList.add('active', 'station-active');
-    } else {
-      map.removeLayer(stationLayer);
-      toggleBtn.classList.remove('active', 'station-active');
-    }
-  });
-}
-
 function refreshStations() {
   fetch('{% url "stations_json" %}', { headers: { 'Accept': 'application/json' } })
     .then(r => r.json())
     .then(data => {
       stations = data.stations || [];
       renderStations(stations);
-      const countEl = document.getElementById('stationCount');
-      if (countEl) countEl.textContent = stations.length;
     })
     .catch(err => console.warn('Station refresh failed', err));
 }
