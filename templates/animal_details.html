@@ -1,10 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>PawsMap | Report #{{ report.id }}</title>
+    <title>PawsMap | Bildirim #{{ report.id }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
@@ -15,12 +15,12 @@
         <div class="top-nav-left">
             <a class="brand" href="{% url 'home' %}">PawsMap</a>
             <div class="top-nav-links">
-                <a class="top-nav-link" href="{% url 'latest_animal_details' %}">Latest Report</a>
-                <a class="top-nav-link" href="{% url 'new_animal' %}">New Report</a>
+                <a class="top-nav-link" href="{% url 'latest_animal_details' %}">Son Bildirim</a>
+                <a class="top-nav-link" href="{% url 'new_animal' %}">Yeni Bildirim</a>
             </div>
         </div>
         <div class="top-nav-actions">
-            <a class="new-report-btn" href="{% url 'new_animal' %}">New Report</a>
+            <a class="new-report-btn" href="{% url 'new_animal' %}">Yeni Bildirim</a>
             <span class="material-symbols-outlined profile-icon">person</span>
         </div>
     </nav>
@@ -38,9 +38,9 @@
             <div class="hero-media">
                 <div class="hero-media-box">
                     {% if report.photo %}
-                    <img alt="Animal photo for report {{ report.id }}" src="{{ report.photo.url }}">
+                    <img alt="{{ report.id }} numaralı bildirim için hayvan fotoğrafı" src="{{ report.photo.url }}">
                     {% else %}
-                    <img alt="Animal placeholder photo" src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1400&q=80">
+                    <img alt="Hayvan yer tutucu fotoğraf" src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1400&q=80">
                     {% endif %}
                 </div>
                 <div class="status-chip-wrap">
@@ -50,10 +50,10 @@
 
             <div class="hero-content">
                 <div>
-                    <h1 class="animal-name">Report #{{ report.id }}</h1>
+                    <h1 class="animal-name">Bildirim #{{ report.id }}</h1>
                     <div class="report-date">
                         <span class="material-symbols-outlined">calendar_today</span>
-                        <span>Reported {{ report.created_at|date:"d M Y H:i" }}</span>
+                        <span>Bildirim tarihi: {{ report.created_at|date:"d M Y H:i" }}</span>
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@
                     <div class="summary-item">
                         <span class="material-symbols-outlined summary-icon primary">location_on</span>
                         <div>
-                            <h3 class="summary-title">Location</h3>
+                            <h3 class="summary-title">Konum</h3>
                             <p class="summary-text">{{ report_latitude }}, {{ report_longitude }}</p>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                     <div class="summary-item">
                         <span class="material-symbols-outlined summary-icon secondary">description</span>
                         <div>
-                            <h3 class="summary-title">Report Story</h3>
+                            <h3 class="summary-title">Bildirim Detayı</h3>
                             <p class="summary-text summary-text-long">{{ report.details|linebreaksbr }}</p>
                         </div>
                     </div>
@@ -78,9 +78,9 @@
                 <div class="cta-stack">
                     <a class="btn-adopt" href="{% url 'new_animal' %}">
                         <span class="material-symbols-outlined">add_circle</span>
-                        Create New Report
+                        Yeni Bildirim Oluştur
                     </a>
-                    <a class="btn-contact" href="tel:{{ report.phone }}">Call Reporter: {{ report.phone }}</a>
+                    <a class="btn-contact" href="tel:{{ report.phone }}">Bildireni Ara: {{ report.phone }}</a>
                 </div>
             </div>
         </section>
@@ -100,20 +100,20 @@
             <aside class="updates-card">
                 <h2 class="updates-title">
                     <span class="material-symbols-outlined">info</span>
-                    Report Information
+                    Bildirim Bilgileri
                 </h2>
 
                 <div class="updates-list">
                     <div class="update-item primary">
-                        <p class="updates-key">Reporter</p>
+                        <p class="updates-key">Bildiren</p>
                         <p class="updates-value">{{ report.full_name }}</p>
                     </div>
                     <div class="update-item secondary">
-                        <p class="updates-key">Phone</p>
+                        <p class="updates-key">Telefon</p>
                         <p class="updates-value"><a class="updates-link" href="tel:{{ report.phone }}">{{ report.phone }}</a></p>
                     </div>
                     <div class="update-item primary">
-                        <p class="updates-key">Category</p>
+                        <p class="updates-key">Kategori</p>
                         <p class="updates-value">{{ report.get_category_display }}</p>
                     </div>
                     <div class="update-item secondary">
@@ -123,7 +123,7 @@
                                href="https://www.openstreetmap.org/?mlat={{ report_latitude }}&mlon={{ report_longitude }}#map=16/{{ report_latitude }}/{{ report_longitude }}"
                                rel="noopener noreferrer"
                                target="_blank">
-                                Open exact pin
+                                Konumu haritada aç
                             </a>
                         </p>
                     </div>
@@ -135,30 +135,30 @@
     <footer class="page-footer">
         <div class="page-footer-inner">
             <div>
-                <span class="footer-brand">PawsMap Sanctuary</span>
-                <p class="footer-text">Helping every stray find their way home through community vigilance and compassion.</p>
+                <span class="footer-brand">PawsMap Sığınağı</span>
+                <p class="footer-text">Topluluk dayanışması ve şefkatle her sokak hayvanının yuvasını bulmasına yardım ediyoruz.</p>
             </div>
             <div class="footer-links">
-                <a class="footer-link" href="{% url 'home' %}">Home</a>
-                <a class="footer-link" href="{% url 'new_animal' %}">New Report</a>
-                <a class="footer-link" href="{% url 'latest_animal_details' %}">Latest Report</a>
+                <a class="footer-link" href="{% url 'home' %}">Ana Sayfa</a>
+                <a class="footer-link" href="{% url 'new_animal' %}">Yeni Bildirim</a>
+                <a class="footer-link" href="{% url 'latest_animal_details' %}">Son Bildirim</a>
             </div>
-            <p class="footer-copy">(c) 2026 PawsMap Sanctuary. All rights reserved.</p>
+            <p class="footer-copy">(c) 2026 PawsMap Sığınağı. Tüm hakları saklıdır.</p>
         </div>
     </footer>
 
     <div class="mobile-bottom-nav">
         <a class="mobile-item" href="{% url 'home' %}">
             <span class="material-symbols-outlined">home</span>
-            <span class="mobile-item-label">Home</span>
+            <span class="mobile-item-label">Ana Sayfa</span>
         </a>
         <a class="mobile-item active" href="{% url 'latest_animal_details' %}">
             <span class="material-symbols-outlined">campaign</span>
-            <span class="mobile-item-label">Reports</span>
+            <span class="mobile-item-label">Bildirimler</span>
         </a>
         <a class="mobile-item" href="{% url 'new_animal' %}">
             <span class="material-symbols-outlined">add_circle</span>
-            <span class="mobile-item-label">Create</span>
+            <span class="mobile-item-label">Oluştur</span>
         </a>
     </div>
 
