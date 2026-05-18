@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kampüs Hayvan Yönetimi | Kullanıcı & Rol</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fff5ed",
+                        "surface-container-low": "#ffeedf",
+                        "surface-container": "#ffe4c9",
+                        "surface-container-high": "#ffddba",
+                        "primary": "#8c4a00",
+                        "primary-container": "#fd8b00",
+                        "secondary": "#006666",
+                        "tertiary-container": "#ffd709",
+                        "error": "#b02500",
+                        "on-surface": "#452800",
+                        "on-primary-container": "#442100"
+                    },
+                    borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: "Be Vietnam Pro", sans-serif;
+            background-color: #fff5ed;
+            color: #452800;
+        }
+        .font-headline { font-family: "Plus Jakarta Sans", sans-serif; }
+        .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400; }
+        .click-bounce-effect:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="bg-surface">
+
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-orange-50 shadow-xl shadow-orange-900/5 z-50 flex-col py-6 gap-2">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center rotate-3">
+                <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">pets</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold text-orange-600 font-headline leading-none">Admin Hub</h1>
+                <p class="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Kampüs Yönetimi</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="flex-1 flex flex-col gap-1">
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full" href="{% url 'custom_admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-headline text-sm font-semibold">Genel Bakış</span>
+        </a>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full" href="{% url 'custom_admin_reports' %}">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-headline text-sm font-semibold">İlanlar</span>
+        </a>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full" href="{% url 'custom_admin_volunteers' %}">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-headline text-sm font-semibold">Gönüllüler</span>
+        </a>
+        <a class="flex items-center gap-3 bg-teal-600 text-white rounded-full px-4 py-3 mx-2 shadow-lg" href="{% url 'custom_admin_users' %}">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+            <span class="font-headline text-sm font-semibold">Kullanıcılar</span>
+        </a>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full" href="{% url 'custom_admin_stations' %}">
+            <span class="material-symbols-outlined">restaurant</span>
+            <span class="font-headline text-sm font-semibold">Besleme İstasyonları</span>
+        </a>
+        <a class="flex items-center gap-3 text-stone-600 px-4 py-3 mx-2 hover:bg-orange-100 rounded-full" href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-headline text-sm font-semibold">Ayarlar</span>
+        </a>
+    </nav>
+</aside>
+
+<main class="md:pl-64 min-h-screen relative z-10">
+    <header class="bg-orange-50/80 backdrop-blur-xl top-0 z-40 flex justify-between items-center w-full px-6 py-3 sticky">
+        <span class="text-2xl font-black tracking-tight text-orange-700 font-headline">Kullanıcı Yönetimi</span>
+        <a href="{% url 'admin_settings' %}" class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-black text-on-primary-container">A</a>
+    </header>
+
+    <div class="p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
+
+        <div>
+            <h2 class="text-4xl font-headline font-black tracking-tight text-on-surface">Kullanıcı & Rol Yönetimi</h2>
+            <p class="text-stone-500 font-body mt-1">Kayıtlı kullanıcıların rollerini buradan güncelle.</p>
+        </div>
+
+        {% if messages %}
+        <div class="space-y-2">
+            {% for message in messages %}
+            <div class="rounded-xl px-5 py-3 text-sm font-bold
+                {% if message.tags == 'error' %}bg-red-100 text-red-700
+                {% elif message.tags == 'success' %}bg-green-100 text-green-700
+                {% else %}bg-orange-100 text-orange-700{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="get" class="bg-white rounded-xl p-4 shadow-sm flex flex-col md:flex-row gap-3">
+            <input class="rounded-full border-orange-100 focus:ring-secondary flex-1 text-sm" type="text" name="search" value="{{ search }}" placeholder="E-posta veya isim ara..."/>
+            <select class="rounded-full border-orange-100 focus:ring-secondary text-sm" name="role">
+                <option value="">Tüm Roller</option>
+                {% for key, label in role_choices %}
+                <option value="{{ key }}" {% if active_role == key %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button class="bg-secondary text-white px-6 py-2 rounded-full font-bold text-sm">Filtrele</button>
+        </form>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-surface-container-low text-on-surface">
+                    <tr>
+                        <th class="text-left p-4 font-headline">Ad</th>
+                        <th class="text-left p-4 font-headline">E-posta</th>
+                        <th class="text-left p-4 font-headline">Mevcut Rol</th>
+                        <th class="text-left p-4 font-headline">Durum</th>
+                        <th class="text-left p-4 font-headline">Rol Değiştir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in users_data %}
+                    <tr class="border-t border-orange-50 hover:bg-orange-50/40">
+                        <td class="p-4 font-semibold">{{ item.obj.first_name|default:item.obj.username }}</td>
+                        <td class="p-4 text-stone-600">{{ item.obj.email|default:item.obj.username }}</td>
+                        <td class="p-4">
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold
+                                {% if item.role == 'volunteer' %}bg-tertiary-container text-on-surface
+                                {% elif item.role == 'staff' %}bg-secondary text-white
+                                {% else %}bg-surface-container text-on-surface{% endif %}">
+                                {{ item.role_display }}
+                            </span>
+                        </td>
+                        <td class="p-4 text-xs">
+                            {% if item.obj.is_superuser %}<span class="text-error font-bold">Süper Admin</span>
+                            {% elif item.obj.is_staff %}<span class="text-secondary font-bold">Admin</span>
+                            {% else %}<span class="text-stone-500">Kullanıcı</span>{% endif %}
+                        </td>
+                        <td class="p-4">
+                            <form method="post" action="{% url 'custom_admin_users' %}" class="flex gap-2 items-center">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ item.obj.id }}"/>
+                                <select class="rounded-full text-xs border-orange-100" name="role">
+                                    {% for key, label in role_choices %}
+                                    <option value="{{ key }}" {% if item.role == key %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="bg-primary-container text-on-primary-container px-4 py-1 rounded-full font-bold text-xs" type="submit">Kaydet</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="p-8 text-center text-stone-500">Kullanıcı bulunamadı.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

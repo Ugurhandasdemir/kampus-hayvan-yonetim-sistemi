@@ -78,6 +78,13 @@
           <span class="paws-filter-label">Tıbbi Yardım</span>
           <span class="paws-filter-count medical-count">{{ counts.medical }}</span>
         </a>
+        <button type="button" id="toggleStationsBtn" class="paws-filter-btn active station-toggle">
+          <span class="paws-filter-icon" style="background:#006666;color:#fff;">
+            <span class="material-symbols-outlined">restaurant</span>
+          </span>
+          <span class="paws-filter-label">Besleme İst.</span>
+          <span class="paws-filter-count" id="stationCount">{{ stations_count }}</span>
+        </button>
       </div>
     </div>
 
@@ -111,7 +118,9 @@
 
 <script>
 const reports = JSON.parse('{{ reports_json|escapejs }}');
+let stations = JSON.parse('{{ stations_json|escapejs }}');
 console.log("Reports:", reports);
+console.log("Stations:", stations);
 
 const map = L.map('map').setView([39.9334, 32.8597], 6);
 
@@ -182,6 +191,89 @@ reports.forEach(function(r) {
     .addTo(map)
     .bindPopup(popup);
 });
+
+// Besleme istasyonu marker'lari
+const stationLayer = L.layerGroup().addTo(map);
+
+function makeStationIcon(critical) {
+  const bg = critical ? '#b02500' : '#006666';
+  const shadow = critical ? 'rgba(176,37,0,0.35)' : 'rgba(0,102,102,0.35)';
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:36px;height:36px;
+      background:${bg};
+      border-radius:50%;
+      border:4px solid #fff;
+      box-shadow:0 8px 16px ${shadow};
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;color:#fff;
+    ">🍽️</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -20],
+  });
+}
+
+function renderStations(list) {
+  stationLayer.clearLayers();
+  list.forEach(function(s) {
+    const lat = parseFloat(s.latitude);
+    const lng = parseFloat(s.longitude);
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    const popup = L.popup({ maxWidth: 260, className: 'paws-popup' }).setContent(`
+      <div style="font-family:'Be Vietnam Pro',sans-serif;padding:12px;min-width:220px;">
+        <span style="display:inline-block;padding:3px 10px;background:${s.critical ? '#b02500' : '#006666'};color:#fff;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">
+          ${s.critical ? 'Kritik' : 'Aktif'} İstasyon
+        </span>
+        <h4 style="margin:0 0 4px;font-size:16px;font-weight:700;color:#1a1c1c;">${s.name}</h4>
+        <p style="margin:0 0 8px;font-size:12px;color:#554337;">${s.location_name}</p>
+        <div style="font-size:12px;color:#333;line-height:1.6;">
+          <div><strong>Mama:</strong> %${s.food_level}</div>
+          <div><strong>Su:</strong> %${s.water_level}</div>
+          <div><strong>Durum:</strong> ${s.status_display}</div>
+          <div style="color:#888;font-size:10px;margin-top:6px;">Güncellendi: ${s.last_updated}</div>
+        </div>
+      </div>
+    `);
+
+    L.marker([lat, lng], { icon: makeStationIcon(s.critical) })
+      .addTo(stationLayer)
+      .bindPopup(popup);
+  });
+}
+
+renderStations(stations);
+
+const toggleBtn = document.getElementById('toggleStationsBtn');
+let stationsVisible = true;
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', function() {
+    stationsVisible = !stationsVisible;
+    if (stationsVisible) {
+      map.addLayer(stationLayer);
+      toggleBtn.classList.add('active');
+    } else {
+      map.removeLayer(stationLayer);
+      toggleBtn.classList.remove('active');
+    }
+  });
+}
+
+function refreshStations() {
+  fetch('{% url "stations_json" %}', { headers: { 'Accept': 'application/json' } })
+    .then(r => r.json())
+    .then(data => {
+      stations = data.stations || [];
+      renderStations(stations);
+      const countEl = document.getElementById('stationCount');
+      if (countEl) countEl.textContent = stations.length;
+    })
+    .catch(err => console.warn('Station refresh failed', err));
+}
+
+setInterval(refreshStations, 30000);
 
 // Bölge arama (Nominatim)
 const searchInput = document.getElementById('searchInput');

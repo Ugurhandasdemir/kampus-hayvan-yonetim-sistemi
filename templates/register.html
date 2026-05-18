@@ -113,6 +113,7 @@
                                 <option {% if not request.POST.role %}selected{% endif %} disabled value="">Rol Seçin</option>
                                 <option {% if request.POST.role == 'student' %}selected{% endif %} value="student">Öğrenci</option>
                                 <option {% if request.POST.role == 'staff' %}selected{% endif %} value="staff">Personel</option>
+                                <option {% if request.POST.role == 'volunteer' %}selected{% endif %} value="volunteer">Gönüllü</option>
                             </select>
                             <span class="kayit_input_ikon material-symbols-outlined">expand_more</span>
                         </div>

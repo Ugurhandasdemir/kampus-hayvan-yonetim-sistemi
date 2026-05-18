@@ -64,12 +64,19 @@ class VolunteerApplication(models.Model):
 
 
 class UserProfile(models.Model):
+    ROLE_CHOICES = [
+        ("student", "Öğrenci"),
+        ("staff", "Personel"),
+        ("volunteer", "Gönüllü"),
+    ]
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="profile",
     )
     bio = models.TextField(max_length=300, blank=True, default="")
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="student")
 
     def __str__(self):
         return f"Profile: {self.user.username}"

@@ -13,6 +13,7 @@ urlpatterns = [
     path('animal-details/<int:report_id>/', views.animal_details_view, name='animal_details'),
     path('new-animal/', views.new_animal_view, name='new_animal'),
     path('map/', views.map_view, name='map'),
+    path('api/stations/', views.stations_json, name='stations_json'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/<int:report_id>/found/', views.mark_report_found, name='mark_report_found'),
     path('admin-settings/', views.admin_settings_view, name='admin_settings'),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('admin-panel/volunteers/<int:volunteer_id>/reject/', views.custom_admin_volunteer_reject, name='custom_admin_volunteer_reject'),
     path('admin-panel/volunteers/<int:volunteer_id>/delete/', views.custom_admin_volunteer_delete, name='custom_admin_volunteer_delete'),
 
+    path('admin-panel/users/', views.custom_admin_users, name='custom_admin_users'),
     path('admin-panel/stations/', views.custom_admin_stations, name='custom_admin_stations'),
     path('admin-panel/stations/<int:station_id>/update/', views.custom_admin_station_update, name='custom_admin_station_update'),
     path('admin-panel/stations/<int:station_id>/delete/', views.custom_admin_station_delete, name='custom_admin_station_delete'),

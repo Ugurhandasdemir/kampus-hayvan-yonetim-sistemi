@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -126,10 +126,15 @@ def register_view(request):
         full_name = request.POST.get("full_name", "").strip()
         email = request.POST.get("email", "").strip().lower()
         password = request.POST.get("password", "")
+        role = request.POST.get("role", "").strip()
         terms_accepted = request.POST.get("terms") == "on"
+
+        valid_roles = {key for key, _ in UserProfile.ROLE_CHOICES}
 
         if not full_name or not email or not password:
             messages.error(request, "Lutfen zorunlu alanlari doldur.")
+        elif role not in valid_roles:
+            messages.error(request, "Gecerli bir rol sec.")
         elif not terms_accepted:
             messages.error(request, "Devam etmek icin sartlari kabul etmelisin.")
         elif User.objects.filter(username=email).exists() or User.objects.filter(email__iexact=email).exists():
@@ -145,6 +150,10 @@ def register_view(request):
             else:
                 new_user.set_password(password)
                 new_user.save()
+                UserProfile.objects.update_or_create(
+                    user=new_user,
+                    defaults={"role": role},
+                )
                 login(request, new_user)
                 messages.success(request, "Hesabin olusturuldu. Hos geldin!")
                 return redirect("map")
@@ -242,6 +251,27 @@ def new_animal_view(request):
     return render(request, "new_animal.html")
 
 
+def _serialize_stations():
+    stations_data = []
+    for station in FeedingStation.objects.all():
+        stations_data.append(
+            {
+                "id": station.id,
+                "name": station.name,
+                "location_name": station.location_name,
+                "latitude": str(station.latitude) if station.latitude else "",
+                "longitude": str(station.longitude) if station.longitude else "",
+                "food_level": station.food_level,
+                "water_level": station.water_level,
+                "status": station.status,
+                "status_display": station.get_status_display(),
+                "critical": station.is_critical(),
+                "last_updated": station.last_updated.strftime("%d.%m.%Y %H:%M"),
+            }
+        )
+    return stations_data
+
+
 def map_view(request):
     reports = AnimalReport.objects.all().order_by("-created_at")
     category = request.GET.get("category", "")
@@ -271,13 +301,21 @@ def map_view(request):
         "medical": AnimalReport.objects.filter(category="medical").count(),
     }
 
+    stations_data = _serialize_stations()
+
     context = {
         "reports_json": json.dumps(reports_data),
+        "stations_json": json.dumps(stations_data),
+        "stations_count": len(stations_data),
         "counts": counts,
         "active_category": category,
     }
 
     return render(request, "map.html", context)
+
+
+def stations_json(request):
+    return JsonResponse({"stations": _serialize_stations()})
 
 
 @login_required
@@ -629,6 +667,56 @@ def custom_admin_station_delete(request, station_id):
 
     messages.success(request, "Besleme istasyonu silindi.")
     return redirect("custom_admin_stations")
+
+
+@login_required
+def custom_admin_users(request):
+    if not _is_custom_admin(request.user):
+        messages.error(request, "Bu sayfaya erisim yetkiniz yok.")
+        return redirect("home")
+
+    if request.method == "POST":
+        user_id = request.POST.get("user_id", "").strip()
+        new_role = request.POST.get("role", "").strip()
+        valid_roles = {key for key, _ in UserProfile.ROLE_CHOICES}
+
+        if not user_id or new_role not in valid_roles:
+            messages.error(request, "Gecerli kullanici ve rol gerekli.")
+        else:
+            target_user = get_object_or_404(User, id=user_id)
+            profile, _ = UserProfile.objects.get_or_create(user=target_user)
+            profile.role = new_role
+            profile.save(update_fields=["role"])
+            messages.success(request, "Kullanici rolu guncellendi.")
+            return redirect("custom_admin_users")
+
+    users_qs = User.objects.all().order_by("-date_joined")
+    role_filter = request.GET.get("role", "").strip()
+    search = request.GET.get("search", "").strip()
+
+    valid_roles = {key for key, _ in UserProfile.ROLE_CHOICES}
+    if role_filter in valid_roles:
+        users_qs = users_qs.filter(profile__role=role_filter)
+
+    if search:
+        users_qs = users_qs.filter(email__icontains=search) | users_qs.filter(first_name__icontains=search)
+
+    users_data = []
+    for u in users_qs:
+        profile, _ = UserProfile.objects.get_or_create(user=u)
+        users_data.append({
+            "obj": u,
+            "role": profile.role,
+            "role_display": profile.get_role_display(),
+        })
+
+    context = {
+        "users_data": users_data,
+        "role_choices": UserProfile.ROLE_CHOICES,
+        "active_role": role_filter,
+        "search": search,
+    }
+    return render(request, "admin_panel/users.html", context)
 
 
 @login_required
